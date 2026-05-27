@@ -5,38 +5,32 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-6-3178C6?logo=typescript)](https://www.typescriptlang.org/)
 [![pnpm](https://img.shields.io/badge/pnpm-9+-F69220?logo=pnpm)](https://pnpm.io/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
+[![Live Demo](https://img.shields.io/badge/demo-GitHub%20Pages-2ea44f)](https://sowee121.github.io/frontend-interview-vue/)
 
-面向前端工程师的面试题库静态站点：按专题章节组织高频面试题与精炼参考答案，支持章内目录跳转与编程题代码高亮，适合在桌面或手机浏览器中随时复习。内容以 JSON 维护（`RichSegment` 结构化片段），构建时打包进前端，**无需后端服务**。
+面向前端工程师的面试题库静态站点：11 个专题章节、结构化 JSON 答案、章内目录与代码高亮，支持桌面与手机浏览器复习。内容构建时打包进前端，**无需后端**。
+
+**在线访问**：https://sowee121.github.io/frontend-interview-vue/
 
 ## 目录
 
-- [在线预览](#在线预览)
 - [功能特性](#功能特性)
 - [技术栈](#技术栈)
 - [快速开始](#快速开始)
 - [常用脚本](#常用脚本)
 - [项目结构](#项目结构)
-- [如何贡献](#如何贡献)
-- [部署](#部署)
-- [维护清单](#维护清单)
-- [相关链接](#相关链接)
+- [贡献指南](#贡献指南)
+- [部署说明](#部署说明)
 - [许可证](#许可证)
-
-## 在线预览
-
-- **GitHub Pages**：https://sowee121.github.io/frontend-interview-vue/
-
-推送 `main` 分支后由 [GitHub Actions](.github/workflows/deploy.yml) 自动构建部署。History 路由通过 `404.html` 回退实现深链刷新（见下方「部署」）。
 
 ## 功能特性
 
 | 特性 | 说明 |
 |------|------|
-| 11 个专题章节 | JavaScript、TypeScript、HTML/CSS、浏览器、网络与安全、性能、工程化、React、Vue、场景题、编程手写题 |
+| 11 个专题 | JavaScript、TypeScript、HTML/CSS、浏览器、网络与安全、性能、工程化、React、Vue、场景题、编程手写题 |
 | 章内目录 | 侧栏锚点，长文快速定位 |
-| 结构化答案 | `src/data/qa/json/*.json`，避免手写 HTML 碎片 |
-| 代码高亮 | 编程章使用 highlight.js |
-| History 路由 | `/chapters/:slug`，URL 简洁可分享 |
+| 结构化答案 | `src/data/qa/json/*.json` + `RichSegment`，避免手写 HTML |
+| 代码高亮 | 编程题章节使用 highlight.js |
+| History 路由 | `/chapters/:slug`，链接可分享、可刷新 |
 
 ## 技术栈
 
@@ -49,7 +43,7 @@
 
 ## 快速开始
 
-**环境要求**：Node.js `^20.19.0` 或 `>=22.12.0`，[pnpm](https://pnpm.io/) 9+
+**环境**：Node.js `^20.19.0` 或 `>=22.12.0`，[pnpm](https://pnpm.io/) 9+
 
 ```sh
 git clone https://github.com/sowee121/frontend-interview-vue.git
@@ -58,82 +52,84 @@ pnpm install
 pnpm dev
 ```
 
-浏览器访问 [http://localhost:5173](http://localhost:5173)。
+本地开发默认根路径 [http://localhost:5173](http://localhost:5173)（与 GitHub Pages 子路径无关，便于日常改题）。
+
+若要本地验证**与线上一致**的生产构建：
+
+```sh
+pnpm build
+pnpm preview
+```
+
+预览地址一般为 `http://localhost:4173/frontend-interview-vue/`（以终端输出为准）。
 
 ## 常用脚本
 
 | 命令 | 说明 |
 |------|------|
 | `pnpm dev` | 本地开发（HMR） |
-| `pnpm build` | 类型检查 + 生产构建，产物在 `dist/` |
-| `pnpm preview` | 本地预览构建结果 |
-| `pnpm lint` | ESLint + Oxlint 检查并尝试自动修复 |
+| `pnpm build` | 类型检查 + 生产构建；`postbuild` 会生成 `dist/404.html`（Pages SPA 回退） |
+| `pnpm preview` | 预览 `dist/` |
+| `pnpm lint` | ESLint + Oxlint |
 | `pnpm format` | Prettier 格式化 `src/` |
 
 ## 项目结构
 
 ```
 frontend-interview-vue/
+├── .github/workflows/deploy.yml   # GitHub Pages 自动部署
 ├── src/
-│   ├── data/qa/json/       # 各章题目与答案（主要维护入口）
-│   ├── data/qa/registry.ts # 章节 JSON 注册
-│   ├── data/constants.ts   # 章节顺序 CHAPTER_ORDER
-│   ├── components/         # 答案渲染、侧栏、布局等
-│   ├── views/              # 首页、章节页
-│   └── router/             # 路由与锚点滚动
-├── scripts/
-│   └── reorder-qa-chapters.mjs  # 按配置重排各章题目顺序
-└── dist/                   # pnpm build 输出（勿提交，见 .gitignore）
+│   ├── data/qa/json/            # 各章题目与答案（主要维护入口）
+│   ├── data/qa/registry.ts      # 章节 JSON 注册
+│   ├── data/constants.ts        # 章节顺序 CHAPTER_ORDER
+│   ├── components/              # 答案渲染、侧栏、布局
+│   ├── views/                   # 首页、章节页
+│   └── router/                  # History 路由与锚点滚动
+├── scripts/reorder-qa-chapters.mjs
+└── dist/                        # 构建产物（已 gitignore，勿提交）
 ```
 
-## 如何贡献
+## 贡献指南
 
-1. Fork 本仓库并创建分支（如 `feat/add-vue-question`）。
-2. 编辑对应章节：`src/data/qa/json/<slug>.json`（`slug` 见 `src/data/constants.ts`）。
-3. 本地运行 `pnpm dev` 预览，确保 `pnpm build` 通过。
-4. 提交 Pull Request，简要说明新增/修改的知识点与原因（为何更常考、更准确、更易懂）。
+欢迎通过 Issue / PR 补充或订正题目。
 
-题目字段说明见 [`src/types/qa-content.ts`](src/types/qa-content.ts)（`QaItem`、`RichSegment` 等）。
+1. Fork 本仓库，创建分支（如 `feat/add-vue-question`）。
+2. 编辑 `src/data/qa/json/<slug>.json`（`slug` 见 [`src/data/constants.ts`](src/data/constants.ts)）。
+3. `pnpm dev` 本地预览，`pnpm build` 确保通过。
+4. 提交 PR，简要说明知识点与改动原因。
 
-批量调整章节内题目顺序（会按配置重排各章 `items`）：
+字段定义见 [`src/types/qa-content.ts`](src/types/qa-content.ts)（`QaItem`、`RichSegment` 等）。
+
+批量重排章节内题目顺序：
 
 ```sh
 node scripts/reorder-qa-chapters.mjs
 ```
 
-## 部署
+**维护建议**：答案宜「短问短答、可验证」；代码示例优先最小可复现片段。仅改单题文案时无需改 README；增删章节或调整 `CHAPTER_ORDER` 时请同步更新上文「功能特性」与「项目结构」。
 
-构建产物目录为 **`dist/`**，可部署到任意支持静态文件托管的平台。
+## 部署说明
 
-| 平台 | 构建命令 | 输出目录 | 备注 |
-|------|----------|----------|------|
-| Cloudflare Pages / Vercel | `pnpm install && pnpm build` | `dist` | 推荐；History 路由回退通常开箱即用 |
-| GitHub Pages | `pnpm install && pnpm build`（见 [deploy.yml](.github/workflows/deploy.yml)） | `dist` | 已配置 `base` 与 `404.html` SPA 回退；Settings → Pages 选 GitHub Actions |
+### GitHub Pages（当前方案）
 
-项目使用 Vue Router **History** 模式，托管侧需将未知路径回退到 `index.html`。
+| 项 | 说明 |
+|----|------|
+| 访问地址 | https://sowee121.github.io/frontend-interview-vue/ |
+| 触发方式 | 推送到 `main` 分支，由 [deploy.yml](.github/workflows/deploy.yml) 自动构建部署 |
+| 仓库设置 | Settings → Pages → Source 选择 **GitHub Actions** |
+| 子路径 | 生产构建 `base` 为 `/frontend-interview-vue/`（见 [`vite.config.ts`](vite.config.ts)） |
+| History 回退 | `pnpm build` 后 `postbuild` 复制 `index.html` → `404.html`，支持深链刷新 |
 
-## 维护清单
+> 分享根地址时，GitHub 可能将无末尾 `/` 的 URL 重定向到带 `/` 的形式，属托管平台默认行为，不影响使用。
 
-- **发布/迁移时**：
-  - [ ] 在「在线预览」处填写实际 Demo 地址
-  - [ ] 确认未提交 `dist/`、`node_modules/`、`.env*` 等构建产物或敏感文件
-  - [ ] 若新增章节/调整顺序：同步更新 `src/data/constants.ts` 与相关说明
-- **日常维护**：
-  - [ ] 新增题目尽量保持“短问短答 + 可验证”的风格，避免泛泛而谈
-  - [ ] 涉及代码示例：优先给出可运行/可复现的最小片段
+### 其他静态托管
 
-## 文档维护
+产物目录为 `dist/`，亦可部署到 Cloudflare Pages、Vercel 等。需满足：
 
-发生以下变更时，请同步更新本 README：
-
-| 变更类型 | 需更新的章节 |
-|----------|--------------|
-| 增删章节、`CHAPTER_ORDER` | 功能特性、项目结构 |
-| 修改 `package.json` 的 scripts / engines | 快速开始、常用脚本 |
-| 更换部署平台或构建方式 | 部署 |
-| 修改站点名称（`src/config/site.ts`） | 标题、简介 |
-
-仅修改某道题的文案时，一般无需改 README。
+- 构建命令：`pnpm install && pnpm build`
+- 输出目录：`dist`
+- History 模式：未知路径回退到 `index.html`（或等效 SPA 规则）
+- 若部署在子路径，需同步修改 Vite `base` 与路由 `import.meta.env.BASE_URL`
 
 ## 相关链接
 
@@ -142,6 +138,4 @@ node scripts/reorder-qa-chapters.mjs
 
 ## 许可证
 
-本项目采用 [MIT License](./LICENSE) 开源。
-
-如果本项目对你有帮助，欢迎 Star 或提交 PR 补充题目。
+本项目采用 [MIT License](./LICENSE) 开源。若对你有帮助，欢迎 Star 或提交 PR。
