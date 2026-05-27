@@ -24,9 +24,9 @@
 
 ## 在线预览
 
-- Demo（待补充）：`<your-demo-url>`
+- **GitHub Pages**：https://sowee121.github.io/frontend-interview-vue/
 
-建议使用 Cloudflare Pages / Vercel（开箱即用支持 History 路由回退）。如果使用 GitHub Pages，需要额外处理 SPA 404 回退（见下方“部署”）。
+推送 `main` 分支后由 [GitHub Actions](.github/workflows/deploy.yml) 自动构建部署。History 路由通过 `404.html` 回退实现深链刷新（见下方「部署」）。
 
 ## 功能特性
 
@@ -108,7 +108,7 @@ node scripts/reorder-qa-chapters.mjs
 | 平台 | 构建命令 | 输出目录 | 备注 |
 |------|----------|----------|------|
 | Cloudflare Pages / Vercel | `pnpm install && pnpm build` | `dist` | 推荐；History 路由回退通常开箱即用 |
-| GitHub Pages | 同上（建议 GitHub Actions） | `dist` | 需处理 SPA 404（如 `404.html` 回退） |
+| GitHub Pages | `pnpm install && pnpm build`（见 [deploy.yml](.github/workflows/deploy.yml)） | `dist` | 已配置 `base` 与 `404.html` SPA 回退；Settings → Pages 选 GitHub Actions |
 
 项目使用 Vue Router **History** 模式，托管侧需将未知路径回退到 `index.html`。
 
