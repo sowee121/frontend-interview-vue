@@ -8,11 +8,25 @@
 
 面向前端工程师的面试题库静态站点：按专题章节组织高频面试题与精炼参考答案，支持章内目录跳转与编程题代码高亮，适合在桌面或手机浏览器中随时复习。内容以 JSON 维护（`RichSegment` 结构化片段），构建时打包进前端，**无需后端服务**。
 
+## 目录
+
+- [在线预览](#在线预览)
+- [功能特性](#功能特性)
+- [技术栈](#技术栈)
+- [快速开始](#快速开始)
+- [常用脚本](#常用脚本)
+- [项目结构](#项目结构)
+- [如何贡献](#如何贡献)
+- [部署](#部署)
+- [维护清单](#维护清单)
+- [相关链接](#相关链接)
+- [许可证](#许可证)
+
 ## 在线预览
 
-> 将仓库发布到 GitHub 后，可在本段补充 Demo 链接（例如 Cloudflare Pages、GitHub Pages）。
+- Demo（待补充）：`<your-demo-url>`
 
-<!-- Demo: https://your-demo-url.example.com -->
+建议使用 Cloudflare Pages / Vercel（开箱即用支持 History 路由回退）。如果使用 GitHub Pages，需要额外处理 SPA 404 回退（见下方“部署”）。
 
 ## 功能特性
 
@@ -77,11 +91,11 @@ frontend-interview-vue/
 1. Fork 本仓库并创建分支（如 `feat/add-vue-question`）。
 2. 编辑对应章节：`src/data/qa/json/<slug>.json`（`slug` 见 `src/data/constants.ts`）。
 3. 本地运行 `pnpm dev` 预览，确保 `pnpm build` 通过。
-4. 提交 Pull Request，简要说明新增或修改的知识点。
+4. 提交 Pull Request，简要说明新增/修改的知识点与原因（为何更常考、更准确、更易懂）。
 
 题目字段说明见 [`src/types/qa-content.ts`](src/types/qa-content.ts)（`QaItem`、`RichSegment` 等）。
 
-批量调整章节内题目顺序：
+批量调整章节内题目顺序（会按配置重排各章 `items`）：
 
 ```sh
 node scripts/reorder-qa-chapters.mjs
@@ -89,7 +103,7 @@ node scripts/reorder-qa-chapters.mjs
 
 ## 部署
 
-构建产物目录为 **`dist/`**，可部署到任意支持静态文件且具备 SPA 回退的托管服务。
+构建产物目录为 **`dist/`**，可部署到任意支持静态文件托管的平台。
 
 | 平台 | 构建命令 | 输出目录 | 备注 |
 |------|----------|----------|------|
@@ -98,15 +112,15 @@ node scripts/reorder-qa-chapters.mjs
 
 项目使用 Vue Router **History** 模式，托管侧需将未知路径回退到 `index.html`。
 
-> 社区版 **Gitee Pages** 已于约 2024 年 5 月停止服务，请勿再作为部署目标。
+## 维护清单
 
-## 发布到 GitHub 前检查
-
-- [ ] 根目录已添加 [`LICENSE`](./LICENSE)（建议 MIT）
-- [ ] `package.json` 中移除 `"private": true`（公开仓库时）
-- [ ] 在「在线预览」处填写实际 Demo 地址
-- [ ] 确认 `git clone` 地址与仓库名一致
-- [ ] 确认未提交 `dist/`、`node_modules/`、`.env*` 等构建产物或敏感文件
+- **发布/迁移时**：
+  - [ ] 在「在线预览」处填写实际 Demo 地址
+  - [ ] 确认未提交 `dist/`、`node_modules/`、`.env*` 等构建产物或敏感文件
+  - [ ] 若新增章节/调整顺序：同步更新 `src/data/constants.ts` 与相关说明
+- **日常维护**：
+  - [ ] 新增题目尽量保持“短问短答 + 可验证”的风格，避免泛泛而谈
+  - [ ] 涉及代码示例：优先给出可运行/可复现的最小片段
 
 ## 文档维护
 
