@@ -23,13 +23,13 @@ function shouldRenderFunctionBlock(segments: RichSegment[]): boolean {
 </script>
 
 <template>
-  <div class="qa-a">
+  <div class="qa-block__answer">
     <template v-for="(segments, pi) in paragraphs" :key="pi">
       <FunctionCodeBlock
         v-if="shouldRenderFunctionBlock(segments)"
         :raw-code="(segments[0] as Extract<RichSegment, { type: 'code' }>).value"
       />
-      <p v-else class="qa-a__p">
+      <p v-else>
         <template v-for="(seg, si) in segments" :key="`${pi}-${si}`">
           <strong v-if="seg.type === 'strong'">{{ seg.value }}</strong>
           <code v-else-if="seg.type === 'code'">{{ seg.value }}</code>

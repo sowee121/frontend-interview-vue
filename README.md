@@ -7,7 +7,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
 [![Live Demo](https://img.shields.io/badge/demo-GitHub%20Pages-2ea44f)](https://sowee121.github.io/frontend-interview-vue/)
 
-面向前端工程师的面试题库静态站点：11 个专题章节、结构化 JSON 答案、章内目录与代码高亮，支持桌面与手机浏览器复习。内容构建时打包进前端，**无需后端**。
+面向前端工程师的面试题库静态站点：12 个专题章节、结构化 JSON 答案、章内目录与代码高亮，支持桌面与手机浏览器复习。内容构建时打包进前端，**无需后端**。
 
 **在线访问**：https://sowee121.github.io/frontend-interview-vue/
 
@@ -18,6 +18,7 @@
 - [快速开始](#快速开始)
 - [常用脚本](#常用脚本)
 - [项目结构](#项目结构)
+- [架构说明](#架构说明)
 - [贡献指南](#贡献指南)
 - [部署说明](#部署说明)
 - [许可证](#许可证)
@@ -26,8 +27,10 @@
 
 | 特性 | 说明 |
 |------|------|
-| 11 个专题 | JavaScript、TypeScript、HTML/CSS、浏览器、网络与安全、性能、工程化、React、Vue、场景题、编程手写题 |
-| 章内目录 | 侧栏锚点，长文快速定位 |
+| 12 个专题 | JavaScript、TypeScript、HTML/CSS、浏览器、网络与安全、性能、工程化、React、Vue 2、Vue 3、场景题、编程手写题 |
+| 章内目录 | 桌面端侧栏锚点 + 吸顶，长文快速定位 |
+| 顶栏章节导航 | 顶栏可横向滑动的章节 tabs，跨章切换 |
+| 移动端目录 | 窄屏（900px 以下）隐藏侧栏，右下角 FAB 唤起底部章内目录 |
 | 结构化答案 | `src/data/qa/json/*.json` + `RichSegment`，避免手写 HTML |
 | 代码高亮 | 编程题章节使用 highlight.js |
 | History 路由 | `/chapters/:slug`，链接可分享、可刷新 |
@@ -79,15 +82,113 @@ pnpm preview
 frontend-interview-vue/
 ├── .github/workflows/deploy.yml   # GitHub Pages 自动部署
 ├── src/
+│   ├── assets/styles/           # 全局 Sass（layout / components / variables）
 │   ├── data/qa/json/            # 各章题目与答案（主要维护入口）
 │   ├── data/qa/registry.ts      # 章节 JSON 注册
 │   ├── data/constants.ts        # 章节顺序 CHAPTER_ORDER
-│   ├── components/              # 答案渲染、侧栏、布局
+│   ├── components/              # 答案渲染、侧栏、布局、移动端目录
 │   ├── views/                   # 首页、章节页
 │   └── router/                  # History 路由与锚点滚动
 ├── scripts/reorder-qa-chapters.mjs
 └── dist/                        # 构建产物（已 gitignore，勿提交）
 ```
+
+## 架构说明
+
+纯静态 SPA：构建时将所有章节 JSON 打包进前端，运行时无 API 请求。
+
+### 整体分层
+
+```mermaid
+flowchart TB
+  subgraph data [数据层]
+    JSON["qa/json/*.json"]
+    Registry["registry.ts"]
+    Constants["constants.ts CHAPTER_ORDER"]
+    Chapters["chapters.ts"]
+    JSON --> Registry
+    Constants --> Chapters
+    Registry --> Chapters
+  end
+
+  subgraph app [应用层]
+    Router["Vue Router"]
+    Views["HomeView / ChapterPageView"]
+    Components["布局 · 侧栏 · 答案渲染"]
+    Store["Pinia app store"]
+    Router --> Views
+    Views --> Components
+    Views --> Store
+  end
+
+  subgraph render [渲染链]
+    ChapterArticle["ChapterArticle"]
+    QaSection["QaSection"]
+    RichAnswer["RichAnswer"]
+    CodeBlock["FunctionCodeBlock"]
+    ChapterArticle --> QaSection --> RichAnswer
+    RichAnswer --> CodeBlock
+  end
+
+  Chapters --> Router
+  Registry --> Views
+  Components --> render
+```
+
+| 层级 | 职责 | 关键文件 |
+|------|------|----------|
+| 数据 | 题目内容、章节元信息、顺序 | `src/data/qa/json/`、`registry.ts`、`constants.ts`、`chapters.ts` |
+| 路由 | History 模式、无效 slug 回首页、锚点滚动、document.title | `src/router/index.ts`、`scrollBehavior.ts`、`setupRouterGuards.ts` |
+| 页面 | 首页目录 / 章节阅读壳层 | `HomeView.vue`、`ChapterPageView.vue` |
+| 组件 | 布局、导航、答案渲染 | `ChapterLayout`、`ChapterSidebar`、`ChapterTocMobile`、`HeaderChapterTabs`、`QaSection`、`RichAnswer` |
+| 状态 | 站点名、最近访问章节（可扩展） | `src/stores/app.ts` |
+| 样式 | 全局 BEM + Sass partial | `src/assets/main.scss` → `_layout.scss` / `_components.scss` |
+
+### 内容数据流
+
+1. 维护者编辑 `src/data/qa/json/<slug>.json`，每题含 `id`、`navLabel`、`question`、`answer`（`RichSegment[][]`）。
+2. `registry.ts` 静态 import 各 JSON，导出 `chapterPayloads`。
+3. `chapters.ts` 按 `CHAPTER_ORDER` 生成首页卡片用的 `ChapterDef`（含 TOC 列表）。
+4. 章节页通过 `useChapterFromRoute()` 从路由 `slug` 取 `payload` 与 `chapter` 元数据。
+
+答案不使用 HTML 字符串，而是 `RichSegment` 片段（`text` / `strong` / `code`），由 `RichAnswer` 逐段渲染；编程题章节（`coding`）对单段函数代码启用 `FunctionCodeBlock` + highlight.js。
+
+### 页面结构
+
+**首页**（`/`）
+
+```
+SiteHeader（顶栏 + 章节 tabs）
+└── layout-home
+    └── article
+        ├── h1 目录
+        ├── 导语
+        └── ChapterCard 网格
+SiteFooter
+```
+
+**章节页**（`/chapters/:slug`）
+
+```
+SiteHeader
+└── ChapterLayout（grid：侧栏 + 主内容）
+    ├── ChapterSidebar（桌面 TOC，sticky 吸顶）
+    └── layout__content
+        ├── 返回链接
+        └── ArticleShell → ChapterArticle → QaSection × N
+ChapterTocMobile（窄屏 FAB + 底部目录面板）
+SiteFooter
+```
+
+### 导航与滚动
+
+- **跨章**：顶栏 `HeaderChapterTabs` 或首页卡片，`RouterLink` 跳转 `/chapters/:slug`。
+- **章内**：TOC 链接带 hash（`#question-id`），`scrollBehavior` 读取 `--anchor-scroll-margin`（由 `SiteHeader` 动态写入顶栏高度）避免标题被遮挡。
+- **响应式**：宽度 ≤900px 隐藏桌面侧栏，改用 `ChapterTocMobile`；顶栏 tabs 可横向滑动并带渐隐提示。
+
+### 构建与部署
+
+Vite 构建产物为纯静态文件；GitHub Pages 以 `/frontend-interview-vue/` 为 `base`，`postbuild` 生成 `404.html` 实现 History 路由回退。本地 `pnpm dev` 使用 `/` 根路径，便于开发。
 
 ## 贡献指南
 
@@ -107,6 +208,8 @@ node scripts/reorder-qa-chapters.mjs
 ```
 
 **维护建议**：答案宜「短问短答、可验证」；代码示例优先最小可复现片段。仅改单题文案时无需改 README；增删章节或调整 `CHAPTER_ORDER` 时请同步更新上文「功能特性」与「项目结构」。
+
+**样式约定**（改 UI 时参考 [`src/assets/main.scss`](src/assets/main.scss) 顶部注释）：全局样式用 kebab-case + BEM——块 `{domain}-{name}`、元素 `{block}__{part}`、修饰符 `{block}--{variant}`；布局与导航见 `_layout.scss`，内容组件见 `_components.scss`。
 
 ## 部署说明
 

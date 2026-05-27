@@ -25,14 +25,14 @@ body {
 }
 
 ::selection {
-  background: rgba($accent, 0.22);
+  background: $selection-bg;
   color: $text;
 }
 
 a {
   color: $accent;
   text-decoration: none;
-  transition: color 0.15s ease;
+  transition: color $transition-fast;
 
   &:hover {
     color: $accent-hover;

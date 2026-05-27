@@ -10,7 +10,7 @@ defineProps<{
 
 <template>
   <h1>{{ payload.title }}</h1>
-  <p class="lead">{{ payload.lead }}</p>
+  <p class="article__lead">{{ payload.lead }}</p>
     <QaSection
       v-for="q in payload.items"
       :key="q.id"

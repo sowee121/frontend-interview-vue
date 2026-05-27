@@ -19,9 +19,9 @@ function isCurrentAnchor(id: string) {
 </script>
 
 <template>
-  <aside class="sidebar">
-    <p class="sidebar-title">本章跳转</p>
-    <ul>
+  <aside class="sidebar sidebar--desktop">
+    <p class="sidebar__title">本章跳转</p>
+    <ul class="toc-list">
       <li v-for="item in toc" :key="item.id">
         <RouterLink
           v-slot="{ href, navigate }"

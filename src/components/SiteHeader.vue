@@ -44,11 +44,11 @@ onUnmounted(() => {
 
 <template>
   <header ref="headerRoot" class="site-header">
-    <div class="site-header-inner">
-      <div class="site-title">
+    <div class="site-header__inner">
+      <div class="site-header__title">
         <RouterLink :to="{ name: 'home' }">{{ siteTitle }}</RouterLink>
       </div>
-      <div class="site-header-right">
+      <div class="site-header__right">
         <HeaderChapterTabs />
       </div>
     </div>

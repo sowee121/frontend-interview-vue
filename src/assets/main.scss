@@ -1,3 +1,9 @@
+// 命名：kebab-case + BEM
+// 块 Block：     {domain}-{name}           例 site-header, qa-block, toc-link
+// 元素 Element： {block}__{part}           例 site-header__inner, qa-block__q
+// 修饰符 Mod：   {block}--{variant}        例 toc-link--current, sidebar--desktop
+// 独立子块可并列使用（同域前缀）：toc-fab、toc-sheet 与 toc-mobile 同级，不必强行嵌套 __
+
 @use './styles/tokens';
 @use './styles/base';
 @use './styles/layout';

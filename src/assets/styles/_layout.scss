@@ -1,60 +1,60 @@
 @use 'variables' as *;
 
 .site-header {
-  background: rgba($paper, 0.92);
+  background: $header-bg;
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border-bottom: 1px solid $border;
   position: sticky;
   top: 0;
   z-index: $sticky-header-z;
-  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.05);
+  box-shadow: $header-shadow;
 
-  &-inner {
+  &__inner {
     max-width: $layout-max;
     margin: 0 auto;
-    padding: $pad-header-y $pad-header-x;
+    padding: $pad-header-y $pad-page;
     display: flex;
     align-items: center;
     justify-content: space-between;
     flex-wrap: wrap;
-    gap: 0.75rem;
+    gap: $spacing-sm;
 
     @media (max-width: $bp-header-tabs-stack) {
       align-items: stretch;
 
-      .site-header-right {
+      .site-header__right {
         flex: 1 1 100%;
         width: 100%;
         justify-content: stretch;
       }
     }
   }
-}
 
-.site-title {
-  font-size: 1.0625rem;
-  font-weight: 600;
-  letter-spacing: -0.01em;
-  color: $text;
+  &__title {
+    font-size: 1.0625rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: $text;
 
-  a {
-    color: inherit;
+    a {
+      color: inherit;
 
-    &:hover {
-      text-decoration: none;
-      color: $accent-hover;
+      &:hover {
+        text-decoration: none;
+        color: $accent-hover;
+      }
     }
   }
-}
 
-// 顶栏右侧：章节 tabs（可横向滑动）
-.site-header-right {
-  display: flex;
-  flex: 1 1 12rem;
-  justify-content: flex-end;
-  align-items: center;
-  min-width: 0;
+  // 顶栏右侧：章节 tabs（可横向滑动）
+  &__right {
+    display: flex;
+    flex: 1 1 12rem;
+    justify-content: flex-end;
+    align-items: center;
+    min-width: 0;
+  }
 }
 
 .site-header-quick {
@@ -69,7 +69,7 @@
     width: 100%;
   }
   padding: 0.35rem;
-  border-radius: 999px;
+  border-radius: $radius-pill;
   background: $header-quick-bg;
   border: 1px solid $header-quick-border;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5);
@@ -85,18 +85,18 @@
     z-index: 0;
     pointer-events: none;
     opacity: 0;
-    transition: opacity 0.2s ease;
+    transition: opacity $transition-base;
   }
 
   &::before {
     left: 0;
-    border-radius: 999px 0 0 999px;
+    border-radius: $radius-pill 0 0 $radius-pill;
     background: linear-gradient(to right, $header-quick-bg 25%, transparent);
   }
 
   &::after {
     right: 0;
-    border-radius: 0 999px 999px 0;
+    border-radius: 0 $radius-pill $radius-pill 0;
     background: linear-gradient(to left, $header-quick-bg 25%, transparent);
   }
 
@@ -114,10 +114,9 @@
     display: flex;
     flex-wrap: nowrap;
     align-items: center;
-    gap: 0.2rem;
+    gap: 0.3rem;
     width: 100%;
     min-width: 0;
-    padding: 0.1rem 0.35rem;
     overflow-x: auto;
     overscroll-behavior-x: contain;
     -webkit-overflow-scrolling: touch;
@@ -135,7 +134,7 @@
     flex-shrink: 0;
     padding: 0.38rem 0.72rem;
     border: 1px solid transparent;
-    border-radius: 999px;
+    border-radius: $radius-pill;
     font-size: 0.82rem;
     font-weight: 500;
     color: $muted;
@@ -144,9 +143,9 @@
     white-space: nowrap;
     scroll-snap-align: center;
     transition:
-      background 0.15s ease,
-      color 0.15s ease,
-      border-color 0.15s ease;
+      background $transition-fast,
+      color $transition-fast,
+      border-color $transition-fast;
 
     &:hover {
       color: $accent-hover;
@@ -157,7 +156,7 @@
     &.router-link-active {
       color: $accent-hover;
       background: $header-quick-link-active-bg;
-      border-color: rgba($accent, 0.28);
+      border-color: $accent-border-soft;
     }
   }
 }
@@ -165,7 +164,7 @@
 .layout {
   max-width: $layout-max;
   margin: 0 auto;
-  padding: $pad-page-y $pad-page-x $pad-page-bottom;
+  padding: $pad-page;
   display: grid;
   grid-template-columns: $sidebar-col 1fr;
   gap: $gap-layout;
@@ -173,23 +172,34 @@
 
   @media (max-width: $bp-stack-sidebar) {
     grid-template-columns: 1fr;
+    gap: 0;
+  }
 
-    .sidebar {
-      position: static !important;
-      order: 2;
+  &__back-link {
+    display: inline-block;
+    margin-bottom: $pad-page;
+    font-size: $font-size-sm;
+    font-weight: 500;
+    color: $muted;
+
+    &:hover {
+      color: $accent-hover;
+      text-decoration: none;
     }
   }
 }
 
 .sidebar {
   position: sticky;
-  top: var(--sticky-header-height, #{$sticky-sidebar-top});
-  font-size: 0.875rem;
-  line-height: 1.55;
+  top: calc(
+    var(--sticky-header-height, #{$sticky-sidebar-top}) + #{$sidebar-sticky-gap}
+  );
+  font-size: $font-size-sm;
+  line-height: $line-height-tight;
   padding-right: 0.5rem;
 
-  &-title {
-    font-size: 0.78rem;
+  &__title {
+    font-size: $font-size-xs;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.08em;
@@ -214,17 +224,17 @@
     padding: 0.38rem 0.65rem 0.38rem 0.85rem;
     margin-left: -1px;
     border-left: 2px solid transparent;
-    border-radius: 0 6px 6px 0;
+    border-radius: $radius-toc-link;
     text-decoration: none;
     transition:
-      color 0.15s ease,
-      background 0.15s ease,
-      border-color 0.15s ease;
+      color $transition-fast,
+      background $transition-fast,
+      border-color $transition-fast;
 
     &:hover,
     &:focus-visible {
       color: $text;
-      background: rgba($accent, 0.06);
+      background: $accent-hover-bg;
       text-decoration: none;
     }
 
@@ -237,20 +247,205 @@
   }
 }
 
-main.content {
+// —— 小屏：悬浮目录（挂于章节页根级，右下角 FAB + 底部面板） ——
+.toc-mobile {
+  display: none;
+
+  @media (max-width: $bp-stack-sidebar) {
+    display: block;
+  }
+
+  .toc-fab {
+    position: fixed;
+    z-index: $z-toc-fab;
+    right: $pad-page;
+    bottom: $pad-page;
+    width: $toc-fab-size;
+    height: $toc-fab-size;
+    padding: 0;
+    border: 1px solid $border;
+    border-radius: 50%;
+    background: $paper;
+    color: $text;
+    box-shadow: $shadow-fab;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition:
+      background $transition-base,
+      border-color $transition-base,
+      box-shadow $transition-base;
+
+    &:hover {
+      border-color: $accent-border-strong;
+      box-shadow: $shadow-fab-hover;
+    }
+
+    &:focus-visible {
+      outline: $focus-ring-width solid $accent;
+      outline-offset: $focus-ring-offset;
+    }
+
+    &__icon {
+      position: relative;
+      display: block;
+      width: 1.125rem;
+      height: 0.875rem;
+      margin: 0 auto;
+    }
+
+    &__bar {
+      position: absolute;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      border-radius: 1px;
+      background: currentColor;
+      transition:
+        transform $transition-slow,
+        opacity $transition-base,
+        top $transition-slow;
+
+      &:nth-child(1) {
+        top: 0;
+      }
+
+      &:nth-child(2) {
+        top: 50%;
+        transform: translateY(-50%);
+      }
+
+      &:nth-child(3) {
+        bottom: 0;
+        top: auto;
+      }
+    }
+
+    &--open .toc-fab__icon .toc-fab__bar {
+      &:nth-child(1) {
+        top: 50%;
+        transform: translateY(-50%) rotate(45deg);
+      }
+
+      &:nth-child(2) {
+        opacity: 0;
+      }
+
+      &:nth-child(3) {
+        top: 50%;
+        bottom: auto;
+        transform: translateY(-50%) rotate(-45deg);
+      }
+    }
+  }
+}
+
+@media (max-width: $bp-stack-sidebar) {
+  .sidebar--desktop {
+    display: none;
+  }
+}
+
+.toc-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: $z-toc-backdrop;
+  background: $overlay-backdrop;
+}
+
+.toc-sheet {
+  position: fixed;
+  z-index: $z-toc-sheet;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  max-height: 100vh;
+  padding: 1rem 1.25rem 1.25rem;
+  border-radius: $radius-sheet $radius-sheet 0 0;
+  background: $paper;
+  box-shadow: $shadow-sheet;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+
+  &__title {
+    margin: 0 0 0.75rem;
+    font-size: $font-size-xs;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: $muted;
+  }
+
+  .toc-list--sheet {
+    border-left: 1px solid $border;
+  }
+}
+
+.toc-backdrop-enter-active,
+.toc-backdrop-leave-active {
+  transition: opacity $transition-slow;
+}
+
+.toc-backdrop-enter-from,
+.toc-backdrop-leave-to {
+  opacity: 0;
+}
+
+.toc-sheet-enter-active,
+.toc-sheet-leave-active {
+  transition:
+    transform $transition-sheet,
+    opacity $transition-slow;
+}
+
+.toc-sheet-enter-from,
+.toc-sheet-leave-to {
+  transform: translateY(100%);
+  opacity: 0.92;
+}
+
+main.layout__content,
+main.layout-home__content {
   min-width: 0;
 }
 
 .layout-home {
   max-width: $layout-max;
   margin: 0 auto;
-  padding: $pad-page-y $pad-page-x $pad-page-bottom;
+  padding: 1.1rem $pad-page $pad-page;
   min-width: 0;
 
-  &-inner {
+  &__inner {
     max-width: $layout-home-inner-max;
     margin: 0 auto;
     min-width: 0;
     width: 100%;
+  }
+
+  &__title {
+    font-size: 1.68rem;
+    font-weight: 600;
+    margin: 0 0 0.5rem;
+    line-height: 1.35;
+    letter-spacing: -0.02em;
+    color: $qa-heading;
+  }
+
+  &__lead {
+    color: $muted;
+    font-size: 0.9375rem;
+    margin: 0 0 1.5rem;
+    padding-bottom: 0.9rem;
+    border-bottom: 1px solid $border;
+  }
+
+  &__grid {
+    display: grid;
+    // min(260px, 100%)：极窄屏下列宽随容器收缩，避免横向溢出
+    grid-template-columns: repeat(auto-fill, minmax(min(260px, 100%), 1fr));
+    gap: 1rem;
+    margin-top: 0.875rem;
+    min-width: 0;
   }
 }

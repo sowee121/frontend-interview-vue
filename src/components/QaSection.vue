@@ -14,9 +14,9 @@ withDefaults(
 
 <template>
   <section :id="item.id" class="qa-block">
-    <div class="qa-q-block">
-      <h2 class="qa-q">{{ item.question }}</h2>
-      <p v-if="item.questionNote" class="qa-q-note">{{ item.questionNote }}</p>
+    <div class="qa-block__question">
+      <h2 class="qa-block__q">{{ item.question }}</h2>
+      <p v-if="item.questionNote" class="qa-block__q-note">{{ item.questionNote }}</p>
     </div>
     <RichAnswer :paragraphs="item.answer" :syntax-highlight-mode="syntaxHighlightMode" />
   </section>
