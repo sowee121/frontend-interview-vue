@@ -2,8 +2,8 @@
   "slug": "scenario",
   "title": "场景题",
   "documentTitle": "场景题",
-  "description": "防抖节流、鉴权、无限滚动、多标签同步、上报与首屏",
-  "lead": "侧重项目里如何落地。",
+  "description": "用真实项目场景来答：防抖节流、鉴权、无限滚动、多标签同步和上报。",
+  "lead": "更偏落地：怎么做、怎么取舍、怎么排坑。",
   "items": [
     {
       "id": "q-debounce-search",

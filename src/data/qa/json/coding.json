@@ -2,8 +2,8 @@
   "slug": "coding",
   "title": "编程题",
   "documentTitle": "编程题 · 手写常考",
-  "description": "按四大主题编排：Promise/异步 → 语言与 API 模拟 → 数组与对象工具 → DOM/浏览器；章末单独附排序算法（冒泡/选择/插入/快排与 Array.sort）",
-  "lead": "顺序为：Promise 与异步 → 语言与 API → 数组/对象 → DOM；最后为排序算法专题。每题含源码与行内注释（标出关键分支与边界），示例偏 ES6，与「JavaScript 核心」互补。",
+  "description": "按常考主题手写练习：Promise/异步、常用 API 模拟、工具函数与 DOM 题。",
+  "lead": "按主题刷手写题，配源码与关键注释。",
   "items": [
     {
       "id": "q-impl-promise-race",

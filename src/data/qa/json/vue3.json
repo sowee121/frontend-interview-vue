@@ -1,0 +1,191 @@
+{
+  "slug": "vue3",
+  "title": "Vue 3",
+  "documentTitle": "Vue 3",
+  "description": "Vue 3 高频面试题：组合式 API、Proxy 响应式、ref/reactive、性能相关 API 与关键新特性。",
+  "lead": "高频必问：组合式、ref/reactive、响应式原理。",
+  "items": [
+    {
+      "id": "q-ref-reactive",
+      "navLabel": "ref 和 reactive",
+      "question": "Vue 3 里 ref 和 reactive 怎么选？这题面试怎么答到点上？",
+      "answer": [
+        [
+          { "type": "code", "value": "ref(0)" },
+          { "type": "text", "value": " 适合基本类型；也能包对象。脚本里取值要 " },
+          { "type": "code", "value": ".value" },
+          { "type": "text", "value": "，模板里自动解包。" }
+        ],
+        [
+          { "type": "code", "value": "reactive({ count: 0 })" },
+          { "type": "text", "value": " 返回 Proxy，更像“一个响应式对象”；但解构会丢响应式，需 " },
+          { "type": "code", "value": "toRefs" },
+          { "type": "text", "value": "（或保持对象整体传递）。" }
+        ],
+        [
+          { "type": "text", "value": "面试策略：别背 API，强调两点即可——" },
+          { "type": "strong", "value": "基本类型优先 ref" },
+          { "type": "text", "value": "；" },
+          { "type": "strong", "value": "reactive 解构要小心" },
+          { "type": "text", "value": "（用 toRefs/storeToRefs）。" }
+        ]
+      ]
+    },
+    {
+      "id": "q-shallow-readonly",
+      "navLabel": "shallowRef / readonly",
+      "question": "shallowRef、readonly、shallowReactive 什么时候用？",
+      "answer": [
+        [
+          { "type": "code", "value": "shallowRef" },
+          { "type": "text", "value": "：只追踪 " },
+          { "type": "code", "value": ".value" },
+          { "type": "text", "value": " 的替换，内部对象不递归代理，适合包大型三方实例/大对象以降低代理开销。" }
+        ],
+        [
+          { "type": "code", "value": "readonly(x)" },
+          { "type": "text", "value": "：创建只读视图，防止下游误改；" },
+          { "type": "code", "value": "shallowReactive" },
+          { "type": "text", "value": " 只代理第一层，性能优化前提是先定位瓶颈再用 shallow。" }
+        ]
+      ]
+    },
+    {
+      "id": "q-composition",
+      "navLabel": "组合式 API",
+      "question": "组合式 API（Composition API）解决了什么问题？为什么更适合复杂业务？",
+      "answer": [
+        [
+          { "type": "text", "value": "核心价值是" },
+          { "type": "strong", "value": "按功能组织与复用逻辑" },
+          { "type": "text", "value": "：把同一功能相关的 state/computed/watch/副作用收敛到一个 " },
+          { "type": "code", "value": "useXxx()" },
+          { "type": "text", "value": "，多个组件直接 import 复用，而不是在 data/methods/mounted 等选项里分散。"} 
+        ],
+        [
+          { "type": "text", "value": "另外和 TypeScript 推断更贴合：返回值就是类型，避免选项式里 this 的类型复杂度。"} 
+        ]
+      ]
+    },
+    {
+      "id": "q-lifecycle-composition",
+      "navLabel": "组合式生命周期",
+      "question": "Vue 3 组合式 API 里怎么对应 mounted、updated？setup 的时机是什么？",
+      "answer": [
+        [
+          { "type": "code", "value": "setup" },
+          { "type": "text", "value": " 运行在组件创建阶段，等价于“创建前后”的组合，不要假设此时有 DOM。" }
+        ],
+        [
+          { "type": "code", "value": "onMounted/onBeforeUnmount" },
+          { "type": "text", "value": " 用于 DOM 可用后的初始化与卸载清理；" },
+          { "type": "code", "value": "onUpdated" },
+          { "type": "text", "value": " 是任意更新后的回调，容易引发抖动，更多时候用 watch 精准监听。"} 
+        ]
+      ]
+    },
+    {
+      "id": "q-script-setup-define-props",
+      "navLabel": "script setup/props",
+      "question": "Vue 3 的 script setup 常考点有哪些？defineProps 怎么和 TS 配合？",
+      "answer": [
+        [
+          { "type": "code", "value": "defineProps<{ id: string; count?: number }>()" },
+          { "type": "text", "value": "：类型写法编译期擦除，运行时不做校验；默认值常用 " },
+          { "type": "code", "value": "withDefaults" },
+          { "type": "text", "value": " 配合可选属性。"} 
+        ],
+        [
+          { "type": "text", "value": "面试补充：props 在脚本里只读；需要回写用 emit 或 v-model 约定。"} 
+        ]
+      ]
+    },
+    {
+      "id": "q-define-model",
+      "navLabel": "defineModel",
+      "question": "Vue 3.4 的 defineModel 解决了什么问题？",
+      "answer": [
+        [
+          { "type": "text", "value": "它是编译期语法糖，让子组件更低成本地实现 v-model：直接得到一个可赋值的 ref，减少 " },
+          { "type": "code", "value": "defineProps(modelValue) + defineEmits(update:modelValue)" },
+          { "type": "text", "value": " 的样板代码。"} 
+        ],
+        [
+          { "type": "code", "value": "defineModel('title')" },
+          { "type": "text", "value": " 对应 " },
+          { "type": "code", "value": "title/update:title" },
+          { "type": "text", "value": "，可以理解为“多 v-model 的更顺手写法”。"} 
+        ]
+      ]
+    },
+    {
+      "id": "q-teleport",
+      "navLabel": "Teleport",
+      "question": "Teleport 用来解决什么问题？为什么面试爱问？",
+      "answer": [
+        [
+          { "type": "text", "value": "解决 UI 组件需要脱离父级层叠/裁剪上下文的问题（Modal/Drawer/Toast）。用 " },
+          { "type": "code", "value": "<Teleport to=\"body\">" },
+          { "type": "text", "value": " 把渲染挂到目标容器，避免父级 " },
+          { "type": "code", "value": "overflow/z-index/transform" },
+          { "type": "text", "value": " 限制。"} 
+        ],
+        [
+          { "type": "text", "value": "面试点：渲染位置变了，但组件逻辑仍在原组件树里，事件与状态仍按 Vue 组件关系理解。"} 
+        ]
+      ]
+    },
+    {
+      "id": "q-style-deep",
+      "navLabel": "样式穿透",
+      "question": "Vue 3 单文件组件 scoped CSS 怎么改子组件内部样式？",
+      "answer": [
+        [
+          { "type": "text", "value": "Vue 3 推荐 " },
+          { "type": "code", "value": ":deep(.child .inner)" },
+          { "type": "text", "value": " 做样式穿透（旧 " },
+          { "type": "code", "value": "::v-deep" },
+          { "type": "text", "value": " 已废弃）。能通过组件 API（props/主题变量）解决则优先别穿透。"} 
+        ]
+      ]
+    },
+    {
+      "id": "q-vue3-vs-vue2-overview",
+      "navLabel": "相对 Vue2 变化",
+      "question": "Vue 3 相对 Vue 2 的关键变化有哪些？（只做总览，不展开重复题）",
+      "answer": [
+        [
+          { "type": "strong", "value": "响应式" },
+          { "type": "text", "value": "：" },
+          { "type": "code", "value": "Proxy" },
+          { "type": "text", "value": " 替代 defineProperty，数组下标/新增属性可追踪；" }
+        ],
+        [
+          { "type": "strong", "value": "渲染性能" },
+          { "type": "text", "value": "：编译优化（静态提升、patch flag 等）减少 diff 压力；" }
+        ],
+        [
+          { "type": "strong", "value": "能力与工程" },
+          { "type": "text", "value": "：组合式 API、更好的 tree-shaking、内置 Teleport/Fragment 等；生态建议用 Pinia 取代 Vuex。"} 
+        ]
+      ]
+    },
+    {
+      "id": "q-reactivity-track",
+      "navLabel": "依赖收集",
+      "question": "Vue 3 响应式里“依赖收集/触发更新”面试怎么讲清？",
+      "answer": [
+        [
+          { "type": "text", "value": "Vue 3 用 Proxy 拦截 get/set：组件 render 或 computed 执行时，读到的属性会 " },
+          { "type": "strong", "value": "track" },
+          { "type": "text", "value": " 到当前活跃的 effect；属性变更时 " },
+          { "type": "strong", "value": "trigger" },
+          { "type": "text", "value": " 通知相关 effect 重新执行，并通过调度队列批量刷新。"} 
+        ],
+        [
+          { "type": "text", "value": "回答抓关键：get 收集、set 触发、effect 调度 + 异步批量更新；不必背源码。"} 
+        ]
+      ]
+    }
+  ]
+}

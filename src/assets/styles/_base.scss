@@ -9,6 +9,8 @@
 html {
   scroll-behavior: smooth;
   scroll-padding-top: var(--anchor-scroll-margin, #{$qa-scroll-margin});
+  // 移动端点击（tap）时的灰色高亮闪层
+  -webkit-tap-highlight-color: transparent;
 }
 
 body {
@@ -36,6 +38,18 @@ a {
     color: $accent-hover;
     text-decoration: underline;
   }
+}
+
+// iOS Safari/部分安卓 WebView 在可点击元素上会出现 tap highlight（灰色蒙层闪一下）
+// 这里仅覆盖交互控件，避免误伤不可交互内容的 selection/hover 体验
+a,
+button,
+[role='button'],
+input,
+textarea,
+select,
+label {
+  -webkit-tap-highlight-color: transparent;
 }
 
 #app {

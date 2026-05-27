@@ -12,7 +12,7 @@ import { chapters } from '@/data/chapters'
       <main class="content">
         <article>
           <h1>目录</h1>
-          <p class="lead">每章几道常考题，直白好记。章内目录可跳转。</p>
+          <p class="lead">每章精选高频面试题，配清晰答案，并附章内目录一键跳转。</p>
           <div class="home-grid">
             <ChapterCard v-for="ch in chapters" :key="ch.slug" :chapter="ch" />
           </div>

@@ -2,8 +2,8 @@
   "slug": "typescript",
   "title": "TypeScript",
   "documentTitle": "TypeScript",
-  "description": "为啥用、any/unknown、interface 与 type、泛型、工具类型、映射与条件类型入门",
-  "lead": "校招社招都常问，但很少深挖到类型体操地狱，够用就行。",
+  "description": "用最直白的方式搞懂 TS：为什么用、怎么写、常用类型和泛型怎么上手。",
+  "lead": "够用就行：覆盖常问点，不钻类型体操。",
   "items": [
     {
       "id": "q-why",

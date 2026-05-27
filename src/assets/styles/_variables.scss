@@ -36,6 +36,7 @@ $pad-page-bottom: 3rem;
 
 // —— 断点 ——
 $bp-stack-sidebar: 900px;
+$bp-header-tabs-stack: 720px;
 $bp-article-tight: 600px;
 
 // —— 组件 ——
@@ -53,8 +54,6 @@ $badge-radius: 6px;
 $header-quick-bg: rgba(66, 184, 131, 0.06);
 $header-quick-border: rgba(66, 184, 131, 0.18);
 $header-quick-link-active-bg: $paper;
-$header-chapter-bg: rgba(60, 60, 67, 0.04);
-$header-chapter-border: $border;
 
 /// 与 :root 中 --* 名称对应（kebab-case）
 $css-root-map: (

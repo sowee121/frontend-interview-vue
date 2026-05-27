@@ -1,9 +1,9 @@
 {
   "slug": "javascript",
-  "title": "JavaScript 核心",
-  "documentTitle": "JavaScript 核心",
-  "description": "类型、this、原型链、闭包、事件循环、Promise、可选链与 ??、手写防抖节流",
-  "lead": "和牛客、面经里出现频率最高的一批对齐，去掉偏门细节题。",
+  "title": "JavaScript",
+  "documentTitle": "JavaScript",
+  "description": "把 JS 面试最常问的核心概念一次讲清：类型、this、原型链、闭包、Promise、事件循环等。",
+  "lead": "只挑最常考的 JS 题，少讲冷门细节。",
   "items": [
     {
       "id": "q-null-undefined",

@@ -2,8 +2,8 @@
   "slug": "browser",
   "title": "浏览器",
   "documentTitle": "浏览器",
-  "description": "从输入网址到显示、defer/async、本地存储、跨标签通信、Intersection/ResizeObserver",
-  "lead": "和「页面怎么出来」「脚本怎么加载」相关的题，面试里出现率很高。",
+  "description": "从“输入网址到页面出现”讲起，顺带搞懂脚本加载、存储机制和常用观察器。",
+  "lead": "围绕“页面怎么出来、脚本怎么加载”。",
   "items": [
     {
       "id": "q-url",

@@ -19,6 +19,16 @@
     justify-content: space-between;
     flex-wrap: wrap;
     gap: 0.75rem;
+
+    @media (max-width: $bp-header-tabs-stack) {
+      align-items: stretch;
+
+      .site-header-right {
+        flex: 1 1 100%;
+        width: 100%;
+        justify-content: stretch;
+      }
+    }
   }
 }
 
@@ -38,39 +48,105 @@
   }
 }
 
-// 顶栏右侧：可选章节条（nav-extra）+ 快捷入口
+// 顶栏右侧：章节 tabs（可横向滑动）
 .site-header-right {
   display: flex;
-  flex-wrap: wrap;
+  flex: 1 1 12rem;
+  justify-content: flex-end;
   align-items: center;
-  gap: 0.65rem 1rem;
   min-width: 0;
 }
 
 .site-header-quick {
-  display: inline-flex;
-  flex-wrap: wrap;
+  position: relative;
+  display: flex;
   align-items: center;
-  gap: 0.12rem;
-  padding: 0.3rem;
+  width: auto;
+  max-width: 100%;
+  min-width: 0;
+
+  @media (max-width: $bp-header-tabs-stack) {
+    width: 100%;
+  }
+  padding: 0.35rem;
   border-radius: 999px;
   background: $header-quick-bg;
   border: 1px solid $header-quick-border;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  overflow: hidden;
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 1.5rem;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+
+  &::before {
+    left: 0;
+    border-radius: 999px 0 0 999px;
+    background: linear-gradient(to right, $header-quick-bg 25%, transparent);
+  }
+
+  &::after {
+    right: 0;
+    border-radius: 0 999px 999px 0;
+    background: linear-gradient(to left, $header-quick-bg 25%, transparent);
+  }
+
+  &--fade-start::before {
+    opacity: 1;
+  }
+
+  &--fade-end::after {
+    opacity: 1;
+  }
+
+  &__track {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 0.2rem;
+    width: 100%;
+    min-width: 0;
+    padding: 0.1rem 0.35rem;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x proximity;
+    scroll-padding-inline: 0.65rem;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
 
   &__link {
     display: inline-block;
+    flex-shrink: 0;
     padding: 0.38rem 0.72rem;
+    border: 1px solid transparent;
     border-radius: 999px;
     font-size: 0.82rem;
     font-weight: 500;
     color: $muted;
     text-decoration: none;
     line-height: 1.2;
+    white-space: nowrap;
+    scroll-snap-align: center;
     transition:
       background 0.15s ease,
       color 0.15s ease,
-      box-shadow 0.15s ease;
+      border-color 0.15s ease;
 
     &:hover {
       color: $accent-hover;
@@ -81,72 +157,8 @@
     &.router-link-active {
       color: $accent-hover;
       background: $header-quick-link-active-bg;
-      box-shadow: 0 0 0 1px rgba($accent, 0.28);
+      border-color: rgba($accent, 0.28);
     }
-  }
-}
-
-.site-header-slot {
-  display: flex;
-  align-items: center;
-  min-width: 0;
-}
-
-.site-header-chapter {
-  display: inline-flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.35rem 0.65rem;
-  max-width: 100%;
-  padding: 0.3rem;
-  border-radius: $radius;
-  background: $header-chapter-bg;
-  border: 1px solid $header-chapter-border;
-  font-size: 0.8rem;
-  line-height: 1.35;
-  color: $muted;
-
-  &__label {
-    flex-shrink: 0;
-    margin-right: 0.15rem;
-    padding: 0.12rem 0.45rem;
-    border-radius: 6px;
-    font-size: 0.65rem;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: $accent;
-    background: rgba($accent, 0.08);
-    border: 1px solid rgba($accent, 0.12);
-    user-select: none;
-  }
-
-  &__sep {
-    color: rgba($muted, 0.45);
-    font-weight: 700;
-    user-select: none;
-    padding: 0 0.05rem;
-  }
-
-  a {
-    color: $text;
-    font-weight: 500;
-    text-decoration: none;
-    white-space: nowrap;
-
-    &:hover {
-      color: $accent-hover;
-      text-decoration: none;
-    }
-  }
-
-  .nav-muted {
-    color: $muted;
-    font-size: 0.78rem;
-    font-weight: 600;
-    font-style: italic;
-    opacity: 0.8;
-    cursor: default;
   }
 }
 

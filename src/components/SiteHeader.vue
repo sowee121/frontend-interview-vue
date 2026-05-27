@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, useSlots, useTemplateRef } from 'vue'
+import { onMounted, onUnmounted, useTemplateRef } from 'vue'
 import { storeToRefs } from 'pinia'
 
+import HeaderChapterTabs from '@/components/HeaderChapterTabs.vue'
 import { useAppStore } from '@/stores/app'
 
 const app = useAppStore()
@@ -21,14 +22,6 @@ function publishHeaderMetrics() {
     `${h + HEADER_ANCHOR_GAP}px`,
   )
 }
-
-const slots = useSlots()
-const hasNavExtra = computed(() => {
-  const render = slots['nav-extra']
-  if (!render) return false
-  const nodes = render()
-  return Array.isArray(nodes) && nodes.length > 0
-})
 
 let ro: ResizeObserver | null = null
 
@@ -56,30 +49,7 @@ onUnmounted(() => {
         <RouterLink :to="{ name: 'home' }">{{ siteTitle }}</RouterLink>
       </div>
       <div class="site-header-right">
-        <div v-if="hasNavExtra" class="site-header-slot">
-          <slot name="nav-extra" />
-        </div>
-        <nav class="site-header-quick" aria-label="快捷入口">
-          <RouterLink class="site-header-quick__link" :to="{ name: 'home' }">首页</RouterLink>
-          <RouterLink
-            class="site-header-quick__link"
-            :to="{ name: 'chapter', params: { slug: 'javascript' } }"
-          >
-            JavaScript
-          </RouterLink>
-          <RouterLink
-            class="site-header-quick__link"
-            :to="{ name: 'chapter', params: { slug: 'react' } }"
-          >
-            React
-          </RouterLink>
-          <RouterLink
-            class="site-header-quick__link"
-            :to="{ name: 'chapter', params: { slug: 'vue' } }"
-          >
-            Vue
-          </RouterLink>
-        </nav>
+        <HeaderChapterTabs />
       </div>
     </div>
   </header>

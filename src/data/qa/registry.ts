@@ -11,7 +11,8 @@ import performance from './json/performance.json'
 import react from './json/react.json'
 import scenario from './json/scenario.json'
 import typescript from './json/typescript.json'
-import vue from './json/vue.json'
+import vue2 from './json/vue2.json'
+import vue3 from './json/vue3.json'
 
 /** 各章正文与题目：直接维护同目录 json；import 进包，勿手写 HTML 片段 */
 export const chapterPayloads: Record<ChapterSlug, ChapterPayload> = {
@@ -24,6 +25,7 @@ export const chapterPayloads: Record<ChapterSlug, ChapterPayload> = {
   performance: performance as ChapterPayload,
   engineering: engineering as ChapterPayload,
   react: react as ChapterPayload,
-  vue: vue as ChapterPayload,
+  vue2: vue2 as ChapterPayload,
+  vue3: vue3 as ChapterPayload,
   scenario: scenario as ChapterPayload,
 }

@@ -2,8 +2,8 @@
   "slug": "engineering",
   "title": "工程化",
   "documentTitle": "工程化",
-  "description": "模块化、Vite/Webpack、Tree-shaking、Turborepo 与远程缓存、微前端一句话",
-  "lead": "打包、规范、协作——面试官想听你有没有真实项目经验。",
+  "description": "把工程化常问点说清：模块化、打包构建、Tree-shaking、缓存与协作规范。",
+  "lead": "工程化聊的就是：打包、规范、协作。",
   "items": [
     {
       "id": "q-module",

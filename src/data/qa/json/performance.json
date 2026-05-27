@@ -2,8 +2,8 @@
   "slug": "performance",
   "title": "性能",
   "documentTitle": "性能",
-  "description": "Web Vitals、INP、图片与懒加载、长列表、监控在干啥",
-  "lead": "能说出「量什么、怎么优化、怎么验证」比背一堆名词有用。",
+  "description": "知道性能看什么、怎么优化、怎么验证：指标、加载、图片、长列表和监控。",
+  "lead": "重点是：怎么量、怎么改、怎么验证。",
   "items": [
     {
       "id": "q-vitals",

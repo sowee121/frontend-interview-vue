@@ -2,8 +2,8 @@
   "slug": "network",
   "title": "网络与安全",
   "documentTitle": "网络与安全",
-  "description": "HTTP 与缓存、HTTPS、跨域、Cookie、CSP、XSS 与 CSRF",
-  "lead": "和接口、鉴权、安全相关的题，社招问得更细一点，这里只留最常考的。",
+  "description": "把前端离不开的网络与安全讲明白：缓存/HTTPS/跨域/Cookie，以及 XSS、CSRF。",
+  "lead": "只留最常考的网络与安全：接口、鉴权和防护。",
   "items": [
     {
       "id": "q-tcp-handshake",

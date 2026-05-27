@@ -2,8 +2,8 @@
   "slug": "html-css",
   "title": "HTML 与 CSS",
   "documentTitle": "HTML 与 CSS",
-  "description": "语义化、盒模型、BFC、Flex 居中、容器查询与 :has、层叠与性能小贴士",
-  "lead": "HTML/CSS 一面里问得多的就这些，很少考冷门的 CSS Hack。",
+  "description": "把页面结构和样式的高频考点捋顺：语义化、盒模型、布局与常见坑。",
+  "lead": "一面常问的就这些，不背冷门 CSS Hack。",
   "items": [
     {
       "id": "q-semantic",

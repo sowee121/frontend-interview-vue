@@ -2,8 +2,8 @@
   "slug": "react",
   "title": "React",
   "documentTitle": "React",
-  "description": "Hooks、effect、key、useMemo/useCallback、Fiber 面试说法、并发相关",
-  "lead": "和官方文档、面经里重复率最高的点对齐，不深究源码每一行。",
+  "description": "React 高频题一套过：Hooks、渲染更新、性能优化和并发相关概念。",
+  "lead": "只讲最常问的点，不抠源码细节。",
   "items": [
     {
       "id": "q-hooks",

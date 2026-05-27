@@ -7,7 +7,8 @@ export const CHAPTER_ORDER = [
   'performance',
   'engineering',
   'react',
-  'vue',
+  'vue2',
+  'vue3',
   'scenario',
   'coding',
 ] as const
