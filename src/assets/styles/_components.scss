@@ -1,0 +1,196 @@
+@use 'variables' as *;
+
+article {
+  min-width: 0;
+  background: $paper;
+  border: 1px solid $border;
+  border-radius: $radius;
+  padding: 2.25rem 2.5rem;
+  box-shadow: $shadow;
+
+  @media (max-width: $bp-article-tight) {
+    padding: 1.35rem 1.15rem;
+  }
+
+  > h1 {
+    font-size: 1.68rem;
+    font-weight: 600;
+    margin: 0 0 0.5rem;
+    line-height: 1.35;
+    letter-spacing: -0.02em;
+    color: $qa-heading;
+  }
+}
+
+.lead {
+  color: $muted;
+  font-size: 0.9375rem;
+  margin: 0 0 1.75rem;
+  padding-bottom: 1.1rem;
+  border-bottom: 1px solid $border;
+}
+
+.qa-block {
+  margin-bottom: 2rem;
+  scroll-margin-top: var(--anchor-scroll-margin, #{$qa-scroll-margin});
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.qa-q-block {
+  margin: 0 0 0.65rem;
+}
+
+.qa-q {
+  font-size: 1.12rem;
+  font-weight: 600;
+  line-height: 1.6rem;
+  margin: 0 0 0.35rem;
+  color: $qa-heading;
+  display: flex;
+  gap: 0.5rem;
+  align-items: flex-start;
+
+  &::before {
+    content: 'Q';
+    flex-shrink: 0;
+    width: 1.6rem;
+    height: 1.6rem;
+    line-height: 1.6rem;
+    text-align: center;
+    font-size: 0.72rem;
+    font-weight: 700;
+    background: $accent-soft;
+    color: $accent;
+    border-radius: $badge-radius;
+  }
+}
+
+.qa-q-block:not(:has(.qa-q-note)) .qa-q {
+  margin-bottom: 0;
+}
+
+/* 题面说明：与标题错开一行，小号、浅色，与正文 lead 区分度略低 */
+.qa-q-note {
+  margin: 0;
+  padding-left: 2.1rem; /* 与 Q 角标 + gap 对齐正文起点 */
+  font-size: 0.875rem;
+  line-height: 1.55;
+  font-weight: 400;
+  color: rgba(60, 60, 67, 0.55);
+}
+
+.qa-a {
+  margin: 0;
+  padding-left: 2.1rem;
+  color: $text;
+  line-height: $line-height-body;
+
+  strong {
+    color: $qa-heading;
+    font-weight: 600;
+  }
+
+  p {
+    margin: 0 0 0.65rem;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  code {
+    font-family: $mono;
+    font-size: 0.88em;
+    background: $code-bg;
+    padding: 0.12em 0.45em;
+    border-radius: 4px;
+    border: 1px solid $border;
+  }
+}
+
+.back-link {
+  display: inline-block;
+  margin-bottom: 1.35rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: $muted;
+
+  &:hover {
+    color: $accent-hover;
+    text-decoration: none;
+  }
+}
+
+.home-grid {
+  display: grid;
+  // min(260px, 100%)：极窄屏下列宽随容器收缩，避免横向溢出
+  grid-template-columns: repeat(auto-fill, minmax(min(260px, 100%), 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+  min-width: 0;
+}
+
+.chapter-card {
+  display: block;
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: break-word;
+  background: $paper;
+  border: 1px solid $border;
+  border-radius: $radius;
+  padding: 1.2rem 1.35rem;
+  box-shadow: $shadow;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.18s ease,
+    color 0.15s ease;
+
+  &:hover {
+    border-color: $chapter-card-hover-border;
+    box-shadow: $chapter-card-hover-shadow;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $accent;
+    outline-offset: 2px;
+  }
+
+  &:hover &__title {
+    color: $accent-hover;
+  }
+
+  &__title {
+    margin: 0 0 0.4rem;
+    font-size: 1.0625rem;
+    font-weight: 600;
+    color: $text;
+    transition: color 0.15s ease;
+  }
+
+  &__desc {
+    margin: 0;
+    font-size: 0.88rem;
+    color: $muted;
+    line-height: 1.55;
+  }
+}
+
+footer {
+  &.site-footer {
+    max-width: $layout-max;
+    margin: 0 auto;
+    padding: 2rem $pad-page-x 2.5rem;
+    text-align: center;
+    font-size: 0.8125rem;
+    color: $muted;
+    border-top: 1px solid $border;
+  }
+}

@@ -1,0 +1,763 @@
+{
+  "slug": "performance",
+  "title": "性能",
+  "documentTitle": "性能",
+  "description": "Web Vitals、INP、图片与懒加载、长列表、监控在干啥",
+  "lead": "能说出「量什么、怎么优化、怎么验证」比背一堆名词有用。",
+  "items": [
+    {
+      "id": "q-vitals",
+      "navLabel": "Web Vitals",
+      "question": "常说的 Web Vitals 是啥？",
+      "answer": [
+        [
+          {
+            "type": "text",
+            "value": "Google 定义的一组"
+          },
+          {
+            "type": "strong",
+            "value": "用户体验指标"
+          },
+          {
+            "type": "text",
+            "value": "。核心三个："
+          },
+          {
+            "type": "strong",
+            "value": "LCP"
+          },
+          {
+            "type": "text",
+            "value": "（视口里最大可见内容何时绘制完，常见是首图/标题）、"
+          },
+          {
+            "type": "strong",
+            "value": "INP"
+          },
+          {
+            "type": "text",
+            "value": "（取代 FID，衡量整页交互延迟）、"
+          },
+          {
+            "type": "strong",
+            "value": "CLS"
+          },
+          {
+            "type": "text",
+            "value": "（布局累计偏移，广告/图片无占位把内容顶下去会扣分）。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Chrome Lighthouse、"
+          },
+          {
+            "type": "code",
+            "value": "web-vitals"
+          },
+          {
+            "type": "text",
+            "value": " SDK、"
+          },
+          {
+            "type": "code",
+            "value": "PerformanceObserver"
+          },
+          {
+            "type": "text",
+            "value": " 采集 LCP 元素 URL；优化后对比 "
+          },
+          {
+            "type": "strong",
+            "value": "P75/P95"
+          },
+          {
+            "type": "text",
+            "value": " 分位比只看平均值靠谱。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-inp-optimize",
+      "navLabel": "INP 优化",
+      "question": "INP（Interaction to Next Paint）差一般怎么排查和优化？",
+      "answer": [
+        [
+          {
+            "type": "text",
+            "value": "INP 看的是整页交互里"
+          },
+          {
+            "type": "strong",
+            "value": "最慢那一次输入到下一帧绘制"
+          },
+          {
+            "type": "text",
+            "value": " 的延迟，长任务、大组件同步重渲染、主线程被第三方脚本占满都会拉高。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "排查：Performance 面板录点击/输入，看 "
+          },
+          {
+            "type": "code",
+            "value": "Long Task"
+          },
+          {
+            "type": "text",
+            "value": "、"
+          },
+          {
+            "type": "code",
+            "value": "Recalculate Style / Layout"
+          },
+          {
+            "type": "text",
+            "value": " 占比；字段里用 "
+          },
+          {
+            "type": "code",
+            "value": "web-vitals"
+          },
+          {
+            "type": "text",
+            "value": " 上报 attribution（哪个节点、哪段脚本）。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "优化：输入后立刻 "
+          },
+          {
+            "type": "code",
+            "value": "startTransition"
+          },
+          {
+            "type": "text",
+            "value": "（React）拆非紧急更新；列表虚拟化；重计算移 "
+          },
+          {
+            "type": "code",
+            "value": "Worker"
+          },
+          {
+            "type": "text",
+            "value": " 或把长任务拆块；有 "
+          },
+          {
+            "type": "code",
+            "value": "scheduler.postTask"
+          },
+          {
+            "type": "text",
+            "value": " 时可降低优先级、主动让出主线程；第三方脚本延后/分区加载。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-longtask",
+      "navLabel": "长任务",
+      "question": "主线程长任务怎么发现？怎么拆？",
+      "answer": [
+        [
+          {
+            "type": "code",
+            "value": "PerformanceObserver"
+          },
+          {
+            "type": "text",
+            "value": " 监听 "
+          },
+          {
+            "type": "code",
+            "value": "longtask"
+          },
+          {
+            "type": "text",
+            "value": "；Chrome Performance 火焰图看黄色长条；RUM 上报超过 50ms 的任务计数。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "拆分："
+          },
+          {
+            "type": "code",
+            "value": "requestIdleCallback"
+          },
+          {
+            "type": "text",
+            "value": " 或 "
+          },
+          {
+            "type": "code",
+            "value": "scheduler.postTask"
+          },
+          {
+            "type": "text",
+            "value": " 分片处理大数组；重计算丢 "
+          },
+          {
+            "type": "code",
+            "value": "Web Worker"
+          },
+          {
+            "type": "text",
+            "value": "；首屏少做同步 JSON.parse 超大 localStorage。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-compositor",
+      "navLabel": "合成层",
+      "question": "合成层（Compositor）和主线程啥关系？",
+      "answer": [
+        [
+          {
+            "type": "text",
+            "value": "主线程算样式、布局、绘制命令；"
+          },
+          {
+            "type": "strong",
+            "value": "Compositor 线程"
+          },
+          {
+            "type": "text",
+            "value": "可独立做滚动、"
+          },
+          {
+            "type": "code",
+            "value": "transform/opacity"
+          },
+          {
+            "type": "text",
+            "value": " 动画合成，不抢 JS。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "滥用 "
+          },
+          {
+            "type": "code",
+            "value": "will-change"
+          },
+          {
+            "type": "text",
+            "value": " 或 "
+          },
+          {
+            "type": "code",
+            "value": "translateZ(0)"
+          },
+          {
+            "type": "text",
+            "value": " 骗层会吃显存；面试说「动画走合成、逻辑别塞滚动回调」即可。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-image",
+      "navLabel": "图片优化",
+      "question": "图片怎么优化？",
+      "answer": [
+        [
+          {
+            "type": "text",
+            "value": "格式：照片用 "
+          },
+          {
+            "type": "code",
+            "value": "WebP/AVIF"
+          },
+          {
+            "type": "text",
+            "value": "，小图标仍可用 "
+          },
+          {
+            "type": "code",
+            "value": "SVG"
+          },
+          {
+            "type": "text",
+            "value": "。尺寸："
+          },
+          {
+            "type": "code",
+            "value": "srcset + sizes"
+          },
+          {
+            "type": "text",
+            "value": " 按 DPR 与布局宽度切多档，别在 400px 槽里塞 4000px 原图。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "传输：CDN + 压缩；首屏外图片 "
+          },
+          {
+            "type": "code",
+            "value": "loading=\"lazy\""
+          },
+          {
+            "type": "text",
+            "value": "；预留宽高或骨架避免 CLS。"
+          },
+          {
+            "type": "code",
+            "value": "fetchpriority=\"high\""
+          },
+          {
+            "type": "text",
+            "value": " 给 LCP 图提优先级（Chrome）。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-font-opt",
+      "navLabel": "字体与 FOIT",
+      "question": "Web 字体加载怎么减轻阻塞和闪烁？",
+      "answer": [
+        [
+          {
+            "type": "code",
+            "value": "font-display: swap"
+          },
+          {
+            "type": "text",
+            "value": " 先显示系统字体再换 webfont，可能闪一下但可读；"
+          },
+          {
+            "type": "code",
+            "value": "optional"
+          },
+          {
+            "type": "text",
+            "value": " 弱网宁可不换字。"
+          },
+          {
+            "type": "code",
+            "value": "preload"
+          },
+          {
+            "type": "text",
+            "value": " 关键 woff2；子集化减体积。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "可变字体 "
+          },
+          {
+            "type": "code",
+            "value": "font-variation-settings"
+          },
+          {
+            "type": "text",
+            "value": " 一文件多字重；注意版权与许可。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-preload",
+      "navLabel": "preload 与 prefetch",
+      "question": "link rel=preload 和 prefetch 区别？",
+      "answer": [
+        [
+          {
+            "type": "code",
+            "value": "preload"
+          },
+          {
+            "type": "text",
+            "value": "："
+          },
+          {
+            "type": "strong",
+            "value": "高优先级"
+          },
+          {
+            "type": "text",
+            "value": "提前拿「本页马上要用」的关键字体、首屏 CSS、LCP 图或拆分 chunk，"
+          },
+          {
+            "type": "code",
+            "value": "as"
+          },
+          {
+            "type": "text",
+            "value": " 要与真实请求类型一致，否则浪费带宽。"
+          }
+        ],
+        [
+          {
+            "type": "code",
+            "value": "prefetch"
+          },
+          {
+            "type": "text",
+            "value": "："
+          },
+          {
+            "type": "strong",
+            "value": "低优先级"
+          },
+          {
+            "type": "text",
+            "value": "在浏览器空闲时预取下一路由可能用到的资源，适合 SPA 下一页。"
+          },
+          {
+            "type": "code",
+            "value": "preconnect/dns-prefetch"
+          },
+          {
+            "type": "text",
+            "value": " 则提前建连/解析域名，减 TLS RTT。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-code-split",
+      "navLabel": "代码分割",
+      "question": "前端怎么做代码分割？",
+      "answer": [
+        [
+          {
+            "type": "text",
+            "value": "路由级："
+          },
+          {
+            "type": "code",
+            "value": "() => import('./Page.vue')"
+          },
+          {
+            "type": "text",
+            "value": " / React "
+          },
+          {
+            "type": "code",
+            "value": "lazy(() => import('./Page'))"
+          },
+          {
+            "type": "text",
+            "value": "，首屏只拉当前路由 chunk。"
+          },
+          {
+            "type": "strong",
+            "value": "组件级"
+          },
+          {
+            "type": "text",
+            "value": "：重图表、编辑器 SDK 用动态 import 进弹窗再挂载。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "配合 "
+          },
+          {
+            "type": "code",
+            "value": "webpackChunkName"
+          },
+          {
+            "type": "text",
+            "value": " 魔法注释（Webpack）、Rollup manualChunks 或 Vite "
+          },
+          {
+            "type": "code",
+            "value": "build.rollupOptions.output.manualChunks"
+          },
+          {
+            "type": "text",
+            "value": " 把 "
+          },
+          {
+            "type": "code",
+            "value": "vue/react"
+          },
+          {
+            "type": "text",
+            "value": " 与业务拆包，避免单文件过大。分割后要测首包与二次导航耗时。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-long-list",
+      "navLabel": "长列表",
+      "question": "列表特别长怎么搞？",
+      "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "虚拟列表"
+          },
+          {
+            "type": "text",
+            "value": "：只挂载可视区上下各多渲染几十条（buffer），滚动时复用 DOM 节点、按 "
+          },
+          {
+            "type": "code",
+            "value": "scrollTop"
+          },
+          {
+            "type": "text",
+            "value": " 换算 "
+          },
+          {
+            "type": "code",
+            "value": "startIndex"
+          },
+          {
+            "type": "text",
+            "value": "。库如 "
+          },
+          {
+            "type": "code",
+            "value": "@tanstack/react-virtual"
+          },
+          {
+            "type": "text",
+            "value": "、"
+          },
+          {
+            "type": "code",
+            "value": "vue-virtual-scroller"
+          },
+          {
+            "type": "text",
+            "value": "。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "若交互简单也可分页或无限滚动 + 防抖；本质是 "
+          },
+          {
+            "type": "strong",
+            "value": "减少 DOM 节点与布局次数"
+          },
+          {
+            "type": "text",
+            "value": "。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-third-party",
+      "navLabel": "第三方脚本",
+      "question": "统计/广告脚本拖慢页面怎么办？",
+      "answer": [
+        [
+          {
+            "type": "text",
+            "value": "延迟到 "
+          },
+          {
+            "type": "code",
+            "value": "load"
+          },
+          {
+            "type": "text",
+            "value": " 或 "
+          },
+          {
+            "type": "code",
+            "value": "requestIdleCallback"
+          },
+          {
+            "type": "text",
+            "value": " 再注入；用 "
+          },
+          {
+            "type": "code",
+            "value": "async/defer"
+          },
+          {
+            "type": "text",
+            "value": "；能 "
+          },
+          {
+            "type": "code",
+            "value": "import()"
+          },
+          {
+            "type": "text",
+            "value": " 的走动态加载。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "用 "
+          },
+          {
+            "type": "code",
+            "value": "Partytown"
+          },
+          {
+            "type": "text",
+            "value": " 等把脚本迁 worker（视兼容性）；和业务无关的 SDK 能不上就不上，定期审计 "
+          },
+          {
+            "type": "code",
+            "value": "bundle"
+          },
+          {
+            "type": "text",
+            "value": " 里谁最大。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-monitor",
+      "navLabel": "性能监控",
+      "question": "线上性能监控一般在干啥？",
+      "answer": [
+        [
+          {
+            "type": "text",
+            "value": "RUM：在真实用户环境打点 "
+          },
+          {
+            "type": "code",
+            "value": "TTFB"
+          },
+          {
+            "type": "text",
+            "value": "、"
+          },
+          {
+            "type": "code",
+            "value": "FCP/LCP"
+          },
+          {
+            "type": "text",
+            "value": "、长任务、接口 P95、白屏率，按 "
+          },
+          {
+            "type": "strong",
+            "value": "版本、国家、机型"
+          },
+          {
+            "type": "text",
+            "value": " 切片，发现某渠道某机型异常。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "实现："
+          },
+          {
+            "type": "code",
+            "value": "PerformanceObserver"
+          },
+          {
+            "type": "text",
+            "value": " 监听 "
+          },
+          {
+            "type": "code",
+            "value": "largest-contentful-paint"
+          },
+          {
+            "type": "text",
+            "value": "、"
+          },
+          {
+            "type": "code",
+            "value": "longtask"
+          },
+          {
+            "type": "text",
+            "value": " 等；"
+          },
+          {
+            "type": "code",
+            "value": "navigator.sendBeacon"
+          },
+          {
+            "type": "text",
+            "value": " 在页面关闭时尽量把队列发出去。和实验室单次 Lighthouse 互补。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-resource-hints",
+      "navLabel": "资源提示",
+      "question": "dns-prefetch、preconnect、preload、prefetch 怎么选？",
+      "answer": [
+        [
+          {
+            "type": "code",
+            "value": "dns-prefetch"
+          },
+          {
+            "type": "text",
+            "value": "：仅解析 DNS；"
+          },
+          {
+            "type": "code",
+            "value": "preconnect"
+          },
+          {
+            "type": "text",
+            "value": "：DNS + TCP + TLS，适合马上要用第三方 API/CDN。"
+          },
+          {
+            "type": "code",
+            "value": "preload"
+          },
+          {
+            "type": "text",
+            "value": "：高优先级拉本页关键资源（LCP 图、关键 CSS）；"
+          },
+          {
+            "type": "code",
+            "value": "prefetch"
+          },
+          {
+            "type": "text",
+            "value": "：空闲时预取下一路由 chunk。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "滥用 preload 会抢带宽；"
+          },
+          {
+            "type": "code",
+            "value": "as"
+          },
+          {
+            "type": "text",
+            "value": " 类型必须与真实请求一致。与 network 章的 DNS/TLS 优化可一起答。"
+          }
+        ]
+      ]
+    }
+  ]
+}

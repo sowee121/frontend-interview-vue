@@ -1,0 +1,1843 @@
+{
+  "slug": "javascript",
+  "title": "JavaScript 核心",
+  "documentTitle": "JavaScript 核心",
+  "description": "类型、this、原型链、闭包、事件循环、Promise、可选链与 ??、手写防抖节流",
+  "lead": "和牛客、面经里出现频率最高的一批对齐，去掉偏门细节题。",
+  "items": [
+    {
+      "id": "q-null-undefined",
+      "navLabel": "null 和 undefined",
+      "question": "null 和 undefined 有什么区别？typeof null 为啥是 object？",
+      "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "一句话："
+          },
+          {
+            "type": "code",
+            "value": "undefined"
+          },
+          {
+            "type": "text",
+            "value": " 多半是「还没赋值、缺省」——例如声明了 "
+          },
+          {
+            "type": "code",
+            "value": "let a"
+          },
+          {
+            "type": "text",
+            "value": " 没赋值、对象缺 key、函数少传参；"
+          },
+          {
+            "type": "code",
+            "value": "null"
+          },
+          {
+            "type": "text",
+            "value": " 是程序员故意写的「这里就是空」，常用来释放对象引用。"
+          },
+          {
+            "type": "code",
+            "value": "typeof undefined === 'undefined'"
+          },
+          {
+            "type": "text",
+            "value": "，而 "
+          },
+          {
+            "type": "code",
+            "value": "typeof null === 'object'"
+          },
+          {
+            "type": "text",
+            "value": " 是早期实现遗留，判断 null 一律用 "
+          },
+          {
+            "type": "code",
+            "value": "x === null"
+          },
+          {
+            "type": "text",
+            "value": "。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "想同时判断「null 或 undefined」可写 "
+          },
+          {
+            "type": "code",
+            "value": "x == null"
+          },
+          {
+            "type": "text",
+            "value": "（仅此场景 "
+          },
+          {
+            "type": "code",
+            "value": "=="
+          },
+          {
+            "type": "text",
+            "value": " 有意为之）；其余比较用 "
+          },
+          {
+            "type": "code",
+            "value": "==="
+          },
+          {
+            "type": "text",
+            "value": "。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-loose-equality",
+      "navLabel": "== 与类型转换",
+      "question": "== 和 === 差在哪？面试怎么答抽象相等？",
+      "answer": [
+        [
+          {
+            "type": "code",
+            "value": "==="
+          },
+          {
+            "type": "text",
+            "value": "：不做类型转换，类型不同直接 "
+          },
+          {
+            "type": "code",
+            "value": "false"
+          },
+          {
+            "type": "text",
+            "value": "，日常业务默认用它。"
+          },
+          {
+            "type": "code",
+            "value": "=="
+          },
+          {
+            "type": "text",
+            "value": "：会按规范做"
+          },
+          {
+            "type": "strong",
+            "value": "抽象相等比较"
+          },
+          {
+            "type": "text",
+            "value": "（ToPrimitive、数字与字符串互转等），典型坑 "
+          },
+          {
+            "type": "code",
+            "value": "[] == false"
+          },
+          {
+            "type": "text",
+            "value": " 为真、"
+          },
+          {
+            "type": "code",
+            "value": "null == undefined"
+          },
+          {
+            "type": "text",
+            "value": " 为真。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "面试能说清「"
+          },
+          {
+            "type": "code",
+            "value": "x == null"
+          },
+          {
+            "type": "text",
+            "value": " 判空是刻意用法」即可，不必背完整比较表；库代码里尽量 "
+          },
+          {
+            "type": "code",
+            "value": "==="
+          },
+          {
+            "type": "text",
+            "value": " + 显式 "
+          },
+          {
+            "type": "code",
+            "value": "Number()"
+          },
+          {
+            "type": "text",
+            "value": " / "
+          },
+          {
+            "type": "code",
+            "value": "String()"
+          },
+          {
+            "type": "text",
+            "value": " 转换。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-let-const-tdz",
+      "navLabel": "let/const 与 TDZ",
+      "question": "var、let、const 区别？啥是暂时性死区？",
+      "answer": [
+        [
+          {
+            "type": "code",
+            "value": "var"
+          },
+          {
+            "type": "text",
+            "value": "：函数作用域，声明会提升且初始化为 "
+          },
+          {
+            "type": "code",
+            "value": "undefined"
+          },
+          {
+            "type": "text",
+            "value": "，同一作用域可重复声明，容易踩坑。"
+          },
+          {
+            "type": "code",
+            "value": "let/const"
+          },
+          {
+            "type": "text",
+            "value": "：块级作用域，"
+          },
+          {
+            "type": "strong",
+            "value": "不存在变量提升成可用值"
+          },
+          {
+            "type": "text",
+            "value": "——从块开头到声明语句之间叫 "
+          },
+          {
+            "type": "strong",
+            "value": "暂时性死区（TDZ）"
+          },
+          {
+            "type": "text",
+            "value": "，访问会 "
+          },
+          {
+            "type": "code",
+            "value": "ReferenceError"
+          },
+          {
+            "type": "text",
+            "value": "。"
+          },
+          {
+            "type": "code",
+            "value": "const"
+          },
+          {
+            "type": "text",
+            "value": " 绑定不可重新赋值，对象属性仍可改（除非 "
+          },
+          {
+            "type": "code",
+            "value": "Object.freeze"
+          },
+          {
+            "type": "text",
+            "value": "）。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "for 循环里闭包用 "
+          },
+          {
+            "type": "code",
+            "value": "var"
+          },
+          {
+            "type": "text",
+            "value": " 会共享一个 "
+          },
+          {
+            "type": "code",
+            "value": "i"
+          },
+          {
+            "type": "text",
+            "value": "，用 "
+          },
+          {
+            "type": "code",
+            "value": "let"
+          },
+          {
+            "type": "text",
+            "value": " 每次迭代一块新绑定，是经典面试题。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-optional-nullish",
+      "navLabel": "可选链与 ??",
+      "question": "可选链 ?. 和空值合并 ?? 和 || 有啥区别？",
+      "answer": [
+        [
+          {
+            "type": "code",
+            "value": "obj?.a?.b"
+          },
+          {
+            "type": "text",
+            "value": "：左侧是 "
+          },
+          {
+            "type": "code",
+            "value": "null"
+          },
+          {
+            "type": "text",
+            "value": " 或 "
+          },
+          {
+            "type": "code",
+            "value": "undefined"
+          },
+          {
+            "type": "text",
+            "value": " 时整条短路为 "
+          },
+          {
+            "type": "code",
+            "value": "undefined"
+          },
+          {
+            "type": "text",
+            "value": "，不报错；可连写方法调用 "
+          },
+          {
+            "type": "code",
+            "value": "fn?.()"
+          },
+          {
+            "type": "text",
+            "value": "、数组下标 "
+          },
+          {
+            "type": "code",
+            "value": "arr?.[0]"
+          },
+          {
+            "type": "text",
+            "value": "。"
+          }
+        ],
+        [
+          {
+            "type": "code",
+            "value": "a ?? b"
+          },
+          {
+            "type": "text",
+            "value": "：仅当 "
+          },
+          {
+            "type": "code",
+            "value": "a"
+          },
+          {
+            "type": "text",
+            "value": " 为 "
+          },
+          {
+            "type": "code",
+            "value": "null"
+          },
+          {
+            "type": "text",
+            "value": " 或 "
+          },
+          {
+            "type": "code",
+            "value": "undefined"
+          },
+          {
+            "type": "text",
+            "value": " 才取 "
+          },
+          {
+            "type": "code",
+            "value": "b"
+          },
+          {
+            "type": "text",
+            "value": "；"
+          },
+          {
+            "type": "code",
+            "value": "0"
+          },
+          {
+            "type": "text",
+            "value": "、"
+          },
+          {
+            "type": "code",
+            "value": "''"
+          },
+          {
+            "type": "text",
+            "value": "、"
+          },
+          {
+            "type": "code",
+            "value": "false"
+          },
+          {
+            "type": "text",
+            "value": " 都会保留，不像 "
+          },
+          {
+            "type": "code",
+            "value": "a || b"
+          },
+          {
+            "type": "text",
+            "value": " 会把「假值」全换成 "
+          },
+          {
+            "type": "code",
+            "value": "b"
+          },
+          {
+            "type": "text",
+            "value": "。表单默认 "
+          },
+          {
+            "type": "code",
+            "value": "count ?? 0"
+          },
+          {
+            "type": "text",
+            "value": " 比 "
+          },
+          {
+            "type": "code",
+            "value": "count || 0"
+          },
+          {
+            "type": "text",
+            "value": " 更安全。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-copy",
+      "navLabel": "深浅拷贝",
+      "question": "浅拷贝和深拷贝区别？常用写法？",
+      "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "浅拷贝"
+          },
+          {
+            "type": "text",
+            "value": "：只复制第一层键，嵌套对象仍是引用——"
+          },
+          {
+            "type": "code",
+            "value": "{ ...obj }"
+          },
+          {
+            "type": "text",
+            "value": "、"
+          },
+          {
+            "type": "code",
+            "value": "Object.assign({}, obj)"
+          },
+          {
+            "type": "text",
+            "value": "、"
+          },
+          {
+            "type": "code",
+            "value": "[].concat(arr)"
+          },
+          {
+            "type": "text",
+            "value": "、"
+          },
+          {
+            "type": "code",
+            "value": "arr.slice()"
+          },
+          {
+            "type": "text",
+            "value": "。"
+          },
+          {
+            "type": "strong",
+            "value": "深拷贝"
+          },
+          {
+            "type": "text",
+            "value": "：递归遍历或序列化——简单结构可用 "
+          },
+          {
+            "type": "code",
+            "value": "JSON.parse(JSON.stringify(x))"
+          },
+          {
+            "type": "text",
+            "value": "，会丢 "
+          },
+          {
+            "type": "code",
+            "value": "undefined"
+          },
+          {
+            "type": "text",
+            "value": "、函数、"
+          },
+          {
+            "type": "code",
+            "value": "Date"
+          },
+          {
+            "type": "text",
+            "value": "、循环引用；生产里常用 "
+          },
+          {
+            "type": "code",
+            "value": "structuredClone"
+          },
+          {
+            "type": "text",
+            "value": "（现代浏览器）或 lodash "
+          },
+          {
+            "type": "code",
+            "value": "cloneDeep"
+          },
+          {
+            "type": "text",
+            "value": "。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Vue/React 里更常谈「不可变更新」：只改需要变的分支，配合框架 diff，而不是每次全量深拷贝整棵状态树。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-for-in-of",
+      "navLabel": "for-in 与 for-of",
+      "question": "for...in 和 for...of 区别？",
+      "answer": [
+        [
+          {
+            "type": "code",
+            "value": "for (const k in obj)"
+          },
+          {
+            "type": "text",
+            "value": "：遍历"
+          },
+          {
+            "type": "strong",
+            "value": "可枚举属性键"
+          },
+          {
+            "type": "text",
+            "value": "（字符串键），包括原型链上的；数组会得到索引字符串如 "
+          },
+          {
+            "type": "code",
+            "value": "\"0\""
+          },
+          {
+            "type": "text",
+            "value": "、"
+          },
+          {
+            "type": "code",
+            "value": "\"1\""
+          },
+          {
+            "type": "text",
+            "value": "，还可能混进 "
+          },
+          {
+            "type": "code",
+            "value": "length"
+          },
+          {
+            "type": "text",
+            "value": "。一般用 "
+          },
+          {
+            "type": "code",
+            "value": "Object.hasOwn(obj, k)"
+          },
+          {
+            "type": "text",
+            "value": " 过滤原型。"
+          }
+        ],
+        [
+          {
+            "type": "code",
+            "value": "for (const x of iterable)"
+          },
+          {
+            "type": "text",
+            "value": "：走"
+          },
+          {
+            "type": "strong",
+            "value": "迭代器协议"
+          },
+          {
+            "type": "text",
+            "value": "，适合数组、Map、Set、字符串；普通 "
+          },
+          {
+            "type": "code",
+            "value": "{ a: 1 }"
+          },
+          {
+            "type": "text",
+            "value": " 默认不可 for-of，除非自己实现 "
+          },
+          {
+            "type": "code",
+            "value": "Symbol.iterator"
+          },
+          {
+            "type": "text",
+            "value": "。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-call-bind",
+      "navLabel": "call/apply/bind",
+      "question": "call、apply、bind 区别？",
+      "answer": [
+        [
+          {
+            "type": "text",
+            "value": "都用来"
+          },
+          {
+            "type": "strong",
+            "value": "指定函数里的 this"
+          },
+          {
+            "type": "text",
+            "value": "并立刻或延后调用。"
+          },
+          {
+            "type": "code",
+            "value": "fn.call(obj, a, b)"
+          },
+          {
+            "type": "text",
+            "value": " 参数一个个传；"
+          },
+          {
+            "type": "code",
+            "value": "fn.apply(obj, [a, b])"
+          },
+          {
+            "type": "text",
+            "value": " 第二个是数组/类数组，适合参数个数不定。"
+          },
+          {
+            "type": "code",
+            "value": "fn.bind(obj, a)"
+          },
+          {
+            "type": "text",
+            "value": " 返回"
+          },
+          {
+            "type": "strong",
+            "value": "新函数"
+          },
+          {
+            "type": "text",
+            "value": "，this 和部分参数被固定，常用于事件回调、"
+          },
+          {
+            "type": "code",
+            "value": "setTimeout"
+          },
+          {
+            "type": "text",
+            "value": "。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "手写题常考："
+          },
+          {
+            "type": "code",
+            "value": "Function.prototype.myCall"
+          },
+          {
+            "type": "text",
+            "value": " 里把 "
+          },
+          {
+            "type": "code",
+            "value": "fn"
+          },
+          {
+            "type": "text",
+            "value": " 挂到 "
+          },
+          {
+            "type": "code",
+            "value": "context"
+          },
+          {
+            "type": "text",
+            "value": " 的临时属性上再调用，最后删掉临时属性。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-this",
+      "navLabel": "this 指向",
+      "question": "this 到底指向谁？",
+      "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "记口诀："
+          },
+          {
+            "type": "text",
+            "value": "普通函数里「谁调用指向谁」——"
+          },
+          {
+            "type": "code",
+            "value": "obj.foo()"
+          },
+          {
+            "type": "text",
+            "value": " 里 "
+          },
+          {
+            "type": "code",
+            "value": "this"
+          },
+          {
+            "type": "text",
+            "value": " 是 "
+          },
+          {
+            "type": "code",
+            "value": "obj"
+          },
+          {
+            "type": "text",
+            "value": "；把方法拆出来 "
+          },
+          {
+            "type": "code",
+            "value": "const f = obj.foo; f()"
+          },
+          {
+            "type": "text",
+            "value": " 在非严格模式往往变全局对象，严格模式是 "
+          },
+          {
+            "type": "code",
+            "value": "undefined"
+          },
+          {
+            "type": "text",
+            "value": "。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "箭头函数没有自己的 "
+          },
+          {
+            "type": "code",
+            "value": "this"
+          },
+          {
+            "type": "text",
+            "value": "，跟定义处外层词法作用域走，.call 也改不了。需要固定 this 时用 "
+          },
+          {
+            "type": "code",
+            "value": "fn.bind(obj)"
+          },
+          {
+            "type": "text",
+            "value": " 或包一层 "
+          },
+          {
+            "type": "code",
+            "value": "() => obj.method()"
+          },
+          {
+            "type": "text",
+            "value": "。"
+          },
+          {
+            "type": "code",
+            "value": "setTimeout(obj.fn)"
+          },
+          {
+            "type": "text",
+            "value": " 丢 this 是经典坑。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-new",
+      "navLabel": "new 做了什么",
+      "question": "new 一个构造函数时发生了什么？",
+      "answer": [
+        [
+          {
+            "type": "text",
+            "value": "1）新建空对象，其 "
+          },
+          {
+            "type": "code",
+            "value": "[[Prototype]]"
+          },
+          {
+            "type": "text",
+            "value": " 指向构造函数的 "
+          },
+          {
+            "type": "code",
+            "value": "prototype"
+          },
+          {
+            "type": "text",
+            "value": "；2）把 "
+          },
+          {
+            "type": "code",
+            "value": "this"
+          },
+          {
+            "type": "text",
+            "value": " 绑到这个对象上执行构造函数体；3）若构造函数返回对象，则用它；否则返回步骤 1 的实例。"
+          }
+        ],
+        [
+          {
+            "type": "code",
+            "value": "class"
+          },
+          {
+            "type": "text",
+            "value": " 语法下 "
+          },
+          {
+            "type": "code",
+            "value": "new"
+          },
+          {
+            "type": "text",
+            "value": " 会校验必须用 "
+          },
+          {
+            "type": "code",
+            "value": "new"
+          },
+          {
+            "type": "text",
+            "value": " 调用（否则抛错），本质仍是 prototype 链那套。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-proto",
+      "navLabel": "原型链",
+      "question": "说说原型链？",
+      "answer": [
+        [
+          {
+            "type": "text",
+            "value": "读 "
+          },
+          {
+            "type": "code",
+            "value": "obj.x"
+          },
+          {
+            "type": "text",
+            "value": "：先看 "
+          },
+          {
+            "type": "code",
+            "value": "obj"
+          },
+          {
+            "type": "text",
+            "value": " 自有属性，没有就沿 "
+          },
+          {
+            "type": "code",
+            "value": "__proto__"
+          },
+          {
+            "type": "text",
+            "value": "（规范称 "
+          },
+          {
+            "type": "code",
+            "value": "[[Prototype]]"
+          },
+          {
+            "type": "text",
+            "value": "）指向的原型对象继续找，直到 "
+          },
+          {
+            "type": "code",
+            "value": "null"
+          },
+          {
+            "type": "text",
+            "value": "。构造函数上的 "
+          },
+          {
+            "type": "code",
+            "value": "prototype"
+          },
+          {
+            "type": "text",
+            "value": " 就是实例链的起点，"
+          },
+          {
+            "type": "code",
+            "value": "new"
+          },
+          {
+            "type": "text",
+            "value": " 时把实例的 "
+          },
+          {
+            "type": "code",
+            "value": "[[Prototype]]"
+          },
+          {
+            "type": "text",
+            "value": " 指过去。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "日常别改 "
+          },
+          {
+            "type": "code",
+            "value": "__proto__"
+          },
+          {
+            "type": "text",
+            "value": "，用 "
+          },
+          {
+            "type": "code",
+            "value": "Object.getPrototypeOf / setPrototypeOf"
+          },
+          {
+            "type": "text",
+            "value": "。"
+          },
+          {
+            "type": "code",
+            "value": "class"
+          },
+          {
+            "type": "text",
+            "value": " 是语法糖，方法仍在 prototype 上。别和作用域链混：作用域链找标识符，原型链找属性。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-closure",
+      "navLabel": "闭包",
+      "question": "什么是闭包？有啥用？",
+      "answer": [
+        [
+          {
+            "type": "text",
+            "value": "内层函数引用外层函数的变量，外层函数执行完栈帧销毁了，但变量仍被内层函数闭包引用着，所以还能访问——这就是闭包。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "用处举例："
+          },
+          {
+            "type": "strong",
+            "value": "私有计数器"
+          },
+          {
+            "type": "text",
+            "value": "（外面调不到 "
+          },
+          {
+            "type": "code",
+            "value": "count"
+          },
+          {
+            "type": "text",
+            "value": "）、"
+          },
+          {
+            "type": "strong",
+            "value": "防抖节流工厂"
+          },
+          {
+            "type": "text",
+            "value": "（闭包里存 timer）、"
+          },
+          {
+            "type": "strong",
+            "value": "柯里化"
+          },
+          {
+            "type": "text",
+            "value": "。代价是引用链上的对象晚回收，记得在组件卸载时清定时器、解绑事件，避免闭包抓着大 DOM 或请求结果不放。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-debounce",
+      "navLabel": "防抖与节流",
+      "question": "防抖和节流啥区别？用在哪？",
+      "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "防抖"
+          },
+          {
+            "type": "text",
+            "value": "："
+          },
+          {
+            "type": "strong",
+            "value": "最后一次触发后等一段时间"
+          },
+          {
+            "type": "text",
+            "value": "才真正执行——例如搜索框 "
+          },
+          {
+            "type": "code",
+            "value": "debounce(onSearch, 300)"
+          },
+          {
+            "type": "text",
+            "value": "，用户连敲只发停手后的那次请求；"
+          },
+          {
+            "type": "code",
+            "value": "resize"
+          },
+          {
+            "type": "text",
+            "value": " 结束再量布局。"
+          }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "节流"
+          },
+          {
+            "type": "text",
+            "value": "："
+          },
+          {
+            "type": "strong",
+            "value": "固定时间窗口内最多执行一次"
+          },
+          {
+            "type": "text",
+            "value": "——滚动监听里每 100～200ms 算一次吸顶状态；跟帧率对齐可用 "
+          },
+          {
+            "type": "code",
+            "value": "requestAnimationFrame"
+          },
+          {
+            "type": "text",
+            "value": " 天然约 60fps。两者都能手写或用 lodash。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-eventloop",
+      "navLabel": "事件循环",
+      "question": "宏任务和微任务谁先执行？",
+      "answer": [
+        [
+          {
+            "type": "text",
+            "value": "一轮里："
+          },
+          {
+            "type": "strong",
+            "value": "先跑完当前宏任务里的同步代码"
+          },
+          {
+            "type": "text",
+            "value": "，然后"
+          },
+          {
+            "type": "strong",
+            "value": "清空微任务队列"
+          },
+          {
+            "type": "text",
+            "value": "（"
+          },
+          {
+            "type": "code",
+            "value": "Promise.then/catch/finally"
+          },
+          {
+            "type": "text",
+            "value": "、"
+          },
+          {
+            "type": "code",
+            "value": "queueMicrotask"
+          },
+          {
+            "type": "text",
+            "value": "、"
+          },
+          {
+            "type": "code",
+            "value": "MutationObserver"
+          },
+          {
+            "type": "text",
+            "value": " 等），微任务里又产生的微任务继续清完，再取下一个宏任务（"
+          },
+          {
+            "type": "code",
+            "value": "setTimeout"
+          },
+          {
+            "type": "text",
+            "value": "、"
+          },
+          {
+            "type": "code",
+            "value": "setInterval"
+          },
+          {
+            "type": "text",
+            "value": "、"
+          },
+          {
+            "type": "code",
+            "value": "I/O"
+          },
+          {
+            "type": "text",
+            "value": "、整段 script 等）。所以经典输出里 "
+          },
+          {
+            "type": "code",
+            "value": "Promise"
+          },
+          {
+            "type": "text",
+            "value": " 常比 "
+          },
+          {
+            "type": "code",
+            "value": "setTimeout(0)"
+          },
+          {
+            "type": "text",
+            "value": " 先执行。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Node 里 "
+          },
+          {
+            "type": "code",
+            "value": "process.nextTick"
+          },
+          {
+            "type": "text",
+            "value": " 优先级高于 Promise 微任务；浏览器没有 nextTick。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-promise",
+      "navLabel": "Promise 组合方法",
+      "question": "Promise.all / race / allSettled / any 区别？什么时候用？",
+      "answer": [
+        [
+          {
+            "type": "code",
+            "value": "Promise.all([a,b])"
+          },
+          {
+            "type": "text",
+            "value": "："
+          },
+          {
+            "type": "strong",
+            "value": "全部 fulfilled"
+          },
+          {
+            "type": "text",
+            "value": " 才 resolve，任一 reject 立刻 reject，适合「多个依赖都必须成功」。"
+          }
+        ],
+        [
+          {
+            "type": "code",
+            "value": "Promise.race"
+          },
+          {
+            "type": "text",
+            "value": "："
+          },
+          {
+            "type": "strong",
+            "value": "谁先 settled 用谁"
+          },
+          {
+            "type": "text",
+            "value": "，典型是超时封装 "
+          },
+          {
+            "type": "code",
+            "value": "Promise.race([fetch, sleep(5000)])"
+          },
+          {
+            "type": "text",
+            "value": "。"
+          }
+        ],
+        [
+          {
+            "type": "code",
+            "value": "Promise.allSettled"
+          },
+          {
+            "type": "text",
+            "value": "：全部结束（不管成败）都返回各自 "
+          },
+          {
+            "type": "code",
+            "value": "status/value/reason"
+          },
+          {
+            "type": "text",
+            "value": "，适合「批量请求做汇总、失败也要展示部分结果」。"
+          }
+        ],
+        [
+          {
+            "type": "code",
+            "value": "Promise.any"
+          },
+          {
+            "type": "text",
+            "value": "："
+          },
+          {
+            "type": "strong",
+            "value": "第一个成功即成功"
+          },
+          {
+            "type": "text",
+            "value": "；全失败会抛 "
+          },
+          {
+            "type": "code",
+            "value": "AggregateError"
+          },
+          {
+            "type": "text",
+            "value": "，适合多源兜底（CDN A/B/C 任意一个可用即可）。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-promise-chain-error",
+      "navLabel": "Promise 链式与错误冒泡",
+      "question": "Promise.then 为什么能链式调用？错误怎么“冒泡”？",
+      "answer": [
+        [
+          {
+            "type": "text",
+            "value": "关键点："
+          },
+          {
+            "type": "strong",
+            "value": "then 会返回一个新的 Promise"
+          },
+          {
+            "type": "text",
+            "value": "。回调返回普通值会变成 resolve(值)；返回 Promise/thenable 会被“展开”等它结束；回调里抛异常等价于 reject(异常)。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "所以链上只要前面有一步 reject 或 throw，后续的 success 回调会跳过，直到遇到最近的 "
+          },
+          {
+            "type": "code",
+            "value": ".catch"
+          },
+          {
+            "type": "text",
+            "value": "（或 then 的第二个参数）处理；"
+          },
+          {
+            "type": "code",
+            "value": "finally"
+          },
+          {
+            "type": "text",
+            "value": " 不改变链上值，只做收尾。面试能把“返回新 Promise + 返回值/异常如何影响状态”讲清即可。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-async-await",
+      "navLabel": "async/await",
+      "question": "async/await 和 Promise 啥关系？",
+      "answer": [
+        [
+          {
+            "type": "code",
+            "value": "async"
+          },
+          {
+            "type": "text",
+            "value": " 函数"
+          },
+          {
+            "type": "strong",
+            "value": "一定返回 Promise"
+          },
+          {
+            "type": "text",
+            "value": "；函数里 "
+          },
+          {
+            "type": "code",
+            "value": "return 1"
+          },
+          {
+            "type": "text",
+            "value": " 会变成 resolve(1)。"
+          },
+          {
+            "type": "code",
+            "value": "await expr"
+          },
+          {
+            "type": "text",
+            "value": " 会暂停当前 "
+          },
+          {
+            "type": "code",
+            "value": "async"
+          },
+          {
+            "type": "text",
+            "value": " 函数，把后续代码放进微任务，等 "
+          },
+          {
+            "type": "code",
+            "value": "expr"
+          },
+          {
+            "type": "text",
+            "value": " 的 Promise settled 再继续。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "错误用 "
+          },
+          {
+            "type": "code",
+            "value": "try/catch"
+          },
+          {
+            "type": "text",
+            "value": " 包住 "
+          },
+          {
+            "type": "code",
+            "value": "await"
+          },
+          {
+            "type": "text",
+            "value": "，等价于 "
+          },
+          {
+            "type": "code",
+            "value": ".catch"
+          },
+          {
+            "type": "text",
+            "value": "；并行请求写 "
+          },
+          {
+            "type": "code",
+            "value": "const [a, b] = await Promise.all([p1, p2])"
+          },
+          {
+            "type": "text",
+            "value": "，别在循环里无脑串行 "
+          },
+          {
+            "type": "code",
+            "value": "await"
+          },
+          {
+            "type": "text",
+            "value": " 除非业务必须顺序。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-iterator",
+      "navLabel": "迭代器协议",
+      "question": "可迭代对象是什么？for-of 背后做了啥？",
+      "answer": [
+        [
+          {
+            "type": "text",
+            "value": "对象若有 "
+          },
+          {
+            "type": "code",
+            "value": "[Symbol.iterator]()"
+          },
+          {
+            "type": "text",
+            "value": " 返回带 "
+          },
+          {
+            "type": "code",
+            "value": "next()"
+          },
+          {
+            "type": "text",
+            "value": " 的迭代器，就是可迭代的；"
+          },
+          {
+            "type": "code",
+            "value": "for-of"
+          },
+          {
+            "type": "text",
+            "value": " 等价于反复取 "
+          },
+          {
+            "type": "code",
+            "value": "iterator.next()"
+          },
+          {
+            "type": "text",
+            "value": "，直到 "
+          },
+          {
+            "type": "code",
+            "value": "done: true"
+          },
+          {
+            "type": "text",
+            "value": "。"
+          }
+        ],
+        [
+          {
+            "type": "code",
+            "value": "Array.from"
+          },
+          {
+            "type": "text",
+            "value": "、展开运算符 "
+          },
+          {
+            "type": "code",
+            "value": "[...iter]"
+          },
+          {
+            "type": "text",
+            "value": "、"
+          },
+          {
+            "type": "code",
+            "value": "Promise.all"
+          },
+          {
+            "type": "text",
+            "value": " 都可消费可迭代对象；手写题常考「实现一个 range 迭代器」。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-weakmap",
+      "navLabel": "WeakMap / WeakSet",
+      "question": "WeakMap 和 Map 有啥区别？典型用途？",
+      "answer": [
+        [
+          {
+            "type": "code",
+            "value": "Map"
+          },
+          {
+            "type": "text",
+            "value": "：任意类型键，可遍历 "
+          },
+          {
+            "type": "code",
+            "value": "size"
+          },
+          {
+            "type": "text",
+            "value": "，键被强引用。"
+          },
+          {
+            "type": "code",
+            "value": "WeakMap"
+          },
+          {
+            "type": "text",
+            "value": "："
+          },
+          {
+            "type": "strong",
+            "value": "键必须是对象"
+          },
+          {
+            "type": "text",
+            "value": "，"
+          },
+          {
+            "type": "strong",
+            "value": "弱引用键"
+          },
+          {
+            "type": "text",
+            "value": "——对象被 GC 掉后对应条目自动消失；"
+          },
+          {
+            "type": "strong",
+            "value": "不可枚举"
+          },
+          {
+            "type": "text",
+            "value": "，没有 "
+          },
+          {
+            "type": "code",
+            "value": "keys()"
+          },
+          {
+            "type": "text",
+            "value": " 之类 API。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "典型用途：把元数据挂在 DOM 节点或第三方实例上而不阻止其回收；Vue 3 里用 WeakMap 关联 "
+          },
+          {
+            "type": "code",
+            "value": "reactive"
+          },
+          {
+            "type": "text",
+            "value": " 代理与原始对象。面试提「弱引用 + 不可遍历」即可。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-dynamic-import",
+      "navLabel": "动态 import",
+      "question": "import() 动态导入返回什么？和静态 import 区别？",
+      "answer": [
+        [
+          {
+            "type": "code",
+            "value": "import(\"./mod.js\")"
+          },
+          {
+            "type": "text",
+            "value": " 返回"
+          },
+          {
+            "type": "strong",
+            "value": "Promise"
+          },
+          {
+            "type": "text",
+            "value": "，resolve 后是模块的 namespace 对象（含 "
+          },
+          {
+            "type": "code",
+            "value": "default"
+          },
+          {
+            "type": "text",
+            "value": " 与各具名导出）。路径可以是变量（在 bundler 里有限制），适合按条件、按路由懒加载。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "静态 "
+          },
+          {
+            "type": "code",
+            "value": "import"
+          },
+          {
+            "type": "text",
+            "value": " 提升、依赖图在编译期确定，利于 tree-shaking；动态 "
+          },
+          {
+            "type": "code",
+            "value": "import()"
+          },
+          {
+            "type": "text",
+            "value": " 会单独分包。失败要 "
+          },
+          {
+            "type": "code",
+            "value": ".catch"
+          },
+          {
+            "type": "text",
+            "value": " 给用户降级或重试。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-esm-cjs",
+      "navLabel": "ESM vs CommonJS",
+      "question": "ES Module 和 CommonJS 区别？为啥 ESM 更利于 tree-shaking？",
+      "answer": [
+        [
+          {
+            "type": "text",
+            "value": "CommonJS（"
+          },
+          {
+            "type": "code",
+            "value": "require/module.exports"
+          },
+          {
+            "type": "text",
+            "value": "）是运行时加载，导出对象可变；ESM（"
+          },
+          {
+            "type": "code",
+            "value": "import/export"
+          },
+          {
+            "type": "text",
+            "value": "）是编译期可静态分析的依赖图，导出是“live binding”（绑定而非拷贝）。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "tree-shaking 依赖静态分析：构建工具能在编译期判断“哪些导出没被用”，从而安全删除未使用代码；CJS 的 "
+          },
+          {
+            "type": "code",
+            "value": "require(x)"
+          },
+          {
+            "type": "text",
+            "value": " 可能是动态路径、导出对象也可能被随时改写，更难做可靠裁剪。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-proxy-reflect",
+      "navLabel": "Proxy 与 Reflect",
+      "question": "Proxy 能拦截哪些操作？Reflect 干啥用？",
+      "answer": [
+        [
+          {
+            "type": "code",
+            "value": "new Proxy(target, { get, set, has, deleteProperty, apply, ... })"
+          },
+          {
+            "type": "text",
+            "value": "：在读写属性、"
+          },
+          {
+            "type": "code",
+            "value": "in"
+          },
+          {
+            "type": "text",
+            "value": "、"
+          },
+          {
+            "type": "code",
+            "value": "delete"
+          },
+          {
+            "type": "text",
+            "value": "、函数调用等路径上插逻辑；Vue 3 响应式、immer 类库都基于此。"
+          }
+        ],
+        [
+          {
+            "type": "code",
+            "value": "Reflect.get/set"
+          },
+          {
+            "type": "text",
+            "value": " 等提供与默认对象操作"
+          },
+          {
+            "type": "strong",
+            "value": "一一对应且返回布尔/结果"
+          },
+          {
+            "type": "text",
+            "value": "，在 Proxy 的 trap 里调用 "
+          },
+          {
+            "type": "code",
+            "value": "Reflect"
+          },
+          {
+            "type": "text",
+            "value": " 可正确转发到 "
+          },
+          {
+            "type": "code",
+            "value": "receiver"
+          },
+          {
+            "type": "text",
+            "value": "，避免 "
+          },
+          {
+            "type": "code",
+            "value": "this"
+          },
+          {
+            "type": "text",
+            "value": " 指向错误。面试不用枚举每个 trap 名。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-memory-leak",
+      "navLabel": "内存泄漏排查",
+      "question": "前端常见内存泄漏有哪些？怎么定位？",
+      "answer": [
+        [
+          {
+            "type": "text",
+            "value": "常见来源：未清理的定时器/轮询、未解绑的事件监听、长生命周期单例里缓存了大对象（Map/数组只增不减）、闭包引用了大 DOM 或大数据、DOM 引用残留（从文档移除但仍被 JS 引用）。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "定位思路：用 DevTools Memory 做 "
+          },
+          {
+            "type": "code",
+            "value": "Heap snapshot"
+          },
+          {
+            "type": "text",
+            "value": " 对比（或 "
+          },
+          {
+            "type": "code",
+            "value": "Allocation instrumentation on timeline"
+          },
+          {
+            "type": "text",
+            "value": "），观察对象数量是否随操作持续增长；配合 Performance/录制，看是否有持续创建且不可回收的对象；必要时用 Retainers 链找“是谁还在引用它”。WeakMap/WeakSet 适合作为“跟对象生命周期绑定的缓存”。"
+          }
+        ]
+      ]
+    }
+  ]
+}

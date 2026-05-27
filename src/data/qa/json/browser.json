@@ -1,0 +1,967 @@
+{
+  "slug": "browser",
+  "title": "浏览器",
+  "documentTitle": "浏览器",
+  "description": "从输入网址到显示、defer/async、本地存储、跨标签通信、Intersection/ResizeObserver",
+  "lead": "和「页面怎么出来」「脚本怎么加载」相关的题，面试里出现率很高。",
+  "items": [
+    {
+      "id": "q-url",
+      "navLabel": "输入网址到显示",
+      "question": "从输入网址到页面显示，大概经历了啥？",
+      "answer": [
+        [
+          {
+            "type": "text",
+            "value": "1）"
+          },
+          {
+            "type": "strong",
+            "value": "DNS"
+          },
+          {
+            "type": "text",
+            "value": " 把域名解析成 IP（可能走缓存 → hosts → DNS 服务器）；2）"
+          },
+          {
+            "type": "strong",
+            "value": "TCP 三次握手"
+          },
+          {
+            "type": "text",
+            "value": "，HTTPS 再 "
+          },
+          {
+            "type": "strong",
+            "value": "TLS 握手"
+          },
+          {
+            "type": "text",
+            "value": " 协商密钥；3）发 "
+          },
+          {
+            "type": "code",
+            "value": "GET /"
+          },
+          {
+            "type": "text",
+            "value": " 拿到 HTML 字节流；4）"
+          },
+          {
+            "type": "strong",
+            "value": "HTML 解析"
+          },
+          {
+            "type": "text",
+            "value": "成 DOM，遇 "
+          },
+          {
+            "type": "code",
+            "value": "<link rel=\"stylesheet\">"
+          },
+          {
+            "type": "text",
+            "value": " 拉 CSS 建 "
+          },
+          {
+            "type": "strong",
+            "value": "CSSOM"
+          },
+          {
+            "type": "text",
+            "value": "；5）"
+          },
+          {
+            "type": "strong",
+            "value": "渲染树"
+          },
+          {
+            "type": "text",
+            "value": " = DOM + 计算样式；6）"
+          },
+          {
+            "type": "strong",
+            "value": "Layout"
+          },
+          {
+            "type": "text",
+            "value": " 算几何；7）"
+          },
+          {
+            "type": "strong",
+            "value": "Paint"
+          },
+          {
+            "type": "text",
+            "value": " 填像素，复杂场景 "
+          },
+          {
+            "type": "strong",
+            "value": "Composite"
+          },
+          {
+            "type": "text",
+            "value": " 合成层。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "遇到 "
+          },
+          {
+            "type": "code",
+            "value": "<script>"
+          },
+          {
+            "type": "text",
+            "value": " 无 "
+          },
+          {
+            "type": "code",
+            "value": "defer/async"
+          },
+          {
+            "type": "text",
+            "value": " 会阻塞解析；图片解码、字体加载可能触发 FOIT/FOUT。面试抓住「解析 → 样式 → 布局 → 绘制」主线即可。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-defer-async",
+      "navLabel": "defer 和 async",
+      "question": "script 标签里 defer 和 async 区别？",
+      "answer": [
+        [
+          {
+            "type": "code",
+            "value": "async"
+          },
+          {
+            "type": "text",
+            "value": "：脚本"
+          },
+          {
+            "type": "strong",
+            "value": "异步下载"
+          },
+          {
+            "type": "text",
+            "value": "，下完"
+          },
+          {
+            "type": "strong",
+            "value": "立刻执行"
+          },
+          {
+            "type": "text",
+            "value": "，执行顺序与出现顺序无关，适合统计、广告等互不依赖的独立脚本；若依赖 DOM 要在脚本里自己等 "
+          },
+          {
+            "type": "code",
+            "value": "DOMContentLoaded"
+          },
+          {
+            "type": "text",
+            "value": " 或判断节点。"
+          }
+        ],
+        [
+          {
+            "type": "code",
+            "value": "defer"
+          },
+          {
+            "type": "text",
+            "value": "：同样并行下载，但"
+          },
+          {
+            "type": "strong",
+            "value": "推迟到 HTML 解析完"
+          },
+          {
+            "type": "text",
+            "value": "再按文档顺序执行，等价于把脚本挪到 "
+          },
+          {
+            "type": "code",
+            "value": "</body>"
+          },
+          {
+            "type": "text",
+            "value": " 前，适合主业务 bundle。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-repaint",
+      "navLabel": "重排与重绘",
+      "question": "重排（reflow）和重绘（repaint）啥区别？怎么减少？",
+      "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "重排（reflow/layout）"
+          },
+          {
+            "type": "text",
+            "value": "：几何变了——改 "
+          },
+          {
+            "type": "code",
+            "value": "width"
+          },
+          {
+            "type": "text",
+            "value": "、插入节点、读 "
+          },
+          {
+            "type": "code",
+            "value": "offsetWidth"
+          },
+          {
+            "type": "text",
+            "value": " 再改样式会触发布局计算。"
+          },
+          {
+            "type": "strong",
+            "value": "重绘"
+          },
+          {
+            "type": "text",
+            "value": "：只改颜色、阴影等外观，不一定触发布局；重排几乎总伴随重绘。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "减少：把 DOM 读写分批（先读后写），避免循环里交替读布局属性；动画尽量 "
+          },
+          {
+            "type": "code",
+            "value": "transform + opacity"
+          },
+          {
+            "type": "text",
+            "value": " 走合成层；大列表虚拟化；能用 "
+          },
+          {
+            "type": "code",
+            "value": "DocumentFragment"
+          },
+          {
+            "type": "text",
+            "value": " 批量插入。面试提「避免强制同步布局（layout thrashing）」很加分。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-event-flow",
+      "navLabel": "捕获与冒泡",
+      "question": "DOM 事件捕获、冒泡、阻止传播怎么说？",
+      "answer": [
+        [
+          {
+            "type": "text",
+            "value": "默认先从 window 到目标 "
+          },
+          {
+            "type": "strong",
+            "value": "捕获阶段"
+          },
+          {
+            "type": "text",
+            "value": "，再到目标，再向上 "
+          },
+          {
+            "type": "strong",
+            "value": "冒泡阶段"
+          },
+          {
+            "type": "text",
+            "value": "。"
+          },
+          {
+            "type": "code",
+            "value": "addEventListener('click', fn, true)"
+          },
+          {
+            "type": "text",
+            "value": " 第三个参数为 true 时监听捕获；默认 false 是冒泡。"
+          }
+        ],
+        [
+          {
+            "type": "code",
+            "value": "event.stopPropagation()"
+          },
+          {
+            "type": "text",
+            "value": " 阻止继续传；"
+          },
+          {
+            "type": "code",
+            "value": "stopImmediatePropagation"
+          },
+          {
+            "type": "text",
+            "value": " 连同一元素上其它监听也不跑。"
+          },
+          {
+            "type": "code",
+            "value": "preventDefault"
+          },
+          {
+            "type": "text",
+            "value": " 只拦默认行为（如链接跳转），不阻止冒泡。"
+          },
+          {
+            "type": "code",
+            "value": "once: true"
+          },
+          {
+            "type": "text",
+            "value": "、"
+          },
+          {
+            "type": "code",
+            "value": "passive: true"
+          },
+          {
+            "type": "text",
+            "value": " 对滚动性能友好。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-passive",
+      "navLabel": "passive 事件监听",
+      "question": "addEventListener 的 passive 选项干啥用？",
+      "answer": [
+        [
+          {
+            "type": "text",
+            "value": "告诉浏览器：监听器里"
+          },
+          {
+            "type": "strong",
+            "value": "不会调用 preventDefault"
+          },
+          {
+            "type": "text",
+            "value": "，滚动可立刻合成不必等 JS，减少滚动卡顿。触摸/滚轮监听默认在 Chrome 里对部分类型已是 passive。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "若必须阻止默认（如自定义横向拖动手势与纵向滚动抢事件），就不要设 "
+          },
+          {
+            "type": "code",
+            "value": "passive: true"
+          },
+          {
+            "type": "text",
+            "value": "，并缩小监听区域。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-storage",
+      "navLabel": "本地存储",
+      "question": "Cookie、localStorage、sessionStorage 怎么选？",
+      "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "Cookie"
+          },
+          {
+            "type": "text",
+            "value": "：单条通常几 KB 量级、"
+          },
+          {
+            "type": "strong",
+            "value": "每次同站请求都会带上"
+          },
+          {
+            "type": "text",
+            "value": "（占带宽），可设 "
+          },
+          {
+            "type": "code",
+            "value": "Expires / Max-Age"
+          },
+          {
+            "type": "text",
+            "value": "、"
+          },
+          {
+            "type": "code",
+            "value": "HttpOnly"
+          },
+          {
+            "type": "text",
+            "value": "、"
+          },
+          {
+            "type": "code",
+            "value": "SameSite"
+          },
+          {
+            "type": "text",
+            "value": "，适合会话标识或与后端约定的轻量标记。"
+          }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "localStorage"
+          },
+          {
+            "type": "text",
+            "value": "：同源约 5～10MB（浏览器实现不同）、"
+          },
+          {
+            "type": "strong",
+            "value": "不参与请求"
+          },
+          {
+            "type": "text",
+            "value": "、关浏览器仍在，适合主题、草稿、离线配置；"
+          },
+          {
+            "type": "strong",
+            "value": "sessionStorage"
+          },
+          {
+            "type": "text",
+            "value": "：生命周期跟"
+          },
+          {
+            "type": "strong",
+            "value": "标签页"
+          },
+          {
+            "type": "text",
+            "value": "走，关页清空，适合多步表单防刷新丢数据。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-cookie-samesite",
+      "navLabel": "SameSite 详解",
+      "question": "Cookie 的 SameSite=Lax 和 Strict 区别？",
+      "answer": [
+        [
+          {
+            "type": "code",
+            "value": "Strict"
+          },
+          {
+            "type": "text",
+            "value": "："
+          },
+          {
+            "type": "strong",
+            "value": "仅同站导航"
+          },
+          {
+            "type": "text",
+            "value": "才带 Cookie，从邮件外链点进来首跳可能「像未登录」——要产品接受。"
+          },
+          {
+            "type": "code",
+            "value": "Lax"
+          },
+          {
+            "type": "text",
+            "value": "：顶级 GET 导航（地址栏、链接点击）会带，"
+          },
+          {
+            "type": "code",
+            "value": "iframe/POST/img"
+          },
+          {
+            "type": "text",
+            "value": " 跨站请求默认不带，平衡 CSRF 与体验。"
+          }
+        ],
+        [
+          {
+            "type": "code",
+            "value": "None"
+          },
+          {
+            "type": "text",
+            "value": " 必须配合 "
+          },
+          {
+            "type": "code",
+            "value": "Secure"
+          },
+          {
+            "type": "text",
+            "value": "，用于跨站嵌入场景（如 SaaS 多子域），要评估 XSS 风险。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-cross-tab",
+      "navLabel": "跨标签页通信",
+      "question": "两个标签页怎么互相传消息？",
+      "answer": [
+        [
+          {
+            "type": "text",
+            "value": "同源："
+          },
+          {
+            "type": "code",
+            "value": "BroadcastChannel(\"foo\")"
+          },
+          {
+            "type": "text",
+            "value": " 两端 "
+          },
+          {
+            "type": "code",
+            "value": "postMessage"
+          },
+          {
+            "type": "text",
+            "value": "；或 "
+          },
+          {
+            "type": "code",
+            "value": "localStorage.setItem"
+          },
+          {
+            "type": "text",
+            "value": " 触发 "
+          },
+          {
+            "type": "code",
+            "value": "storage"
+          },
+          {
+            "type": "text",
+            "value": " 事件（另一页监听 "
+          },
+          {
+            "type": "code",
+            "value": "window.addEventListener(\"storage\", ... )"
+          },
+          {
+            "type": "text",
+            "value": "，注意触发页自己不会收到）。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "跨域嵌套：父页与 iframe 用 "
+          },
+          {
+            "type": "code",
+            "value": "postMessage(data, targetOrigin)"
+          },
+          {
+            "type": "text",
+            "value": " 并校验 "
+          },
+          {
+            "type": "code",
+            "value": "event.origin"
+          },
+          {
+            "type": "text",
+            "value": "。"
+          },
+          {
+            "type": "code",
+            "value": "SharedWorker"
+          },
+          {
+            "type": "text",
+            "value": " 可做连接点但兼容性一般。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-sop",
+      "navLabel": "同源策略",
+      "question": "同源策略限制啥？和跨域啥关系？",
+      "answer": [
+        [
+          {
+            "type": "text",
+            "value": "「源」= 协议 + 主机 + 端口。浏览器限制页面里的脚本"
+          },
+          {
+            "type": "strong",
+            "value": "读另一个源的 HTTP 响应"
+          },
+          {
+            "type": "text",
+            "value": "（XHR/fetch），即 CORS；但 "
+          },
+          {
+            "type": "strong",
+            "value": "不拦你发请求"
+          },
+          {
+            "type": "text",
+            "value": "，也不拦 "
+          },
+          {
+            "type": "code",
+            "value": "<img src=\"//other\">"
+          },
+          {
+            "type": "text",
+            "value": " 拉图片——所以 CSRF 才成立。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "嵌 iframe：父读子 "
+          },
+          {
+            "type": "code",
+            "value": "contentDocument"
+          },
+          {
+            "type": "text",
+            "value": " 同源才行；跨域用 "
+          },
+          {
+            "type": "code",
+            "value": "postMessage"
+          },
+          {
+            "type": "text",
+            "value": "。本地 "
+          },
+          {
+            "type": "code",
+            "value": "file://"
+          },
+          {
+            "type": "text",
+            "value": " 与 "
+          },
+          {
+            "type": "code",
+            "value": "http://localhost"
+          },
+          {
+            "type": "text",
+            "value": " 也不是同源。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-visibility-page",
+      "navLabel": "Page Visibility",
+      "question": "document.visibilityState 能干啥？",
+      "answer": [
+        [
+          {
+            "type": "code",
+            "value": "document.hidden"
+          },
+          {
+            "type": "text",
+            "value": " / "
+          },
+          {
+            "type": "code",
+            "value": "visibilitychange"
+          },
+          {
+            "type": "text",
+            "value": "：页签切到后台时暂停轮询、视频、动画省资源；回到 "
+          },
+          {
+            "type": "code",
+            "value": "visible"
+          },
+          {
+            "type": "text",
+            "value": " 再恢复。比 "
+          },
+          {
+            "type": "code",
+            "value": "blur/focus"
+          },
+          {
+            "type": "text",
+            "value": " 更贴近「用户是否在看这个标签页」。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "移动端切 App 也会触发；统计停留时长、心跳上报常与这个 API 搭配。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-web-worker",
+      "navLabel": "Web Worker",
+      "question": "Web Worker 和主线程怎么通信？适合干啥？",
+      "answer": [
+        [
+          {
+            "type": "code",
+            "value": "postMessage"
+          },
+          {
+            "type": "text",
+            "value": " 传数据，默认"
+          },
+          {
+            "type": "strong",
+            "value": "结构化克隆"
+          },
+          {
+            "type": "text",
+            "value": "（大对象有拷贝成本）；"
+          },
+          {
+            "type": "code",
+            "value": "Transferable"
+          },
+          {
+            "type": "text",
+            "value": " 如 "
+          },
+          {
+            "type": "code",
+            "value": "ArrayBuffer"
+          },
+          {
+            "type": "text",
+            "value": " 可零拷贝转移所有权。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "适合重计算（解析大 CSV、加解密、图像处理）；"
+          },
+          {
+            "type": "strong",
+            "value": "不能操作 DOM"
+          },
+          {
+            "type": "text",
+            "value": "。SharedWorker 多标签共享，生态较少；"
+          },
+          {
+            "type": "code",
+            "value": "OffscreenCanvas"
+          },
+          {
+            "type": "text",
+            "value": " 可把绘制放 worker。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-intersection-resize",
+      "navLabel": "Intersection 与 Resize",
+      "question": "IntersectionObserver 和 ResizeObserver 一般用在哪？",
+      "answer": [
+        [
+          {
+            "type": "code",
+            "value": "IntersectionObserver"
+          },
+          {
+            "type": "text",
+            "value": "：异步回调元素与视口（或某 root）的相交比例，"
+          },
+          {
+            "type": "strong",
+            "value": "图片/列表懒加载、无限滚动触底、曝光埋点"
+          },
+          {
+            "type": "text",
+            "value": "；比 "
+          },
+          {
+            "type": "code",
+            "value": "scroll"
+          },
+          {
+            "type": "text",
+            "value": " + "
+          },
+          {
+            "type": "code",
+            "value": "getBoundingClientRect"
+          },
+          {
+            "type": "text",
+            "value": " 省主线程；记得 "
+          },
+          {
+            "type": "code",
+            "value": "unobserve"
+          },
+          {
+            "type": "text",
+            "value": " 或 "
+          },
+          {
+            "type": "code",
+            "value": "disconnect"
+          },
+          {
+            "type": "text",
+            "value": " 防泄漏。"
+          }
+        ],
+        [
+          {
+            "type": "code",
+            "value": "ResizeObserver"
+          },
+          {
+            "type": "text",
+            "value": "：监听元素"
+          },
+          {
+            "type": "strong",
+            "value": "内容框尺寸变化"
+          },
+          {
+            "type": "text",
+            "value": "（含非 window resize 导致的变宽），图表自适应、"
+          },
+          {
+            "type": "code",
+            "value": "container query"
+          },
+          {
+            "type": "text",
+            "value": " 以外的 JS 测量、虚拟列表容器高度都常用；回调里避免同步改布局引发循环抖动。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-sw",
+      "navLabel": "Service Worker",
+      "question": "Service Worker 能做什么？",
+      "answer": [
+        [
+          {
+            "type": "text",
+            "value": "运行在"
+          },
+          {
+            "type": "strong",
+            "value": "独立线程"
+          },
+          {
+            "type": "text",
+            "value": "，可拦截网络请求做缓存（PWA 离线包）、推送通知后台同步；生命周期 "
+          },
+          {
+            "type": "code",
+            "value": "install -> waiting -> activate"
+          },
+          {
+            "type": "text",
+            "value": "，更新策略要设计好避免用户永远拿到旧壳。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "必须 "
+          },
+          {
+            "type": "code",
+            "value": "HTTPS"
+          },
+          {
+            "type": "text",
+            "value": "（localhost 例外）；"
+          },
+          {
+            "type": "code",
+            "value": "navigator.serviceWorker.register"
+          },
+          {
+            "type": "text",
+            "value": " 注册后与页面通过 "
+          },
+          {
+            "type": "code",
+            "value": "postMessage"
+          },
+          {
+            "type": "text",
+            "value": " 通信。面试能说「离线缓存、首屏壳 + 接口兜底」即可，不必背 Workbox 每个 API。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-indexeddb",
+      "navLabel": "IndexedDB",
+      "question": "IndexedDB 和 localStorage 怎么选？",
+      "answer": [
+        [
+          {
+            "type": "code",
+            "value": "localStorage"
+          },
+          {
+            "type": "text",
+            "value": "：同步 API、字符串键值、容量约 5～10MB，适合主题、简单配置。"
+          },
+          {
+            "type": "code",
+            "value": "IndexedDB"
+          },
+          {
+            "type": "text",
+            "value": "：异步、可存对象/Blob、容量大得多，适合离线缓存大量结构化数据、草稿、媒体。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "操作通过 "
+          },
+          {
+            "type": "code",
+            "value": "indexedDB.open"
+          },
+          {
+            "type": "text",
+            "value": " + 事务；可用 Dexie 等封装。Service Worker 离线包、PWA 常配合 IndexedDB；注意版本迁移与配额超限处理。"
+          }
+        ]
+      ]
+    }
+  ]
+}

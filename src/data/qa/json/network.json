@@ -1,0 +1,927 @@
+{
+  "slug": "network",
+  "title": "网络与安全",
+  "documentTitle": "网络与安全",
+  "description": "HTTP 与缓存、HTTPS、跨域、Cookie、CSP、XSS 与 CSRF",
+  "lead": "和接口、鉴权、安全相关的题，社招问得更细一点，这里只留最常考的。",
+  "items": [
+    {
+      "id": "q-tcp-handshake",
+      "navLabel": "TCP 三次握手",
+      "question": "TCP 三次握手在干啥？",
+      "answer": [
+        [
+          {
+            "type": "text",
+            "value": "1）客户端发 "
+          },
+          {
+            "type": "code",
+            "value": "SYN"
+          },
+          {
+            "type": "text",
+            "value": "，带初始序号；2）服务端 "
+          },
+          {
+            "type": "code",
+            "value": "SYN-ACK"
+          },
+          {
+            "type": "text",
+            "value": " 确认并带上自己的序号；3）客户端 "
+          },
+          {
+            "type": "code",
+            "value": "ACK"
+          },
+          {
+            "type": "text",
+            "value": "，双方确认对方收发能力，进入 "
+          },
+          {
+            "type": "code",
+            "value": "ESTABLISHED"
+          },
+          {
+            "type": "text",
+            "value": "。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "为啥不是两次：防止历史滞留连接的请求被服务端误当成新连接；三次让双方同步初始序列号。前端面试点到为止，深挖交给后端。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-dns",
+      "navLabel": "DNS 与建连",
+      "question": "前端能怎么减少 DNS 和 TLS 耗时？",
+      "answer": [
+        [
+          {
+            "type": "code",
+            "value": "dns-prefetch"
+          },
+          {
+            "type": "text",
+            "value": " 对第三方域名；"
+          },
+          {
+            "type": "code",
+            "value": "preconnect"
+          },
+          {
+            "type": "text",
+            "value": " 提前 TCP+TLS；静态资源域名与主文档同站或减少域名分片（HTTP/2 多路复用下过多域名反而慢）。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "HTTP/3 QUIC 首包建连更快，属基础设施选型；前端面试点到 "
+          },
+          {
+            "type": "code",
+            "value": "preconnect"
+          },
+          {
+            "type": "text",
+            "value": " 即可。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-http-versions",
+      "navLabel": "HTTP/1 和 2",
+      "question": "HTTP/1.1 和 HTTP/2 主要差在哪？",
+      "answer": [
+        [
+          {
+            "type": "text",
+            "value": "HTTP/1.1：同一域名下浏览器有并发连接数上限（常见 6 条），请求多了要"
+          },
+          {
+            "type": "strong",
+            "value": "域名分片"
+          },
+          {
+            "type": "text",
+            "value": "、合并雪碧图来绕；文本头部重复多。"
+          },
+          {
+            "type": "strong",
+            "value": "HTTP/2"
+          },
+          {
+            "type": "text",
+            "value": "：一条连接上 "
+          },
+          {
+            "type": "strong",
+            "value": "多路复用"
+          },
+          {
+            "type": "text",
+            "value": "多个流，二进制分帧，"
+          },
+          {
+            "type": "strong",
+            "value": "HPACK"
+          },
+          {
+            "type": "text",
+            "value": " 压缩头部；可选 Server Push（实际用得少）。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "HTTP/3 跑在 "
+          },
+          {
+            "type": "code",
+            "value": "QUIC/UDP"
+          },
+          {
+            "type": "text",
+            "value": " 上，减少握手 RTT、弱网丢包只阻塞单流，提一句即可。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-https",
+      "navLabel": "HTTPS",
+      "question": "HTTPS 为啥比 HTTP 安全？",
+      "answer": [
+        [
+          {
+            "type": "text",
+            "value": "HTTP 明文，链路任一节点的抓包都能看到 body。HTTPS = HTTP + "
+          },
+          {
+            "type": "strong",
+            "value": "TLS"
+          },
+          {
+            "type": "text",
+            "value": "：握手阶段用非对称加密交换或协商出 "
+          },
+          {
+            "type": "strong",
+            "value": "对称会话密钥"
+          },
+          {
+            "type": "text",
+            "value": "，之后数据对称加密传输；"
+          },
+          {
+            "type": "strong",
+            "value": "证书链"
+          },
+          {
+            "type": "text",
+            "value": "由客户端校验（域名、有效期、是否被吊销），防中间人冒充。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "顺带提 "
+          },
+          {
+            "type": "code",
+            "value": "HSTS"
+          },
+          {
+            "type": "text",
+            "value": " 强制走 HTTPS、"
+          },
+          {
+            "type": "code",
+            "value": "HPKP"
+          },
+          {
+            "type": "text",
+            "value": " 已废弃别乱背。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-get-post",
+      "navLabel": "GET 与 POST",
+      "question": "GET 和 POST 区别？POST 一定更安全吗？",
+      "answer": [
+        [
+          {
+            "type": "text",
+            "value": "语义上 "
+          },
+          {
+            "type": "code",
+            "value": "GET"
+          },
+          {
+            "type": "text",
+            "value": " 宜幂等、读资源，参数通常在 URL query，可被缓存、书签、服务端日志记录；"
+          },
+          {
+            "type": "code",
+            "value": "POST"
+          },
+          {
+            "type": "text",
+            "value": " 常表示创建/提交，body 可带复杂结构，默认不被强缓存。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "「POST 更安全」是误区：HTTPS 下两者都加密传输；GET 也能在 body 里塞数据但不推荐（中间件、缓存行为不一致）。敏感信息别放 URL，防泄露在日志与 Referer。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-rest",
+      "navLabel": "RESTful",
+      "question": "啥叫 RESTful？和 GraphQL 对比一句？",
+      "answer": [
+        [
+          {
+            "type": "text",
+            "value": "用 "
+          },
+          {
+            "type": "code",
+            "value": "HTTP 方法 + 资源名词 URL"
+          },
+          {
+            "type": "text",
+            "value": " 表达操作："
+          },
+          {
+            "type": "code",
+            "value": "GET /users/1"
+          },
+          {
+            "type": "text",
+            "value": " 查、"
+          },
+          {
+            "type": "code",
+            "value": "POST /users"
+          },
+          {
+            "type": "text",
+            "value": " 建、"
+          },
+          {
+            "type": "code",
+            "value": "PUT/PATCH"
+          },
+          {
+            "type": "text",
+            "value": " 改、"
+          },
+          {
+            "type": "code",
+            "value": "DELETE"
+          },
+          {
+            "type": "text",
+            "value": " 删；状态码表达结果。现实项目常有 RPC 风格接口，不必教条。"
+          }
+        ],
+        [
+          {
+            "type": "code",
+            "value": "GraphQL"
+          },
+          {
+            "type": "text",
+            "value": "：单端点按需取字段，减少 over-fetching，代价是缓存、复杂度、N+1 查询要在服务端治理。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-cache",
+      "navLabel": "缓存",
+      "question": "浏览器缓存怎么说清楚？",
+      "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "强缓存"
+          },
+          {
+            "type": "text",
+            "value": "：响应里 "
+          },
+          {
+            "type": "code",
+            "value": "Cache-Control: max-age=31536000"
+          },
+          {
+            "type": "text",
+            "value": " 或旧的 "
+          },
+          {
+            "type": "code",
+            "value": "Expires"
+          },
+          {
+            "type": "text",
+            "value": "，未过期浏览器直接用磁盘/内存副本，"
+          },
+          {
+            "type": "strong",
+            "value": "不发网络请求"
+          },
+          {
+            "type": "text",
+            "value": "（状态里可能显示 memory/disk cache）。"
+          }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "协商缓存"
+          },
+          {
+            "type": "text",
+            "value": "：过期后带 "
+          },
+          {
+            "type": "code",
+            "value": "If-None-Match: W/\"abc\""
+          },
+          {
+            "type": "text",
+            "value": " / "
+          },
+          {
+            "type": "code",
+            "value": "If-Modified-Since"
+          },
+          {
+            "type": "text",
+            "value": " 问服务器，"
+          },
+          {
+            "type": "code",
+            "value": "304"
+          },
+          {
+            "type": "text",
+            "value": " 则体为空继续用旧文件，"
+          },
+          {
+            "type": "code",
+            "value": "200"
+          },
+          {
+            "type": "text",
+            "value": " 则下新内容。静态资源文件名带 "
+          },
+          {
+            "type": "code",
+            "value": "contenthash"
+          },
+          {
+            "type": "text",
+            "value": " + 长 "
+          },
+          {
+            "type": "code",
+            "value": "max-age"
+          },
+          {
+            "type": "text",
+            "value": " 是常见组合。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-compression",
+      "navLabel": "压缩",
+      "question": "gzip 和 Brotli 在前端侧要了解啥？",
+      "answer": [
+        [
+          {
+            "type": "text",
+            "value": "由服务端 "
+          },
+          {
+            "type": "code",
+            "value": "Content-Encoding: gzip / br"
+          },
+          {
+            "type": "text",
+            "value": " 返回压缩体，浏览器自动解压；"
+          },
+          {
+            "type": "code",
+            "value": "br"
+          },
+          {
+            "type": "text",
+            "value": " 文本压缩率通常优于 gzip，需 CDN/Nginx 开启与 "
+          },
+          {
+            "type": "code",
+            "value": "Accept-Encoding"
+          },
+          {
+            "type": "text",
+            "value": " 协商。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "已压缩格式（jpeg/png/webp）再 gzip 收益小；小文件压缩可能因字典开销不划算，可设阈值。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-cors",
+      "navLabel": "跨域",
+      "question": "跨域是啥？怎么解决？",
+      "answer": [
+        [
+          {
+            "type": "text",
+            "value": "浏览器同源策略：协议/主机/端口任一不同，页面里的 JS 用 "
+          },
+          {
+            "type": "code",
+            "value": "fetch/XHR"
+          },
+          {
+            "type": "text",
+            "value": " 读"
+          },
+          {
+            "type": "strong",
+            "value": "另一个源的响应"
+          },
+          {
+            "type": "text",
+            "value": "会被拦（简单请求先发，复杂请求先 "
+          },
+          {
+            "type": "code",
+            "value": "OPTIONS"
+          },
+          {
+            "type": "text",
+            "value": " 预检）。"
+          },
+          {
+            "type": "code",
+            "value": "curl"
+          },
+          {
+            "type": "text",
+            "value": "、服务端互调不受 CORS 限制。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "解决：生产环境让服务端返回 "
+          },
+          {
+            "type": "code",
+            "value": "Access-Control-Allow-Origin"
+          },
+          {
+            "type": "text",
+            "value": "（可带凭证时还要 "
+          },
+          {
+            "type": "code",
+            "value": "Allow-Credentials"
+          },
+          {
+            "type": "text",
+            "value": " + 具体 Origin）、"
+          },
+          {
+            "type": "code",
+            "value": "Allow-Methods/Headers"
+          },
+          {
+            "type": "text",
+            "value": "；本地开发用 dev server "
+          },
+          {
+            "type": "strong",
+            "value": "代理"
+          },
+          {
+            "type": "text",
+            "value": " 把 "
+          },
+          {
+            "type": "code",
+            "value": "/api"
+          },
+          {
+            "type": "text",
+            "value": " 转到后端同源。"
+          },
+          {
+            "type": "code",
+            "value": "JSONP"
+          },
+          {
+            "type": "text",
+            "value": " 是历史方案，仅 GET、难维护。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-preflight",
+      "navLabel": "预检请求",
+      "question": "啥样的请求会触发 CORS 预检？",
+      "answer": [
+        [
+          {
+            "type": "text",
+            "value": "简单请求："
+          },
+          {
+            "type": "code",
+            "value": "GET/HEAD/POST"
+          },
+          {
+            "type": "text",
+            "value": " + 安全头 + 简单 Content-Type（"
+          },
+          {
+            "type": "code",
+            "value": "text/plain"
+          },
+          {
+            "type": "text",
+            "value": " 等）不预检。"
+          },
+          {
+            "type": "strong",
+            "value": "其余「非简单」"
+          },
+          {
+            "type": "text",
+            "value": "如带 "
+          },
+          {
+            "type": "code",
+            "value": "Authorization"
+          },
+          {
+            "type": "text",
+            "value": "、"
+          },
+          {
+            "type": "code",
+            "value": "Content-Type: application/json"
+          },
+          {
+            "type": "text",
+            "value": "、自定义头，会先 "
+          },
+          {
+            "type": "code",
+            "value": "OPTIONS"
+          },
+          {
+            "type": "text",
+            "value": "。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "优化：GET 尽量简单；或网关对 OPTIONS 快速 "
+          },
+          {
+            "type": "code",
+            "value": "204"
+          },
+          {
+            "type": "text",
+            "value": "；开发期代理同源可绕预检。别记错「所有 POST 都预检」。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-jwt-basics",
+      "navLabel": "JWT 结构",
+      "question": "JWT 三段分别是啥？前端能信 payload 吗？",
+      "answer": [
+        [
+          {
+            "type": "text",
+            "value": "Header.Payload.Signature：前两段 Base64URL 解码是 JSON，"
+          },
+          {
+            "type": "strong",
+            "value": "签名防篡改"
+          },
+          {
+            "type": "text",
+            "value": "，密钥只在服务端。"
+          },
+          {
+            "type": "code",
+            "value": "payload"
+          },
+          {
+            "type": "text",
+            "value": " 里 "
+          },
+          {
+            "type": "code",
+            "value": "exp"
+          },
+          {
+            "type": "text",
+            "value": "、用户 id 可被任何人解码看到，"
+          },
+          {
+            "type": "strong",
+            "value": "不能放密码"
+          },
+          {
+            "type": "text",
+            "value": "；是否登录仍以服务端验签为准。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "存 "
+          },
+          {
+            "type": "code",
+            "value": "localStorage"
+          },
+          {
+            "type": "text",
+            "value": " 的 JWT 怕 XSS；"
+          },
+          {
+            "type": "code",
+            "value": "HttpOnly Cookie"
+          },
+          {
+            "type": "text",
+            "value": " 装 session id 仍是常见折中。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-xss-csrf",
+      "navLabel": "XSS 与 CSRF",
+      "question": "XSS 和 CSRF 区别？怎么防？",
+      "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "XSS"
+          },
+          {
+            "type": "text",
+            "value": "：恶意脚本进了你的页面上下文，能读 "
+          },
+          {
+            "type": "code",
+            "value": "document.cookie"
+          },
+          {
+            "type": "text",
+            "value": "（非 HttpOnly）、调接口、改 DOM。防：入库/输出 "
+          },
+          {
+            "type": "strong",
+            "value": "转义"
+          },
+          {
+            "type": "text",
+            "value": "、模板默认转义、"
+          },
+          {
+            "type": "code",
+            "value": "Content-Security-Policy"
+          },
+          {
+            "type": "text",
+            "value": " 限制脚本来源、敏感 Cookie 设 "
+          },
+          {
+            "type": "code",
+            "value": "HttpOnly"
+          },
+          {
+            "type": "text",
+            "value": "、避免 "
+          },
+          {
+            "type": "code",
+            "value": "v-html"
+          },
+          {
+            "type": "text",
+            "value": " 直插用户输入。"
+          }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "CSRF"
+          },
+          {
+            "type": "text",
+            "value": "：诱导已登录用户打开恶意站，浏览器"
+          },
+          {
+            "type": "strong",
+            "value": "自动带 Cookie"
+          },
+          {
+            "type": "text",
+            "value": " 发状态改变请求。防："
+          },
+          {
+            "type": "code",
+            "value": "SameSite=Lax/Strict"
+          },
+          {
+            "type": "text",
+            "value": "、关键接口要 "
+          },
+          {
+            "type": "code",
+            "value": "CSRF Token"
+          },
+          {
+            "type": "text",
+            "value": " 或 "
+          },
+          {
+            "type": "code",
+            "value": "Origin/Referer"
+          },
+          {
+            "type": "text",
+            "value": " 校验、敏感操作用二次验证或改用 "
+          },
+          {
+            "type": "code",
+            "value": "Authorization"
+          },
+          {
+            "type": "text",
+            "value": " 头（不自动发送）。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-csp",
+      "navLabel": "CSP",
+      "question": "Content-Security-Policy 是干啥的？怎么配才不至于全站挂？",
+      "answer": [
+        [
+          {
+            "type": "text",
+            "value": "通过响应头告诉浏览器"
+          },
+          {
+            "type": "strong",
+            "value": "哪些来源的脚本、样式、图片、接口可以执行/加载"
+          },
+          {
+            "type": "text",
+            "value": "，从根上收紧 XSS：默认 "
+          },
+          {
+            "type": "code",
+            "value": "default-src 'self'"
+          },
+          {
+            "type": "text",
+            "value": "，内联脚本需 "
+          },
+          {
+            "type": "code",
+            "value": "'nonce-xxx'"
+          },
+          {
+            "type": "text",
+            "value": " 或 "
+          },
+          {
+            "type": "code",
+            "value": "'sha256-...'"
+          },
+          {
+            "type": "text",
+            "value": "；第三方统计域名要显式列入 "
+          },
+          {
+            "type": "code",
+            "value": "script-src"
+          },
+          {
+            "type": "text",
+            "value": " / "
+          },
+          {
+            "type": "code",
+            "value": "connect-src"
+          },
+          {
+            "type": "text",
+            "value": "。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "上线策略：先用 "
+          },
+          {
+            "type": "code",
+            "value": "Content-Security-Policy-Report-Only"
+          },
+          {
+            "type": "text",
+            "value": " + "
+          },
+          {
+            "type": "code",
+            "value": "report-uri / report-to"
+          },
+          {
+            "type": "text",
+            "value": " 收集违规报告，再切 enforce；"
+          },
+          {
+            "type": "code",
+            "value": "'unsafe-inline'"
+          },
+          {
+            "type": "text",
+            "value": " 能不开就不开，否则 XSS 防线打折扣。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-fetch-abort",
+      "navLabel": "AbortController",
+      "question": "fetch 怎么取消请求？竞态怎么处理？",
+      "answer": [
+        [
+          {
+            "type": "code",
+            "value": "const ctrl = new AbortController(); fetch(url, { signal: ctrl.signal }); ctrl.abort()"
+          },
+          {
+            "type": "text",
+            "value": " 会 reject，需在 catch 里区分用户取消与真实错误（"
+          },
+          {
+            "type": "code",
+            "value": "e.name === \"AbortError\""
+          },
+          {
+            "type": "text",
+            "value": "）。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "搜索框、路由切换：每次新请求 abort 上一次，或维护递增 requestId，响应回来时比对 id 再 setState，避免慢请求覆盖新结果。React Strict Mode 双挂载时注意清理。"
+          }
+        ]
+      ]
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+@use 'variables' as *;
+
+// 输出 CSS 变量：供少量 SFC 使用；全局样式以 SCSS 变量为主
+:root {
+  @each $name, $value in $css-root-map {
+    --#{$name}: #{$value};
+  }
+
+  // 由 SiteHeader 在运行时覆盖为真实像素；未执行前用近似值
+  --sticky-header-height: #{$sticky-sidebar-top};
+  --anchor-scroll-margin: #{$qa-scroll-margin};
+}

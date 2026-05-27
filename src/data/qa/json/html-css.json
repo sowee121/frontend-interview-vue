@@ -1,0 +1,946 @@
+{
+  "slug": "html-css",
+  "title": "HTML 与 CSS",
+  "documentTitle": "HTML 与 CSS",
+  "description": "语义化、盒模型、BFC、Flex 居中、容器查询与 :has、层叠与性能小贴士",
+  "lead": "HTML/CSS 一面里问得多的就这些，很少考冷门的 CSS Hack。",
+  "items": [
+    {
+      "id": "q-semantic",
+      "navLabel": "语义化",
+      "question": "语义化标签有啥用？",
+      "answer": [
+        [
+          {
+            "type": "text",
+            "value": "用 "
+          },
+          {
+            "type": "code",
+            "value": "<header> <nav> <main> <article> <aside> <footer>"
+          },
+          {
+            "type": "text",
+            "value": " 等标签把结构说清楚："
+          },
+          {
+            "type": "strong",
+            "value": "读屏"
+          },
+          {
+            "type": "text",
+            "value": "能按 landmark 跳转；"
+          },
+          {
+            "type": "strong",
+            "value": "爬虫"
+          },
+          {
+            "type": "text",
+            "value": "更好理解正文与导航权重；团队读源码也比一屏 "
+          },
+          {
+            "type": "code",
+            "value": "<div class=\"wrapper\">"
+          },
+          {
+            "type": "text",
+            "value": " 好扫。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "纯布局、没有语义的块继续用 "
+          },
+          {
+            "type": "code",
+            "value": "div"
+          },
+          {
+            "type": "text",
+            "value": " 很正常；不要为了「看起来专业」到处套 "
+          },
+          {
+            "type": "code",
+            "value": "<section>"
+          },
+          {
+            "type": "text",
+            "value": "。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-box",
+      "navLabel": "盒模型",
+      "question": "标准盒模型和 IE 盒模型？box-sizing？",
+      "answer": [
+        [
+          {
+            "type": "code",
+            "value": "box-sizing: content-box"
+          },
+          {
+            "type": "text",
+            "value": "（默认）："
+          },
+          {
+            "type": "code",
+            "value": "width"
+          },
+          {
+            "type": "text",
+            "value": " 只含内容区，"
+          },
+          {
+            "type": "code",
+            "value": "padding/border"
+          },
+          {
+            "type": "text",
+            "value": " 会往外长，总占位 = width + padding + border。"
+          }
+        ],
+        [
+          {
+            "type": "code",
+            "value": "box-sizing: border-box"
+          },
+          {
+            "type": "text",
+            "value": "："
+          },
+          {
+            "type": "code",
+            "value": "width"
+          },
+          {
+            "type": "text",
+            "value": " 含内容 + padding + border，改 padding 不会把整行撑爆，排栅格更直观。很多项目全局写 "
+          },
+          {
+            "type": "code",
+            "value": "*, *::before, *::after { box-sizing: border-box }"
+          },
+          {
+            "type": "text",
+            "value": "。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-flex",
+      "navLabel": "Flex 居中",
+      "question": "水平垂直居中怎么写？",
+      "answer": [
+        [
+          {
+            "type": "text",
+            "value": "父容器定高或 "
+          },
+          {
+            "type": "code",
+            "value": "min-height: 100vh"
+          },
+          {
+            "type": "text",
+            "value": " 时最省事："
+          },
+          {
+            "type": "code",
+            "value": "display: flex; justify-content: center; align-items: center;"
+          },
+          {
+            "type": "text",
+            "value": "。一维主轴用 flex，二维棋盘格用 "
+          },
+          {
+            "type": "code",
+            "value": "display: grid; place-items: center;"
+          },
+          {
+            "type": "text",
+            "value": "。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "老方案：绝对定位 "
+          },
+          {
+            "type": "code",
+            "value": "top:50%; left:50%; transform: translate(-50%,-50%)"
+          },
+          {
+            "type": "text",
+            "value": "，或表格布局；面试提一句「兼容或改别人老代码时见过」即可。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-grid",
+      "navLabel": "Grid 入门",
+      "question": "CSS Grid 和 Flex 怎么分工？",
+      "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "Flex"
+          },
+          {
+            "type": "text",
+            "value": "：一维主轴分配空间，适合导航、按钮组、单行多列等；"
+          },
+          {
+            "type": "strong",
+            "value": "Grid"
+          },
+          {
+            "type": "text",
+            "value": "：二维行列同时排，适合整页 dashboard、卡片矩阵、复杂对齐。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "常见写法："
+          },
+          {
+            "type": "code",
+            "value": "display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;"
+          },
+          {
+            "type": "text",
+            "value": "；某格跨列用 "
+          },
+          {
+            "type": "code",
+            "value": "grid-column: span 2"
+          },
+          {
+            "type": "text",
+            "value": "。面试提「子项可同时参与行和列对齐」比背属性表更重要。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-position",
+      "navLabel": "position",
+      "question": "position 几个取值区别？",
+      "answer": [
+        [
+          {
+            "type": "code",
+            "value": "static"
+          },
+          {
+            "type": "text",
+            "value": "：默认，正常文档流；"
+          },
+          {
+            "type": "code",
+            "value": "relative"
+          },
+          {
+            "type": "text",
+            "value": "：仍在占位，"
+          },
+          {
+            "type": "code",
+            "value": "top/left"
+          },
+          {
+            "type": "text",
+            "value": " 相对原位置偏移，常作子绝父相里的父；"
+          },
+          {
+            "type": "code",
+            "value": "absolute"
+          },
+          {
+            "type": "text",
+            "value": "：脱离文档流，相对最近定位祖先（否则视口）偏移。"
+          }
+        ],
+        [
+          {
+            "type": "code",
+            "value": "fixed"
+          },
+          {
+            "type": "text",
+            "value": "：相对视口固定，滚动不动；祖先 "
+          },
+          {
+            "type": "code",
+            "value": "transform/filter/perspective"
+          },
+          {
+            "type": "text",
+            "value": " 会让 fixed 变成相对该祖先，这是高频踩坑。"
+          },
+          {
+            "type": "code",
+            "value": "sticky"
+          },
+          {
+            "type": "text",
+            "value": "：在滚动容器内吸顶/吸底，需指定 "
+          },
+          {
+            "type": "code",
+            "value": "top"
+          },
+          {
+            "type": "text",
+            "value": " 等阈值，注意 overflow 隐藏会失效。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-bfc",
+      "navLabel": "BFC",
+      "question": "BFC 是啥？能干啥？",
+      "answer": [
+        [
+          {
+            "type": "text",
+            "value": "块级格式化上下文：一块区域里块级盒子按规则竖直堆叠，和外面布局相对隔离。"
+          },
+          {
+            "type": "strong",
+            "value": "常见触发"
+          },
+          {
+            "type": "text",
+            "value": "："
+          },
+          {
+            "type": "code",
+            "value": "overflow: hidden/auto"
+          },
+          {
+            "type": "text",
+            "value": "、"
+          },
+          {
+            "type": "code",
+            "value": "display: flow-root"
+          },
+          {
+            "type": "text",
+            "value": "（专门造 BFC）、"
+          },
+          {
+            "type": "code",
+            "value": "float"
+          },
+          {
+            "type": "text",
+            "value": " 不为 none、"
+          },
+          {
+            "type": "code",
+            "value": "position: absolute/fixed"
+          },
+          {
+            "type": "text",
+            "value": " 的子块、"
+          },
+          {
+            "type": "code",
+            "value": "flex/grid"
+          },
+          {
+            "type": "text",
+            "value": " 子项等。"
+          }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "典型效果："
+          },
+          {
+            "type": "text",
+            "value": "父级 BFC "
+          },
+          {
+            "type": "strong",
+            "value": "包住浮动子元素"
+          },
+          {
+            "type": "text",
+            "value": "（否则高度塌陷）；同一 BFC 内相邻块 "
+          },
+          {
+            "type": "strong",
+            "value": "外边距折叠"
+          },
+          {
+            "type": "text",
+            "value": " 规则可控；"
+          },
+          {
+            "type": "strong",
+            "value": "阻止"
+          },
+          {
+            "type": "text",
+            "value": "普通流里浮动元素盖住后面块级盒子的内容区（浮动环绕仍可能发生，能说清「清浮动」场景即可）。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-specificity",
+      "navLabel": "选择器优先级",
+      "question": "CSS 选择器优先级怎么比？",
+      "answer": [
+        [
+          {
+            "type": "text",
+            "value": "权重按「行内 style、id、类/属性/伪类、标签/伪元素」四档计数，例如 "
+          },
+          {
+            "type": "code",
+            "value": "#app .list li"
+          },
+          {
+            "type": "text",
+            "value": " 是 1 个 id + 1 个 class + 1 个标签；同权重看谁后出现（层叠顺序）。"
+          },
+          {
+            "type": "code",
+            "value": "!important"
+          },
+          {
+            "type": "text",
+            "value": " 压过普通作者样式，但维护地狱，尽量只在覆盖第三方时用。"
+          }
+        ],
+        [
+          {
+            "type": "code",
+            "value": ":where(.a, .b)"
+          },
+          {
+            "type": "text",
+            "value": " 里选择器权重为 0，用来降低优先级；"
+          },
+          {
+            "type": "code",
+            "value": ":is()"
+          },
+          {
+            "type": "text",
+            "value": " 取括号里最高权重。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-stacking",
+      "navLabel": "层叠上下文",
+      "question": "什么是层叠上下文？和 z-index 啥关系？",
+      "answer": [
+        [
+          {
+            "type": "text",
+            "value": "层叠上下文是一块「独立叠放世界」：里面的 "
+          },
+          {
+            "type": "code",
+            "value": "z-index"
+          },
+          {
+            "type": "text",
+            "value": " 只和兄弟在同一上下文里比，"
+          },
+          {
+            "type": "strong",
+            "value": "压不过父级外面更高上下文的元素"
+          },
+          {
+            "type": "text",
+            "value": "——所以子元素 "
+          },
+          {
+            "type": "code",
+            "value": "z-index: 9999"
+          },
+          {
+            "type": "text",
+            "value": " 也可能盖不住隔壁组件。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "常见创建条件："
+          },
+          {
+            "type": "code",
+            "value": "position"
+          },
+          {
+            "type": "text",
+            "value": " 非 static 且 "
+          },
+          {
+            "type": "code",
+            "value": "z-index"
+          },
+          {
+            "type": "text",
+            "value": " 为数值、"
+          },
+          {
+            "type": "code",
+            "value": "opacity < 1"
+          },
+          {
+            "type": "text",
+            "value": "、"
+          },
+          {
+            "type": "code",
+            "value": "transform"
+          },
+          {
+            "type": "text",
+            "value": "、"
+          },
+          {
+            "type": "code",
+            "value": "filter"
+          },
+          {
+            "type": "text",
+            "value": "、"
+          },
+          {
+            "type": "code",
+            "value": "flex/grid"
+          },
+          {
+            "type": "text",
+            "value": " 子项等。排查遮罩盖不全优先看是不是父级被新建了上下文。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-layer-order",
+      "navLabel": "@layer",
+      "question": "CSS @layer 解决什么问题？",
+      "answer": [
+        [
+          {
+            "type": "text",
+            "value": "把样式分进"
+          },
+          {
+            "type": "strong",
+            "value": "层（layer）"
+          },
+          {
+            "type": "text",
+            "value": "并声明层顺序，例如 "
+          },
+          {
+            "type": "code",
+            "value": "@layer reset, theme, utilities"
+          },
+          {
+            "type": "text",
+            "value": "；"
+          },
+          {
+            "type": "strong",
+            "value": "同层内仍按选择器权重比"
+          },
+          {
+            "type": "text",
+            "value": "，但"
+          },
+          {
+            "type": "strong",
+            "value": "整层优先级低于未分层样式"
+          },
+          {
+            "type": "text",
+            "value": "的设计可用来整理第三方 "
+          },
+          {
+            "type": "code",
+            "value": "!important"
+          },
+          {
+            "type": "text",
+            "value": " 与业务样式冲突。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Tailwind v4、现代设计系统里出现率高；老浏览器不支持时要有降级。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-dark-mode",
+      "navLabel": "深色模式",
+      "question": "CSS 怎么做跟随系统的深色模式？",
+      "answer": [
+        [
+          {
+            "type": "code",
+            "value": "@media (prefers-color-scheme: dark) { ... }"
+          },
+          {
+            "type": "text",
+            "value": " 写暗色变量覆盖；根上用 "
+          },
+          {
+            "type": "code",
+            "value": ":root"
+          },
+          {
+            "type": "text",
+            "value": " 与 "
+          },
+          {
+            "type": "code",
+            "value": "html.dark"
+          },
+          {
+            "type": "text",
+            "value": " class 切换可并存：系统一套、用户手动一套，手动优先级更高。"
+          }
+        ],
+        [
+          {
+            "type": "code",
+            "value": "color-scheme: dark"
+          },
+          {
+            "type": "text",
+            "value": " 让原生表单滚动条与系统 UI 协调；图片/图标可用 "
+          },
+          {
+            "type": "code",
+            "value": "filter"
+          },
+          {
+            "type": "text",
+            "value": " 或两套 asset，注意对比度 WCAG。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-reduced-motion",
+      "navLabel": "减少动效",
+      "question": "prefers-reduced-motion 用来干啥？",
+      "answer": [
+        [
+          {
+            "type": "code",
+            "value": "@media (prefers-reduced-motion: reduce)"
+          },
+          {
+            "type": "text",
+            "value": " 表示用户系统开了「减少动态效果」（无障碍/省电）；应把长过渡、视差、自动轮播减弱或关掉。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "实现：把动画时长/距离改短，或 "
+          },
+          {
+            "type": "code",
+            "value": "animation: none"
+          },
+          {
+            "type": "text",
+            "value": "；"
+          },
+          {
+            "type": "code",
+            "value": "matchMedia(\"(prefers-reduced-motion: reduce)\")"
+          },
+          {
+            "type": "text",
+            "value": " 在 JS 里也可读。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-mobile-1px",
+      "navLabel": "移动端 1px",
+      "question": "高清屏上 1px 边框发粗怎么解决？",
+      "answer": [
+        [
+          {
+            "type": "text",
+            "value": "物理像素比（DPR）为 2/3 时，CSS 1px 会占多物理像素，细线看起来像「粗边」。思路："
+          },
+          {
+            "type": "strong",
+            "value": "用 transform 缩放伪元素"
+          },
+          {
+            "type": "text",
+            "value": "——"
+          },
+          {
+            "type": "code",
+            "value": "::after"
+          },
+          {
+            "type": "text",
+            "value": " 画 1px 高，"
+          },
+          {
+            "type": "code",
+            "value": "scaleY(0.5)"
+          },
+          {
+            "type": "text",
+            "value": " 按 DPR 调整；或用 "
+          },
+          {
+            "type": "code",
+            "value": "0.5px"
+          },
+          {
+            "type": "text",
+            "value": "（老设备不支持）。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "设计允许时直接用 "
+          },
+          {
+            "type": "code",
+            "value": "border: 0.5px solid"
+          },
+          {
+            "type": "text",
+            "value": "、hairline 类名配合 PostCSS 插件，或统一用分隔线组件封装，避免每个业务手写一套。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-will-change",
+      "navLabel": "will-change",
+      "question": "will-change 是干啥的？滥用会怎样？",
+      "answer": [
+        [
+          {
+            "type": "text",
+            "value": "提示浏览器某属性即将变化，可"
+          },
+          {
+            "type": "strong",
+            "value": "提前建合成层"
+          },
+          {
+            "type": "text",
+            "value": "，减少首帧动画卡顿；常见 "
+          },
+          {
+            "type": "code",
+            "value": "will-change: transform"
+          },
+          {
+            "type": "text",
+            "value": "。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "滥用会"
+          },
+          {
+            "type": "strong",
+            "value": "占 GPU 内存"
+          },
+          {
+            "type": "text",
+            "value": "、层爆炸；动画结束应移除或改 "
+          },
+          {
+            "type": "code",
+            "value": "auto"
+          },
+          {
+            "type": "text",
+            "value": "。移动端优先用 "
+          },
+          {
+            "type": "code",
+            "value": "transform/opacity"
+          },
+          {
+            "type": "text",
+            "value": " 动画，别全局 "
+          },
+          {
+            "type": "code",
+            "value": "* { will-change: ... }"
+          },
+          {
+            "type": "text",
+            "value": "。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-container-has",
+      "navLabel": "容器查询与 :has",
+      "question": "CSS 容器查询和 :has() 是啥？能解决以前啥痛点？",
+      "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "容器查询"
+          },
+          {
+            "type": "text",
+            "value": "："
+          },
+          {
+            "type": "code",
+            "value": "@container (min-width: 400px) { ... }"
+          },
+          {
+            "type": "text",
+            "value": " 让组件按"
+          },
+          {
+            "type": "strong",
+            "value": "父级容器宽度"
+          },
+          {
+            "type": "text",
+            "value": " 响应，而不是整页 "
+          },
+          {
+            "type": "code",
+            "value": "@media"
+          },
+          {
+            "type": "text",
+            "value": "；同一卡片在侧栏窄、主栏宽时排版可不同，真正「组件级响应式」。需先在祖先设 "
+          },
+          {
+            "type": "code",
+            "value": "container-type"
+          },
+          {
+            "type": "text",
+            "value": "。"
+          }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": ":has()"
+          },
+          {
+            "type": "text",
+            "value": "：父选择器，例如 "
+          },
+          {
+            "type": "code",
+            "value": "form:has(:user-invalid) { border-color: red }"
+          },
+          {
+            "type": "text",
+            "value": " 根据子元素状态改父样式，少一层 JS 包 class；注意性能与选择器复杂度，能窄化后代范围就窄化。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-rem-em",
+      "navLabel": "rem / em / vw",
+      "question": "rem、em、vw/vh 分别适合什么场景？",
+      "answer": [
+        [
+          {
+            "type": "code",
+            "value": "rem"
+          },
+          {
+            "type": "text",
+            "value": "：相对根元素 "
+          },
+          {
+            "type": "code",
+            "value": "html"
+          },
+          {
+            "type": "text",
+            "value": " 的 font-size，改一处可整体缩放，适合间距、字号体系。"
+          },
+          {
+            "type": "code",
+            "value": "em"
+          },
+          {
+            "type": "text",
+            "value": "：相对当前元素或父级 font-size，嵌套组件内 padding 会层层放大，要小心。"
+          }
+        ],
+        [
+          {
+            "type": "code",
+            "value": "vw/vh"
+          },
+          {
+            "type": "text",
+            "value": "：相对视口宽高，全屏 Hero、移动端 100vh 常见；注意移动端地址栏导致 "
+          },
+          {
+            "type": "code",
+            "value": "100vh"
+          },
+          {
+            "type": "text",
+            "value": " 溢出，可用 "
+          },
+          {
+            "type": "code",
+            "value": "dvh/svh"
+          },
+          {
+            "type": "text",
+            "value": " 或 JS 变量 '--vh'"
+          },
+          {
+            "type": "text",
+            "value": " 兜底。"
+          }
+        ]
+      ]
+    }
+  ]
+}

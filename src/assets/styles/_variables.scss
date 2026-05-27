@@ -1,0 +1,72 @@
+// —— 颜色（参考 cn.vuejs.org / VitePress：浅底、白卡片、Vue 绿强调） ——
+$vue-green: #42b883;
+$vue-green-dark: #33a06f;
+$vue-green-soft: #ecf8f4;
+
+$bg: #f6f6f7;
+$paper: #ffffff;
+$text: #3c3c43;
+$muted: rgba(60, 60, 67, 0.72);
+$accent: $vue-green;
+$accent-hover: $vue-green-dark;
+$accent-soft: $vue-green-soft;
+$border: #e2e2e3;
+
+// —— 排版与尺寸 ——
+$radius: 8px;
+$shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+$font:
+  -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue',
+  'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', system-ui, sans-serif;
+$mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+
+$font-size-body: 16px;
+$line-height-body: 1.7;
+
+// —— 布局 ——
+$layout-max: 1180px;
+$layout-home-inner-max: 920px;
+$sidebar-col: 240px;
+$gap-layout: 2.5rem;
+$pad-header-y: 0.7rem;
+$pad-header-x: 1.35rem;
+$pad-page-y: 1.75rem;
+$pad-page-x: 1.35rem;
+$pad-page-bottom: 3rem;
+
+// —— 断点 ——
+$bp-stack-sidebar: 900px;
+$bp-article-tight: 600px;
+
+// —— 组件 ——
+$qa-heading: #213547;
+$code-bg: #f3f4f6;
+$chapter-card-hover-border: rgba(66, 184, 131, 0.35);
+$chapter-card-hover-shadow: 0 4px 14px rgba(66, 184, 131, 0.1);
+$sticky-header-z: 20;
+$sticky-sidebar-top: 5rem;
+// 锚点滚动预留：吸顶 SiteHeader + 章节条换行时仍不遮挡标题
+$qa-scroll-margin: 6.75rem;
+$badge-radius: 6px;
+
+// —— 顶栏导航分组 ——
+$header-quick-bg: rgba(66, 184, 131, 0.06);
+$header-quick-border: rgba(66, 184, 131, 0.18);
+$header-quick-link-active-bg: $paper;
+$header-chapter-bg: rgba(60, 60, 67, 0.04);
+$header-chapter-border: $border;
+
+/// 与 :root 中 --* 名称对应（kebab-case）
+$css-root-map: (
+  'bg': $bg,
+  'paper': $paper,
+  'text': $text,
+  'muted': $muted,
+  'accent': $accent,
+  'accent-soft': $accent-soft,
+  'border': $border,
+  'radius': $radius,
+  'shadow': $shadow,
+  'font': $font,
+  'mono': $mono,
+);

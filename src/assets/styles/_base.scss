@@ -1,0 +1,43 @@
+@use 'variables' as *;
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: var(--anchor-scroll-margin, #{$qa-scroll-margin});
+}
+
+body {
+  margin: 0;
+  font-family: $font;
+  font-size: $font-size-body;
+  line-height: $line-height-body;
+  color: $text;
+  background: $bg;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background: rgba($accent, 0.22);
+  color: $text;
+}
+
+a {
+  color: $accent;
+  text-decoration: none;
+  transition: color 0.15s ease;
+
+  &:hover {
+    color: $accent-hover;
+    text-decoration: underline;
+  }
+}
+
+#app {
+  min-height: 100vh;
+}
