@@ -50,6 +50,7 @@ watch(
   background: #f6f8fa;
   box-shadow: 0 1px 0 rgba(27, 31, 35, 0.04);
   overflow: hidden;
+  white-space: pre;
 }
 
 .function-code-block :deep(code.hljs) {
@@ -60,6 +61,7 @@ watch(
   font-size: 0.8125rem;
   line-height: 1.55;
   tab-size: 2;
+  white-space: pre;
   font-variant-ligatures: none;
   background: transparent !important;
 }

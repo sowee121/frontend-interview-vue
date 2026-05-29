@@ -110,7 +110,8 @@
       margin-bottom: 0.35rem;
     }
 
-    code {
+    /* 仅段内行内 code；编程题块级代码见 FunctionCodeBlock */
+    p code {
       font-family: $mono;
       font-size: 0.88em;
       font-weight: 500;
