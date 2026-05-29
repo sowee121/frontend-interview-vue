@@ -208,5 +208,17 @@ footer {
     font-size: $font-size-caption;
     color: $muted;
     border-top: 1px solid $border;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.35rem;
+
+    &__note {
+      margin: 0;
+    }
+
+    &__github {
+      font-size: inherit;
+    }
   }
 }

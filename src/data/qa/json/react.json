@@ -12,27 +12,72 @@
       "questionNote": "React 靠调用顺序匹配 hook 状态槽位；条件调用会导致顺序错位，状态灌进错误的 hook。",
       "answer": [
         [
-          { "type": "strong", "value": "根因：" },
-          { "type": "text", "value": "函数组件每次渲染会" },
-          { "type": "strong", "value": "按固定顺序" },
-          { "type": "text", "value": "调用同一套 hook。React 用链表/数组槽位把第 N 次 " },
-          { "type": "code", "value": "useState" },
-          { "type": "text", "value": " 对应到哪个状态。" }
+          {
+            "type": "strong",
+            "value": "根因："
+          },
+          {
+            "type": "text",
+            "value": "函数组件每次渲染会"
+          },
+          {
+            "type": "strong",
+            "value": "按固定顺序"
+          },
+          {
+            "type": "text",
+            "value": "调用同一套 hook。React 用链表/数组槽位把第 N 次 "
+          },
+          {
+            "type": "code",
+            "value": "useState"
+          },
+          {
+            "type": "text",
+            "value": " 对应到哪个状态。"
+          }
         ],
         [
-          { "type": "text", "value": "若在 " },
-          { "type": "code", "value": "if (x) useEffect(...)" },
-          { "type": "text", "value": " 里条件跳过某次 hook，下次渲染顺序错位，状态会灌进错误的 hook，引发诡异 bug。" }
+          {
+            "type": "text",
+            "value": "若在 "
+          },
+          {
+            "type": "code",
+            "value": "if (x) useEffect(...)"
+          },
+          {
+            "type": "text",
+            "value": " 里条件跳过某次 hook，下次渲染顺序错位，状态会灌进错误的 hook，引发诡异 bug。"
+          }
         ],
         [
-          { "type": "text", "value": "1）只在组件或自定义 hook 顶层调用 hook，别放在 if/for/嵌套函数里。" }
+          {
+            "type": "text",
+            "value": "1）只在组件或自定义 hook 顶层调用 hook，别放在 if/for/嵌套函数里。"
+          }
         ],
         [
-          { "type": "text", "value": "2）条件逻辑放进 " },
-          { "type": "code", "value": "useEffect" },
-          { "type": "text", "value": " 回调内部的 " },
-          { "type": "code", "value": "if" },
-          { "type": "text", "value": "，而不是包住 hook 调用本身。" }
+          {
+            "type": "text",
+            "value": "2）条件逻辑放进 "
+          },
+          {
+            "type": "code",
+            "value": "useEffect"
+          },
+          {
+            "type": "text",
+            "value": " 回调内部的 "
+          },
+          {
+            "type": "code",
+            "value": "if"
+          },
+          {
+            "type": "text",
+            "value": "，而不是包住 hook 调用本身。"
+          }
         ]
       ]
     },
@@ -43,26 +88,68 @@
       "questionNote": "会增删排序的列表别用 index；静态只读列表勉强可以。random key 比 index 更糟。",
       "answer": [
         [
-          { "type": "strong", "value": "结论：" },
-          { "type": "text", "value": "列表会插入、删除或排序时，" },
-          { "type": "strong", "value": "不要用 index 当 key" },
-          { "type": "text", "value": "。" }
+          {
+            "type": "strong",
+            "value": "结论："
+          },
+          {
+            "type": "text",
+            "value": "列表会插入、删除或排序时，"
+          },
+          {
+            "type": "strong",
+            "value": "不要用 index 当 key"
+          },
+          {
+            "type": "text",
+            "value": "。"
+          }
         ],
         [
-          { "type": "text", "value": "同一 index 在 diff 里可能对应不同实体，子组件 " },
-          { "type": "code", "value": "useState" },
-          { "type": "text", "value": " 会复用错节点，出现输入框内容乱跑、动画错位。" }
+          {
+            "type": "text",
+            "value": "同一 index 在 diff 里可能对应不同实体，子组件 "
+          },
+          {
+            "type": "code",
+            "value": "useState"
+          },
+          {
+            "type": "text",
+            "value": " 会复用错节点，出现输入框内容乱跑、动画错位。"
+          }
         ],
         [
-          { "type": "text", "value": "优先用稳定主键：数据库 " },
-          { "type": "code", "value": "id" },
-          { "type": "text", "value": "、业务 " },
-          { "type": "code", "value": "orderNo" },
-          { "type": "text", "value": " 等。" }
+          {
+            "type": "text",
+            "value": "优先用稳定主键：数据库 "
+          },
+          {
+            "type": "code",
+            "value": "id"
+          },
+          {
+            "type": "text",
+            "value": "、业务 "
+          },
+          {
+            "type": "code",
+            "value": "orderNo"
+          },
+          {
+            "type": "text",
+            "value": " 等。"
+          }
         ],
         [
-          { "type": "code", "value": "key={Math.random()}" },
-          { "type": "text", "value": " 每次渲染都变，等于禁用复用，性能更差，比 index 还糟。" }
+          {
+            "type": "code",
+            "value": "key={Math.random()}"
+          },
+          {
+            "type": "text",
+            "value": " 每次渲染都变，等于禁用复用，性能更差，比 index 还糟。"
+          }
         ]
       ]
     },
@@ -73,23 +160,62 @@
       "questionNote": "受控值在 React state 里，便于校验联动；非受控交 DOM 管，适合简单表单和文件输入。",
       "answer": [
         [
-          { "type": "strong", "value": "受控组件：" },
-          { "type": "text", "value": "表单值存在 React state，用 " },
-          { "type": "code", "value": "value + onChange" },
-          { "type": "text", "value": " 驱动，每次输入都经 React 更新。" }
+          {
+            "type": "strong",
+            "value": "受控组件："
+          },
+          {
+            "type": "text",
+            "value": "表单值存在 React state，用 "
+          },
+          {
+            "type": "code",
+            "value": "value + onChange"
+          },
+          {
+            "type": "text",
+            "value": " 驱动，每次输入都经 React 更新。"
+          }
         ],
         [
-          { "type": "text", "value": "优点：便于校验、禁用、字段联动；代价是高频输入要优化（防抖、本地 state 再提交）。" }
+          {
+            "type": "text",
+            "value": "优点：便于校验、禁用、字段联动；代价是高频输入要优化（防抖、本地 state 再提交）。"
+          }
         ],
         [
-          { "type": "strong", "value": "非受控组件：" },
-          { "type": "text", "value": "用 " },
-          { "type": "code", "value": "ref" },
-          { "type": "text", "value": " 或原生 " },
-          { "type": "code", "value": "defaultValue" },
-          { "type": "text", "value": "，DOM 自己管值，提交时再读。适合简单表单、" },
-          { "type": "code", "value": "<input type=\"file\">" },
-          { "type": "text", "value": " 等。" }
+          {
+            "type": "strong",
+            "value": "非受控组件："
+          },
+          {
+            "type": "text",
+            "value": "用 "
+          },
+          {
+            "type": "code",
+            "value": "ref"
+          },
+          {
+            "type": "text",
+            "value": " 或原生 "
+          },
+          {
+            "type": "code",
+            "value": "defaultValue"
+          },
+          {
+            "type": "text",
+            "value": "，DOM 自己管值，提交时再读。适合简单表单、"
+          },
+          {
+            "type": "code",
+            "value": "<input type=\"file\">"
+          },
+          {
+            "type": "text",
+            "value": " 等。"
+          }
         ]
       ]
     },
@@ -100,26 +226,68 @@
       "questionNote": "React 18 默认自动批处理；需要同步刷 DOM 时用 flushSync，滥用会伤性能。",
       "answer": [
         [
-          { "type": "strong", "value": "批处理：" },
-          { "type": "text", "value": "同一事件处理器、同一 hook、或 React 事件里的多次 " },
-          { "type": "code", "value": "setState" },
-          { "type": "text", "value": "，React 18 会" },
-          { "type": "strong", "value": "合并" },
-          { "type": "text", "value": "后统一提交，只渲染一次。" }
+          {
+            "type": "strong",
+            "value": "批处理："
+          },
+          {
+            "type": "text",
+            "value": "同一事件处理器、同一 hook、或 React 事件里的多次 "
+          },
+          {
+            "type": "code",
+            "value": "setState"
+          },
+          {
+            "type": "text",
+            "value": "，React 18 会"
+          },
+          {
+            "type": "strong",
+            "value": "合并"
+          },
+          {
+            "type": "text",
+            "value": "后统一提交，只渲染一次。"
+          }
         ],
         [
-          { "type": "text", "value": "原生 " },
-          { "type": "code", "value": "setTimeout" },
-          { "type": "text", "value": "、Promise 回调里 React 18 也会自动批处理（React 17 不会）。" }
+          {
+            "type": "text",
+            "value": "原生 "
+          },
+          {
+            "type": "code",
+            "value": "setTimeout"
+          },
+          {
+            "type": "text",
+            "value": "、Promise 回调里 React 18 也会自动批处理（React 17 不会）。"
+          }
         ],
         [
-          { "type": "text", "value": "需要同步刷 DOM（量尺寸、接非受控第三方）时用 " },
-          { "type": "code", "value": "flushSync(() => setState(...))" },
-          { "type": "text", "value": " 跳出批处理；滥用会伤性能。" }
+          {
+            "type": "text",
+            "value": "需要同步刷 DOM（量尺寸、接非受控第三方）时用 "
+          },
+          {
+            "type": "code",
+            "value": "flushSync(() => setState(...))"
+          },
+          {
+            "type": "text",
+            "value": " 跳出批处理；滥用会伤性能。"
+          }
         ],
         [
-          { "type": "code", "value": "startTransition" },
-          { "type": "text", "value": " 里的更新标记为低优先级，可与紧急更新（如输入）穿插执行。" }
+          {
+            "type": "code",
+            "value": "startTransition"
+          },
+          {
+            "type": "text",
+            "value": " 里的更新标记为低优先级，可与紧急更新（如输入）穿插执行。"
+          }
         ]
       ]
     },
@@ -130,25 +298,64 @@
       "questionNote": "memo 包组件、useMemo 缓存值、useCallback 缓存函数引用；先 Profiler 找慢点再优化。",
       "answer": [
         [
-          { "type": "code", "value": "React.memo(Component)" },
-          { "type": "text", "value": "：高阶组件，默认浅比较 props，没变则跳过该子树渲染。" }
+          {
+            "type": "code",
+            "value": "React.memo(Component)"
+          },
+          {
+            "type": "text",
+            "value": "：高阶组件，默认浅比较 props，没变则跳过该子树渲染。"
+          }
         ],
         [
-          { "type": "code", "value": "useMemo(() => compute(), [deps])" },
-          { "type": "text", "value": "：缓存" },
-          { "type": "strong", "value": "计算结果（值）" },
-          { "type": "text", "value": "，依赖不变不重复算。" }
+          {
+            "type": "code",
+            "value": "useMemo(() => compute(), [deps])"
+          },
+          {
+            "type": "text",
+            "value": "：缓存"
+          },
+          {
+            "type": "strong",
+            "value": "计算结果（值）"
+          },
+          {
+            "type": "text",
+            "value": "，依赖不变不重复算。"
+          }
         ],
         [
-          { "type": "code", "value": "useCallback(fn, [deps])" },
-          { "type": "text", "value": "：等价于 " },
-          { "type": "code", "value": "useMemo(() => fn, [deps])" },
-          { "type": "text", "value": "，缓存" },
-          { "type": "strong", "value": "函数引用" },
-          { "type": "text", "value": "，避免父组件每次渲染新建函数导致子组件 memo 失效。" }
+          {
+            "type": "code",
+            "value": "useCallback(fn, [deps])"
+          },
+          {
+            "type": "text",
+            "value": "：等价于 "
+          },
+          {
+            "type": "code",
+            "value": "useMemo(() => fn, [deps])"
+          },
+          {
+            "type": "text",
+            "value": "，缓存"
+          },
+          {
+            "type": "strong",
+            "value": "函数引用"
+          },
+          {
+            "type": "text",
+            "value": "，避免父组件每次渲染新建函数导致子组件 memo 失效。"
+          }
         ],
         [
-          { "type": "text", "value": "先用 React DevTools Profiler 找真正慢的子树再包；到处 useCallback 反而增加依赖心智负担。" }
+          {
+            "type": "text",
+            "value": "先用 React DevTools Profiler 找真正慢的子树再包；到处 useCallback 反而增加依赖心智负担。"
+          }
         ]
       ]
     },
@@ -159,30 +366,84 @@
       "questionNote": "目的是稳定引用或减少昂贵计算；别为「减少渲染」滥用，先证明子组件真的贵。",
       "answer": [
         [
-          { "type": "strong", "value": "该用时：" },
-          { "type": "text", "value": "传给 " },
-          { "type": "code", "value": "memo" },
-          { "type": "text", "value": " 子组件的回调需稳定引用；" },
-          { "type": "code", "value": "useEffect" },
-          { "type": "text", "value": " 依赖数组里放函数；" },
-          { "type": "code", "value": "useMemo" },
-          { "type": "text", "value": " 缓存大列表 filter/sort 等昂贵计算。" }
+          {
+            "type": "strong",
+            "value": "该用时："
+          },
+          {
+            "type": "text",
+            "value": "传给 "
+          },
+          {
+            "type": "code",
+            "value": "memo"
+          },
+          {
+            "type": "text",
+            "value": " 子组件的回调需稳定引用；"
+          },
+          {
+            "type": "code",
+            "value": "useEffect"
+          },
+          {
+            "type": "text",
+            "value": " 依赖数组里放函数；"
+          },
+          {
+            "type": "code",
+            "value": "useMemo"
+          },
+          {
+            "type": "text",
+            "value": " 缓存大列表 filter/sort 等昂贵计算。"
+          }
         ],
         [
-          { "type": "strong", "value": "坑 1：" },
-          { "type": "text", "value": "依赖漏写导致闭包读到旧 state；补依赖，或用函数式 " },
-          { "type": "code", "value": "setState" },
-          { "type": "text", "value": "、" },
-          { "type": "code", "value": "useRef" },
-          { "type": "text", "value": " 存最新值。" }
+          {
+            "type": "strong",
+            "value": "坑 1："
+          },
+          {
+            "type": "text",
+            "value": "依赖漏写导致闭包读到旧 state；补依赖，或用函数式 "
+          },
+          {
+            "type": "code",
+            "value": "setState"
+          },
+          {
+            "type": "text",
+            "value": "、"
+          },
+          {
+            "type": "code",
+            "value": "useRef"
+          },
+          {
+            "type": "text",
+            "value": " 存最新值。"
+          }
         ],
         [
-          { "type": "strong", "value": "坑 2：" },
-          { "type": "text", "value": "为减少渲染滥用 useCallback，多一次比较、代码更难读——先 Profiler 证明子组件真贵。" }
+          {
+            "type": "strong",
+            "value": "坑 2："
+          },
+          {
+            "type": "text",
+            "value": "为减少渲染滥用 useCallback，多一次比较、代码更难读——先 Profiler 证明子组件真贵。"
+          }
         ],
         [
-          { "type": "strong", "value": "坑 3：" },
-          { "type": "text", "value": "列表行里每项都 useCallback，deps 含整条 item 导致引用仍不稳，memo 照样失效。" }
+          {
+            "type": "strong",
+            "value": "坑 3："
+          },
+          {
+            "type": "text",
+            "value": "列表行里每项都 useCallback，deps 含整条 item 导致引用仍不稳，memo 照样失效。"
+          }
         ]
       ]
     },
@@ -193,27 +454,72 @@
       "questionNote": "[] 挂载跑一次；[dep] 依赖变才跑；不传第二参数基本已淘汰（易死循环）。",
       "answer": [
         [
-          { "type": "code", "value": "useEffect(() => { ... }, [])" },
-          { "type": "text", "value": "：依赖为空，" },
-          { "type": "strong", "value": "挂载后执行一次" },
-          { "type": "text", "value": "。适合拉配置、建订阅；返回清理函数在卸载时跑。" }
+          {
+            "type": "code",
+            "value": "useEffect(() => { ... }, [])"
+          },
+          {
+            "type": "text",
+            "value": "：依赖为空，"
+          },
+          {
+            "type": "strong",
+            "value": "挂载后执行一次"
+          },
+          {
+            "type": "text",
+            "value": "。适合拉配置、建订阅；返回清理函数在卸载时跑。"
+          }
         ],
         [
-          { "type": "code", "value": "[dep1, dep2]" },
-          { "type": "text", "value": "：任一依赖变了再执行 effect + 清理。eslint-plugin-react-hooks 会提示漏依赖。" }
+          {
+            "type": "code",
+            "value": "[dep1, dep2]"
+          },
+          {
+            "type": "text",
+            "value": "：任一依赖变了再执行 effect + 清理。eslint-plugin-react-hooks 会提示漏依赖。"
+          }
         ],
         [
-          { "type": "code", "value": "不传第二参数" },
-          { "type": "text", "value": "：每次渲染后都执行，容易 " },
-          { "type": "strong", "value": "setState 死循环" },
-          { "type": "text", "value": " 或多余请求，现在基本避免。" }
+          {
+            "type": "code",
+            "value": "不传第二参数"
+          },
+          {
+            "type": "text",
+            "value": "：每次渲染后都执行，容易 "
+          },
+          {
+            "type": "strong",
+            "value": "setState 死循环"
+          },
+          {
+            "type": "text",
+            "value": " 或多余请求，现在基本避免。"
+          }
         ],
         [
-          { "type": "text", "value": "闭包拿到旧 state 时：补依赖，或用函数式 " },
-          { "type": "code", "value": "setState" },
-          { "type": "text", "value": "、" },
-          { "type": "code", "value": "useRef" },
-          { "type": "text", "value": " 存最新值。" }
+          {
+            "type": "text",
+            "value": "闭包拿到旧 state 时：补依赖，或用函数式 "
+          },
+          {
+            "type": "code",
+            "value": "setState"
+          },
+          {
+            "type": "text",
+            "value": "、"
+          },
+          {
+            "type": "code",
+            "value": "useRef"
+          },
+          {
+            "type": "text",
+            "value": " 存最新值。"
+          }
         ]
       ]
     },
@@ -224,28 +530,76 @@
       "questionNote": "useLayoutEffect 在绘制前同步跑，适合量 DOM 防闪烁；SSR 环境会告警。",
       "answer": [
         [
-          { "type": "code", "value": "useEffect" },
-          { "type": "text", "value": "：浏览器" },
-          { "type": "strong", "value": "绘制之后" },
-          { "type": "text", "value": "异步执行，不阻塞首帧。适合请求、订阅、非 DOM 敏感逻辑。" }
+          {
+            "type": "code",
+            "value": "useEffect"
+          },
+          {
+            "type": "text",
+            "value": "：浏览器"
+          },
+          {
+            "type": "strong",
+            "value": "绘制之后"
+          },
+          {
+            "type": "text",
+            "value": "异步执行，不阻塞首帧。适合请求、订阅、非 DOM 敏感逻辑。"
+          }
         ],
         [
-          { "type": "code", "value": "useLayoutEffect" },
-          { "type": "text", "value": "：DOM 更新后、" },
-          { "type": "strong", "value": "绘制前" },
-          { "type": "text", "value": "同步执行。可量 DOM 再改 state，避免 tooltip 位置闪烁。" }
+          {
+            "type": "code",
+            "value": "useLayoutEffect"
+          },
+          {
+            "type": "text",
+            "value": "：DOM 更新后、"
+          },
+          {
+            "type": "strong",
+            "value": "绘制前"
+          },
+          {
+            "type": "text",
+            "value": "同步执行。可量 DOM 再改 state，避免 tooltip 位置闪烁。"
+          }
         ],
         [
-          { "type": "text", "value": "会阻塞浏览器绘制，别写重逻辑；多数副作用用 " },
-          { "type": "code", "value": "useEffect" },
-          { "type": "text", "value": " 即可。" }
+          {
+            "type": "text",
+            "value": "会阻塞浏览器绘制，别写重逻辑；多数副作用用 "
+          },
+          {
+            "type": "code",
+            "value": "useEffect"
+          },
+          {
+            "type": "text",
+            "value": " 即可。"
+          }
         ],
         [
-          { "type": "text", "value": "服务端渲染（SSR）时 " },
-          { "type": "code", "value": "useLayoutEffect" },
-          { "type": "text", "value": " 会告警，客户端专用逻辑改用 " },
-          { "type": "code", "value": "useEffect" },
-          { "type": "text", "value": " 或动态 import。" }
+          {
+            "type": "text",
+            "value": "服务端渲染（SSR）时 "
+          },
+          {
+            "type": "code",
+            "value": "useLayoutEffect"
+          },
+          {
+            "type": "text",
+            "value": " 会告警，客户端专用逻辑改用 "
+          },
+          {
+            "type": "code",
+            "value": "useEffect"
+          },
+          {
+            "type": "text",
+            "value": " 或动态 import。"
+          }
         ]
       ]
     },
@@ -256,23 +610,56 @@
       "questionNote": "Context 适合低频变的全局配置；value 引用一变，下面 consumer 默认全重渲染。",
       "answer": [
         [
-          { "type": "strong", "value": "适合：" },
-          { "type": "text", "value": "跨层级传" },
-          { "type": "strong", "value": "主题、语言、当前用户" },
-          { "type": "text", "value": " 等「很多叶子都要读、很少变」的配置，避免 props 逐层透传。" }
+          {
+            "type": "strong",
+            "value": "适合："
+          },
+          {
+            "type": "text",
+            "value": "跨层级传"
+          },
+          {
+            "type": "strong",
+            "value": "主题、语言、当前用户"
+          },
+          {
+            "type": "text",
+            "value": " 等「很多叶子都要读、很少变」的配置，避免 props 逐层透传。"
+          }
         ],
         [
-          { "type": "text", "value": "不适合高频变的全局业务 state；Provider 的 " },
-          { "type": "code", "value": "value" },
-          { "type": "text", "value": " 每次渲染若引用变了，下面所有 consumer 默认都会重渲染。" }
+          {
+            "type": "text",
+            "value": "不适合高频变的全局业务 state；Provider 的 "
+          },
+          {
+            "type": "code",
+            "value": "value"
+          },
+          {
+            "type": "text",
+            "value": " 每次渲染若引用变了，下面所有 consumer 默认都会重渲染。"
+          }
         ],
         [
-          { "type": "text", "value": "1）把 value 拆成多个 Context，读写分离。" }
+          {
+            "type": "text",
+            "value": "1）把 value 拆成多个 Context，读写分离。"
+          }
         ],
         [
-          { "type": "text", "value": "2）" },
-          { "type": "code", "value": "useMemo" },
-          { "type": "text", "value": " 稳定对象引用；读侧用 use-context-selector 或 Zustand/Jotai 做细粒度订阅。" }
+          {
+            "type": "text",
+            "value": "2）"
+          },
+          {
+            "type": "code",
+            "value": "useMemo"
+          },
+          {
+            "type": "text",
+            "value": " 稳定对象引用；读侧用 use-context-selector 或 Zustand/Jotai 做细粒度订阅。"
+          }
         ]
       ]
     },
@@ -283,24 +670,158 @@
       "questionNote": "简单标量用 useState；下一状态依赖 action 类型和多字段时用 useReducer。",
       "answer": [
         [
-          { "type": "code", "value": "useState" },
-          { "type": "text", "value": "：简单标量或对象；多次连续更新用函数式 " },
-          { "type": "code", "value": "setState(s => ...)" },
-          { "type": "text", "value": "。" }
+          {
+            "type": "code",
+            "value": "useState"
+          },
+          {
+            "type": "text",
+            "value": "：简单标量或对象；多次连续更新用函数式 "
+          },
+          {
+            "type": "code",
+            "value": "setState(s => ...)"
+          },
+          {
+            "type": "text",
+            "value": "。"
+          }
         ],
         [
-          { "type": "code", "value": "useReducer" },
-          { "type": "text", "value": "：下一状态依赖「动作类型 + 多字段」，和 " },
-          { "type": "code", "value": "dispatch" },
-          { "type": "text", "value": " 一起好测、好追踪。" }
+          {
+            "type": "code",
+            "value": "useReducer"
+          },
+          {
+            "type": "text",
+            "value": "：下一状态依赖「动作类型 + 多字段」，和 "
+          },
+          {
+            "type": "code",
+            "value": "dispatch"
+          },
+          {
+            "type": "text",
+            "value": " 一起好测、好追踪。"
+          }
         ],
         [
-          { "type": "text", "value": "复杂表单、多步向导、状态机式 UI 可减轻 effect 里一堆 " },
-          { "type": "code", "value": "if" },
-          { "type": "text", "value": " 的分支。" }
+          {
+            "type": "text",
+            "value": "复杂表单、多步向导、状态机式 UI 可减轻 effect 里一堆 "
+          },
+          {
+            "type": "code",
+            "value": "if"
+          },
+          {
+            "type": "text",
+            "value": " 的分支。"
+          }
         ],
         [
-          { "type": "text", "value": "再大就上 Zustand/Redux；别为用而用 reducer。" }
+          {
+            "type": "text",
+            "value": "再大就上 Zustand/Redux；别为用而用 reducer。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-redux",
+      "navLabel": "Redux",
+      "question": "Redux 核心流程是什么？和 useReducer 啥关系？",
+      "questionNote": "可说 Redux Toolkit（RTK）为现代默认写法。",
+      "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "三大原则："
+          },
+          {
+            "type": "text",
+            "value": "单一 store、state 只读、用纯函数 reducer 描述变化。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "流程：UI "
+          },
+          {
+            "type": "code",
+            "value": "dispatch(action)"
+          },
+          {
+            "type": "text",
+            "value": " → reducer(state, action) → 新 state → 订阅者（如 "
+          },
+          {
+            "type": "code",
+            "value": "useSelector"
+          },
+          {
+            "type": "text",
+            "value": "）重渲染。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "useReducer 是组件内的 mini-redux；全局、可预测、中间件（异步、日志）用 Redux / RTK。RTK 的 "
+          },
+          {
+            "type": "code",
+            "value": "createSlice"
+          },
+          {
+            "type": "text",
+            "value": " 减少样板代码。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-zustand",
+      "navLabel": "Zustand",
+      "question": "Zustand 和 Redux 怎么选？",
+      "questionNote": "Jotai/Recoil 偏原子化，面试提到 Zustand 即可。",
+      "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "Zustand："
+          },
+          {
+            "type": "text",
+            "value": "轻量、基于 hooks，"
+          },
+          {
+            "type": "code",
+            "value": "create((set) => ({ count, inc: () => set(...) }))"
+          },
+          {
+            "type": "text",
+            "value": "；可按 selector 订阅切片，少 Provider 嵌套。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "1）中小项目、要快速全局状态：Zustand 上手快。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2）大型团队、强规范、中间件生态、时间旅行调试：Redux + RTK 仍常见。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3）低频配置用 Context；组件内简单状态用 useState/useReducer。与 Context 题、useReducer 题配合记忆。"
+          }
         ]
       ]
     },
@@ -311,24 +832,60 @@
       "questionNote": "函数组件默认拿不到 ref；forwardRef 把父组件 ref 转给内部 DOM 或 imperative API。",
       "answer": [
         [
-          { "type": "strong", "value": "问题：" },
-          { "type": "text", "value": "函数组件默认没有实例，父组件传 " },
-          { "type": "code", "value": "ref" },
-          { "type": "text", "value": " 拿不到内部 DOM 或方法。" }
+          {
+            "type": "strong",
+            "value": "问题："
+          },
+          {
+            "type": "text",
+            "value": "函数组件默认没有实例，父组件传 "
+          },
+          {
+            "type": "code",
+            "value": "ref"
+          },
+          {
+            "type": "text",
+            "value": " 拿不到内部 DOM 或方法。"
+          }
         ],
         [
-          { "type": "code", "value": "forwardRef((props, ref) => <input ref={ref} />)" },
-          { "type": "text", "value": " 把父组件 ref 绑到内部 DOM。" }
+          {
+            "type": "code",
+            "value": "forwardRef((props, ref) => <input ref={ref} />)"
+          },
+          {
+            "type": "text",
+            "value": " 把父组件 ref 绑到内部 DOM。"
+          }
         ],
         [
-          { "type": "text", "value": "配合 " },
-          { "type": "code", "value": "useImperativeHandle" },
-          { "type": "text", "value": " 可只暴露 focus、scroll 等有限方法，而非整个 DOM 节点。" }
+          {
+            "type": "text",
+            "value": "配合 "
+          },
+          {
+            "type": "code",
+            "value": "useImperativeHandle"
+          },
+          {
+            "type": "text",
+            "value": " 可只暴露 focus、scroll 等有限方法，而非整个 DOM 节点。"
+          }
         ],
         [
-          { "type": "text", "value": "React 19+ " },
-          { "type": "code", "value": "ref" },
-          { "type": "text", "value": " 可作为普通 prop 传入，forwardRef 使用场景在收窄，面试仍常问旧写法。" }
+          {
+            "type": "text",
+            "value": "React 19+ "
+          },
+          {
+            "type": "code",
+            "value": "ref"
+          },
+          {
+            "type": "text",
+            "value": " 可作为普通 prop 传入，forwardRef 使用场景在收窄，面试仍常问旧写法。"
+          }
         ]
       ]
     },
@@ -339,20 +896,50 @@
       "questionNote": "DOM 挂到 body 等元素，事件仍按 React 树冒泡；和 Vue Teleport 同类。",
       "answer": [
         [
-          { "type": "strong", "value": "作用：" },
-          { "type": "text", "value": "把子树渲染到" },
-          { "type": "strong", "value": "任意 DOM 容器" },
-          { "type": "text", "value": "（如 " },
-          { "type": "code", "value": "document.body" },
-          { "type": "text", "value": "），跳出父级 " },
-          { "type": "code", "value": "overflow" },
-          { "type": "text", "value": " 裁剪。" }
+          {
+            "type": "strong",
+            "value": "作用："
+          },
+          {
+            "type": "text",
+            "value": "把子树渲染到"
+          },
+          {
+            "type": "strong",
+            "value": "任意 DOM 容器"
+          },
+          {
+            "type": "text",
+            "value": "（如 "
+          },
+          {
+            "type": "code",
+            "value": "document.body"
+          },
+          {
+            "type": "text",
+            "value": "），跳出父级 "
+          },
+          {
+            "type": "code",
+            "value": "overflow"
+          },
+          {
+            "type": "text",
+            "value": " 裁剪。"
+          }
         ],
         [
-          { "type": "text", "value": "Modal、Dropdown、Tooltip 常用；事件仍按 React 组件树冒泡，不是按 DOM 父子关系。" }
+          {
+            "type": "text",
+            "value": "Modal、Dropdown、Tooltip 常用；事件仍按 React 组件树冒泡，不是按 DOM 父子关系。"
+          }
         ],
         [
-          { "type": "text", "value": "服务端渲染（SSR）时目标容器需在服务端存在，或在客户端 mount 后再 createPortal。" }
+          {
+            "type": "text",
+            "value": "服务端渲染（SSR）时目标容器需在服务端存在，或在客户端 mount 后再 createPortal。"
+          }
         ]
       ]
     },
@@ -363,20 +950,44 @@
       "questionNote": "lazy 做代码分割，Suspense 显示 loading；加载失败要另包 ErrorBoundary。",
       "answer": [
         [
-          { "type": "code", "value": "const Page = lazy(() => import('./Page'))" },
-          { "type": "text", "value": " 动态 import 做路由级代码分割。" }
+          {
+            "type": "code",
+            "value": "const Page = lazy(() => import('./Page'))"
+          },
+          {
+            "type": "text",
+            "value": " 动态 import 做路由级代码分割。"
+          }
         ],
         [
-          { "type": "code", "value": "<Suspense fallback={<Skeleton />}><Page /></Suspense>" },
-          { "type": "text", "value": "：chunk 加载中显示 fallback。" }
+          {
+            "type": "code",
+            "value": "<Suspense fallback={<Skeleton />}><Page /></Suspense>"
+          },
+          {
+            "type": "text",
+            "value": "：chunk 加载中显示 fallback。"
+          }
         ],
         [
-          { "type": "text", "value": "Suspense 不捕获加载失败，需外层包 " },
-          { "type": "code", "value": "ErrorBoundary" },
-          { "type": "text", "value": " 处理网络错误或 404。" }
+          {
+            "type": "text",
+            "value": "Suspense 不捕获加载失败，需外层包 "
+          },
+          {
+            "type": "code",
+            "value": "ErrorBoundary"
+          },
+          {
+            "type": "text",
+            "value": " 处理网络错误或 404。"
+          }
         ],
         [
-          { "type": "text", "value": "React 18 起 Suspense 也用于数据获取（配合框架如 Next.js）；具体模式以所用框架文档为准。" }
+          {
+            "type": "text",
+            "value": "React 18 起 Suspense 也用于数据获取（配合框架如 Next.js）；具体模式以所用框架文档为准。"
+          }
         ]
       ]
     },
@@ -387,16 +998,34 @@
       "questionNote": "开发环境故意 mount→unmount→remount，逼你写清理函数；生产不会双跑。",
       "answer": [
         [
-          { "type": "strong", "value": "原因：" },
-          { "type": "text", "value": "开发环境 StrictMode 故意" },
-          { "type": "strong", "value": "挂载 → 卸载 → 再挂载" },
-          { "type": "text", "value": "，暴露缺少清理函数的 effect（重复订阅、重复请求）。" }
+          {
+            "type": "strong",
+            "value": "原因："
+          },
+          {
+            "type": "text",
+            "value": "开发环境 StrictMode 故意"
+          },
+          {
+            "type": "strong",
+            "value": "挂载 → 卸载 → 再挂载"
+          },
+          {
+            "type": "text",
+            "value": "，暴露缺少清理函数的 effect（重复订阅、重复请求）。"
+          }
         ],
         [
-          { "type": "text", "value": "生产环境不会双跑；别用「只跑一次」假设写全局单例初始化。" }
+          {
+            "type": "text",
+            "value": "生产环境不会双跑；别用「只跑一次」假设写全局单例初始化。"
+          }
         ],
         [
-          { "type": "text", "value": "应对：useEffect 返回清理函数里 abort 请求、解绑监听；或用幂等 key 防重复副作用。" }
+          {
+            "type": "text",
+            "value": "应对：useEffect 返回清理函数里 abort 请求、解绑监听；或用幂等 key 防重复副作用。"
+          }
         ]
       ]
     },
@@ -407,24 +1036,66 @@
       "questionNote": "服务端与客户端首屏 HTML 必须一致；浏览器专用逻辑放 useEffect。",
       "answer": [
         [
-          { "type": "strong", "value": "水合：" },
-          { "type": "text", "value": "服务端渲染（SSR）产出 HTML 后，客户端 React 接管并绑定事件。两端首屏 DOM 不一致就报 mismatch。" }
+          {
+            "type": "strong",
+            "value": "水合："
+          },
+          {
+            "type": "text",
+            "value": "服务端渲染（SSR）产出 HTML 后，客户端 React 接管并绑定事件。两端首屏 DOM 不一致就报 mismatch。"
+          }
         ],
         [
-          { "type": "text", "value": "常见原因：首屏用了 " },
-          { "type": "code", "value": "Date.now()" },
-          { "type": "text", "value": "、" },
-          { "type": "code", "value": "Math.random()" },
-          { "type": "text", "value": "、" },
-          { "type": "code", "value": "localStorage" },
-          { "type": "text", "value": " 初始值、浏览器扩展改 DOM、非法 HTML 嵌套。" }
+          {
+            "type": "text",
+            "value": "常见原因：首屏用了 "
+          },
+          {
+            "type": "code",
+            "value": "Date.now()"
+          },
+          {
+            "type": "text",
+            "value": "、"
+          },
+          {
+            "type": "code",
+            "value": "Math.random()"
+          },
+          {
+            "type": "text",
+            "value": "、"
+          },
+          {
+            "type": "code",
+            "value": "localStorage"
+          },
+          {
+            "type": "text",
+            "value": " 初始值、浏览器扩展改 DOM、非法 HTML 嵌套。"
+          }
         ],
         [
-          { "type": "text", "value": "修复：客户端专用逻辑放 " },
-          { "type": "code", "value": "useEffect" },
-          { "type": "text", "value": "；或 " },
-          { "type": "code", "value": "suppressHydrationWarning" },
-          { "type": "text", "value": " 仅限确实不可避免且无害的差异（如时区格式化）。" }
+          {
+            "type": "text",
+            "value": "修复：客户端专用逻辑放 "
+          },
+          {
+            "type": "code",
+            "value": "useEffect"
+          },
+          {
+            "type": "text",
+            "value": "；或 "
+          },
+          {
+            "type": "code",
+            "value": "suppressHydrationWarning"
+          },
+          {
+            "type": "text",
+            "value": " 仅限确实不可避免且无害的差异（如时区格式化）。"
+          }
         ]
       ]
     },
@@ -435,20 +1106,50 @@
       "questionNote": "React 16 起的可中断协调架构；说清「可暂停、有优先级」即可，不必画链表。",
       "answer": [
         [
-          { "type": "strong", "value": "Fiber 架构：" },
-          { "type": "text", "value": "React 16 起把更新拆成小工作单元（Fiber 节点），协调过程可" },
-          { "type": "strong", "value": "暂停、恢复、丢弃" },
-          { "type": "text", "value": "，把长任务切片到多帧，避免阻塞主线程。" }
+          {
+            "type": "strong",
+            "value": "Fiber 架构："
+          },
+          {
+            "type": "text",
+            "value": "React 16 起把更新拆成小工作单元（Fiber 节点），协调过程可"
+          },
+          {
+            "type": "strong",
+            "value": "暂停、恢复、丢弃"
+          },
+          {
+            "type": "text",
+            "value": "，把长任务切片到多帧，避免阻塞主线程。"
+          }
         ],
         [
-          { "type": "text", "value": "上层能力：Concurrent 并发渲染、" },
-          { "type": "code", "value": "startTransition" },
-          { "type": "text", "value": " 标记低优更新、" },
-          { "type": "code", "value": "useDeferredValue" },
-          { "type": "text", "value": " 延迟展示派生值等。" }
+          {
+            "type": "text",
+            "value": "上层能力：Concurrent 并发渲染、"
+          },
+          {
+            "type": "code",
+            "value": "startTransition"
+          },
+          {
+            "type": "text",
+            "value": " 标记低优更新、"
+          },
+          {
+            "type": "code",
+            "value": "useDeferredValue"
+          },
+          {
+            "type": "text",
+            "value": " 延迟展示派生值等。"
+          }
         ],
         [
-          { "type": "text", "value": "面试不用画 Fiber 链表，说清「可中断 + 优先级调度」即可。" }
+          {
+            "type": "text",
+            "value": "面试不用画 Fiber 链表，说清「可中断 + 优先级调度」即可。"
+          }
         ]
       ]
     },
@@ -459,25 +1160,64 @@
       "questionNote": "把大更新标为非紧急，让输入等交互优先响应；别把所有 setState 都包 transition。",
       "answer": [
         [
-          { "type": "strong", "value": "场景：" },
-          { "type": "text", "value": "Tab 切换重列表、大筛选等可能卡顿的更新，标为" },
-          { "type": "strong", "value": "非紧急" },
-          { "type": "text", "value": "，React 可中断渲染、优先响应输入。" }
+          {
+            "type": "strong",
+            "value": "场景："
+          },
+          {
+            "type": "text",
+            "value": "Tab 切换重列表、大筛选等可能卡顿的更新，标为"
+          },
+          {
+            "type": "strong",
+            "value": "非紧急"
+          },
+          {
+            "type": "text",
+            "value": "，React 可中断渲染、优先响应输入。"
+          }
         ],
         [
-          { "type": "code", "value": "startTransition(() => setTab(id))" },
-          { "type": "text", "value": "：输入框 state 仍同步更新，Tab 内容切换走低优先级。" }
+          {
+            "type": "code",
+            "value": "startTransition(() => setTab(id))"
+          },
+          {
+            "type": "text",
+            "value": "：输入框 state 仍同步更新，Tab 内容切换走低优先级。"
+          }
         ],
         [
-          { "type": "code", "value": "useTransition" },
-          { "type": "text", "value": " 返回 " },
-          { "type": "code", "value": "[isPending, startTransition]" },
-          { "type": "text", "value": "，可显示加载态。" }
+          {
+            "type": "code",
+            "value": "useTransition"
+          },
+          {
+            "type": "text",
+            "value": " 返回 "
+          },
+          {
+            "type": "code",
+            "value": "[isPending, startTransition]"
+          },
+          {
+            "type": "text",
+            "value": "，可显示加载态。"
+          }
         ],
         [
-          { "type": "text", "value": "与 " },
-          { "type": "code", "value": "useDeferredValue" },
-          { "type": "text", "value": "（延迟展示派生值）可搭配；只用于可能卡顿的大更新，别滥用。" }
+          {
+            "type": "text",
+            "value": "与 "
+          },
+          {
+            "type": "code",
+            "value": "useDeferredValue"
+          },
+          {
+            "type": "text",
+            "value": "（延迟展示派生值）可搭配；只用于可能卡顿的大更新，别滥用。"
+          }
         ]
       ]
     }

@@ -12,32 +12,86 @@
       "questionNote": "Google 主推的体验指标集；能口述 LCP、INP、CLS 含义与采集方式即可。",
       "answer": [
         [
-          { "type": "strong", "value": "一句话：" },
-          { "type": "text", "value": "Google 定义的" },
-          { "type": "strong", "value": "用户体验指标" },
-          { "type": "text", "value": "，用来衡量真实用户眼里的快慢与稳定。" }
+          {
+            "type": "strong",
+            "value": "一句话："
+          },
+          {
+            "type": "text",
+            "value": "Google 定义的"
+          },
+          {
+            "type": "strong",
+            "value": "用户体验指标"
+          },
+          {
+            "type": "text",
+            "value": "，用来衡量真实用户眼里的快慢与稳定。"
+          }
         ],
         [
-          { "type": "text", "value": "1）" },
-          { "type": "strong", "value": "最大内容绘制（LCP）" },
-          { "type": "text", "value": "：视口里最大可见块何时画完，常见是首图或主标题。" }
+          {
+            "type": "text",
+            "value": "1）"
+          },
+          {
+            "type": "strong",
+            "value": "最大内容绘制（LCP）"
+          },
+          {
+            "type": "text",
+            "value": "：视口里最大可见块何时画完，常见是首图或主标题。"
+          }
         ],
         [
-          { "type": "text", "value": "2）" },
-          { "type": "strong", "value": "交互到下一帧绘制（INP）" },
-          { "type": "text", "value": "：取代首次输入延迟（FID），看整页交互里最慢那次输入到下一帧的延迟。" }
+          {
+            "type": "text",
+            "value": "2）"
+          },
+          {
+            "type": "strong",
+            "value": "交互到下一帧绘制（INP）"
+          },
+          {
+            "type": "text",
+            "value": "：取代首次输入延迟（FID），看整页交互里最慢那次输入到下一帧的延迟。"
+          }
         ],
         [
-          { "type": "text", "value": "3）" },
-          { "type": "strong", "value": "累积布局偏移（CLS）" },
-          { "type": "text", "value": "：布局意外跳动，如广告或图片无占位把正文顶下去。" }
+          {
+            "type": "text",
+            "value": "3）"
+          },
+          {
+            "type": "strong",
+            "value": "累积布局偏移（CLS）"
+          },
+          {
+            "type": "text",
+            "value": "：布局意外跳动，如广告或图片无占位把正文顶下去。"
+          }
         ],
         [
-          { "type": "text", "value": "采集可用 Chrome Lighthouse、" },
-          { "type": "code", "value": "web-vitals" },
-          { "type": "text", "value": " SDK、" },
-          { "type": "code", "value": "PerformanceObserver" },
-          { "type": "text", "value": "；对比优化效果看第 75/95 百分位（P75/P95），比只看平均值更贴近长尾用户。" }
+          {
+            "type": "text",
+            "value": "采集可用 Chrome Lighthouse、"
+          },
+          {
+            "type": "code",
+            "value": "web-vitals"
+          },
+          {
+            "type": "text",
+            "value": " SDK、"
+          },
+          {
+            "type": "code",
+            "value": "PerformanceObserver"
+          },
+          {
+            "type": "text",
+            "value": "；对比优化效果看第 75/95 百分位（P75/P95），比只看平均值更贴近长尾用户。"
+          }
         ]
       ]
     },
@@ -48,34 +102,94 @@
       "questionNote": "INP 看「最慢那次交互」；结合 Performance 长任务与主线程占用讲清即可。",
       "answer": [
         [
-          { "type": "strong", "value": "结论：" },
-          { "type": "text", "value": "INP 差通常是主线程被长任务、同步重渲染或第三方脚本占满。" }
+          {
+            "type": "strong",
+            "value": "结论："
+          },
+          {
+            "type": "text",
+            "value": "INP 差通常是主线程被长任务、同步重渲染或第三方脚本占满。"
+          }
         ],
         [
-          { "type": "text", "value": "1）" },
-          { "type": "strong", "value": "怎么量" },
-          { "type": "text", "value": "：Performance 面板录点击/输入，找超过 50ms 的" },
-          { "type": "code", "value": "Long Task" },
-          { "type": "text", "value": " 与样式重算、布局占比。" }
+          {
+            "type": "text",
+            "value": "1）"
+          },
+          {
+            "type": "strong",
+            "value": "怎么量"
+          },
+          {
+            "type": "text",
+            "value": "：Performance 面板录点击/输入，找超过 50ms 的"
+          },
+          {
+            "type": "code",
+            "value": "Long Task"
+          },
+          {
+            "type": "text",
+            "value": " 与样式重算、布局占比。"
+          }
         ],
         [
-          { "type": "text", "value": "2）" },
-          { "type": "strong", "value": "怎么定位" },
-          { "type": "text", "value": "：线上用 " },
-          { "type": "code", "value": "web-vitals" },
-          { "type": "text", "value": " 上报 attribution，看是哪个节点、哪段脚本拖慢。" }
+          {
+            "type": "text",
+            "value": "2）"
+          },
+          {
+            "type": "strong",
+            "value": "怎么定位"
+          },
+          {
+            "type": "text",
+            "value": "：线上用 "
+          },
+          {
+            "type": "code",
+            "value": "web-vitals"
+          },
+          {
+            "type": "text",
+            "value": " 上报 attribution，看是哪个节点、哪段脚本拖慢。"
+          }
         ],
         [
-          { "type": "text", "value": "3）" },
-          { "type": "strong", "value": "怎么改" },
-          { "type": "text", "value": "：React 里用 " },
-          { "type": "code", "value": "startTransition" },
-          { "type": "text", "value": " 拆非紧急更新；长列表虚拟化；重计算进 Web Worker 或分片。" }
+          {
+            "type": "text",
+            "value": "3）"
+          },
+          {
+            "type": "strong",
+            "value": "怎么改"
+          },
+          {
+            "type": "text",
+            "value": "：React 里用 "
+          },
+          {
+            "type": "code",
+            "value": "startTransition"
+          },
+          {
+            "type": "text",
+            "value": " 拆非紧急更新；长列表虚拟化；重计算进 Web Worker 或分片。"
+          }
         ],
         [
-          { "type": "text", "value": "有 " },
-          { "type": "code", "value": "scheduler.postTask" },
-          { "type": "text", "value": " 时可降优先级、主动让出主线程；统计/广告脚本延后或分区加载。" }
+          {
+            "type": "text",
+            "value": "有 "
+          },
+          {
+            "type": "code",
+            "value": "scheduler.postTask"
+          },
+          {
+            "type": "text",
+            "value": " 时可降优先级、主动让出主线程；统计/广告脚本延后或分区加载。"
+          }
         ]
       ]
     },
@@ -86,34 +200,100 @@
       "questionNote": "长任务会阻塞输入与绘制；要能说出监听手段和「分片/下沉」两类手段。",
       "answer": [
         [
-          { "type": "strong", "value": "发现：" },
-          { "type": "code", "value": "PerformanceObserver" },
-          { "type": "text", "value": " 监听 " },
-          { "type": "code", "value": "longtask" },
-          { "type": "text", "value": "；火焰图看黄色长条；真实用户监控（RUM）统计超 50ms 任务次数。" }
+          {
+            "type": "strong",
+            "value": "发现："
+          },
+          {
+            "type": "code",
+            "value": "PerformanceObserver"
+          },
+          {
+            "type": "text",
+            "value": " 监听 "
+          },
+          {
+            "type": "code",
+            "value": "longtask"
+          },
+          {
+            "type": "text",
+            "value": "；火焰图看黄色长条；真实用户监控（RUM）统计超 50ms 任务次数。"
+          }
         ],
         [
-          { "type": "text", "value": "1）" },
-          { "type": "strong", "value": "分片" },
-          { "type": "text", "value": "：大数组用 " },
-          { "type": "code", "value": "requestIdleCallback" },
-          { "type": "text", "value": " 或 " },
-          { "type": "code", "value": "scheduler.postTask" },
-          { "type": "text", "value": " 每帧处理一批，避免一次算太久。" }
+          {
+            "type": "text",
+            "value": "1）"
+          },
+          {
+            "type": "strong",
+            "value": "分片"
+          },
+          {
+            "type": "text",
+            "value": "：大数组用 "
+          },
+          {
+            "type": "code",
+            "value": "requestIdleCallback"
+          },
+          {
+            "type": "text",
+            "value": " 或 "
+          },
+          {
+            "type": "code",
+            "value": "scheduler.postTask"
+          },
+          {
+            "type": "text",
+            "value": " 每帧处理一批，避免一次算太久。"
+          }
         ],
         [
-          { "type": "text", "value": "2）" },
-          { "type": "strong", "value": "下沉" },
-          { "type": "text", "value": "：重计算丢进 " },
-          { "type": "code", "value": "Web Worker" },
-          { "type": "text", "value": "，主线程只收结果。" }
+          {
+            "type": "text",
+            "value": "2）"
+          },
+          {
+            "type": "strong",
+            "value": "下沉"
+          },
+          {
+            "type": "text",
+            "value": "：重计算丢进 "
+          },
+          {
+            "type": "code",
+            "value": "Web Worker"
+          },
+          {
+            "type": "text",
+            "value": "，主线程只收结果。"
+          }
         ],
         [
-          { "type": "text", "value": "3）" },
-          { "type": "strong", "value": "减首屏同步活" },
-          { "type": "text", "value": "：避免首屏同步 " },
-          { "type": "code", "value": "JSON.parse" },
-          { "type": "text", "value": " 超大 localStorage。" }
+          {
+            "type": "text",
+            "value": "3）"
+          },
+          {
+            "type": "strong",
+            "value": "减首屏同步活"
+          },
+          {
+            "type": "text",
+            "value": "：避免首屏同步 "
+          },
+          {
+            "type": "code",
+            "value": "JSON.parse"
+          },
+          {
+            "type": "text",
+            "value": " 超大 localStorage。"
+          }
         ]
       ]
     },
@@ -124,29 +304,80 @@
       "questionNote": "分清主线程布局绘制与合成线程独立动画；别滥用提层 hack。",
       "answer": [
         [
-          { "type": "strong", "value": "分工：" },
-          { "type": "text", "value": "主线程算样式、布局、绘制命令；" },
-          { "type": "strong", "value": "合成线程" },
-          { "type": "text", "value": "可独立做滚动、" },
-          { "type": "code", "value": "transform/opacity" },
-          { "type": "text", "value": " 动画，不抢 JavaScript 执行。" }
+          {
+            "type": "strong",
+            "value": "分工："
+          },
+          {
+            "type": "text",
+            "value": "主线程算样式、布局、绘制命令；"
+          },
+          {
+            "type": "strong",
+            "value": "合成线程"
+          },
+          {
+            "type": "text",
+            "value": "可独立做滚动、"
+          },
+          {
+            "type": "code",
+            "value": "transform/opacity"
+          },
+          {
+            "type": "text",
+            "value": " 动画，不抢 JavaScript 执行。"
+          }
         ],
         [
-          { "type": "text", "value": "1）动画尽量只动 " },
-          { "type": "code", "value": "transform" },
-          { "type": "text", "value": " 与 " },
-          { "type": "code", "value": "opacity" },
-          { "type": "text", "value": "，走合成层，减少重排重绘。" }
+          {
+            "type": "text",
+            "value": "1）动画尽量只动 "
+          },
+          {
+            "type": "code",
+            "value": "transform"
+          },
+          {
+            "type": "text",
+            "value": " 与 "
+          },
+          {
+            "type": "code",
+            "value": "opacity"
+          },
+          {
+            "type": "text",
+            "value": "，走合成层，减少重排重绘。"
+          }
         ],
         [
-          { "type": "text", "value": "2）滥用 " },
-          { "type": "code", "value": "will-change" },
-          { "type": "text", "value": " 或 " },
-          { "type": "code", "value": "translateZ(0)" },
-          { "type": "text", "value": " 强行提层会吃显存；滚动回调里别塞重逻辑。" }
+          {
+            "type": "text",
+            "value": "2）滥用 "
+          },
+          {
+            "type": "code",
+            "value": "will-change"
+          },
+          {
+            "type": "text",
+            "value": " 或 "
+          },
+          {
+            "type": "code",
+            "value": "translateZ(0)"
+          },
+          {
+            "type": "text",
+            "value": " 强行提层会吃显存；滚动回调里别塞重逻辑。"
+          }
         ],
         [
-          { "type": "text", "value": "面试点到「动画走合成、逻辑别绑 scroll」即可，不必背层数公式。" }
+          {
+            "type": "text",
+            "value": "面试点到「动画走合成、逻辑别绑 scroll」即可，不必背层数公式。"
+          }
         ]
       ]
     },
@@ -157,38 +388,110 @@
       "questionNote": "格式、尺寸、传输、占位四块；LCP 图可提优先级。",
       "answer": [
         [
-          { "type": "strong", "value": "结论：" },
-          { "type": "text", "value": "用对格式与尺寸，再配合 CDN、懒加载和占位，兼顾体积与累积布局偏移（CLS）。" }
+          {
+            "type": "strong",
+            "value": "结论："
+          },
+          {
+            "type": "text",
+            "value": "用对格式与尺寸，再配合 CDN、懒加载和占位，兼顾体积与累积布局偏移（CLS）。"
+          }
         ],
         [
-          { "type": "text", "value": "1）" },
-          { "type": "strong", "value": "格式" },
-          { "type": "text", "value": "：照片用 " },
-          { "type": "code", "value": "WebP/AVIF" },
-          { "type": "text", "value": "，图标用 " },
-          { "type": "code", "value": "SVG" },
-          { "type": "text", "value": "。" }
+          {
+            "type": "text",
+            "value": "1）"
+          },
+          {
+            "type": "strong",
+            "value": "格式"
+          },
+          {
+            "type": "text",
+            "value": "：照片用 "
+          },
+          {
+            "type": "code",
+            "value": "WebP/AVIF"
+          },
+          {
+            "type": "text",
+            "value": "，图标用 "
+          },
+          {
+            "type": "code",
+            "value": "SVG"
+          },
+          {
+            "type": "text",
+            "value": "。"
+          }
         ],
         [
-          { "type": "text", "value": "2）" },
-          { "type": "strong", "value": "尺寸" },
-          { "type": "text", "value": "：" },
-          { "type": "code", "value": "srcset + sizes" },
-          { "type": "text", "value": " 按设备像素比与槽宽切档，别在 400px 槽里塞 4000px 原图。" }
+          {
+            "type": "text",
+            "value": "2）"
+          },
+          {
+            "type": "strong",
+            "value": "尺寸"
+          },
+          {
+            "type": "text",
+            "value": "："
+          },
+          {
+            "type": "code",
+            "value": "srcset + sizes"
+          },
+          {
+            "type": "text",
+            "value": " 按设备像素比与槽宽切档，别在 400px 槽里塞 4000px 原图。"
+          }
         ],
         [
-          { "type": "text", "value": "3）" },
-          { "type": "strong", "value": "传输" },
-          { "type": "text", "value": "：走内容分发网络（CDN）并压缩；首屏外用 " },
-          { "type": "code", "value": "loading=\"lazy\"" },
-          { "type": "text", "value": "；预留宽高防 CLS。" }
+          {
+            "type": "text",
+            "value": "3）"
+          },
+          {
+            "type": "strong",
+            "value": "传输"
+          },
+          {
+            "type": "text",
+            "value": "：走内容分发网络（CDN）并压缩；首屏外用 "
+          },
+          {
+            "type": "code",
+            "value": "loading=\"lazy\""
+          },
+          {
+            "type": "text",
+            "value": "；预留宽高防 CLS。"
+          }
         ],
         [
-          { "type": "text", "value": "4）" },
-          { "type": "strong", "value": "LCP 图" },
-          { "type": "text", "value": "：Chrome 可对最大内容绘制图设 " },
-          { "type": "code", "value": "fetchpriority=\"high\"" },
-          { "type": "text", "value": " 提高优先级。" }
+          {
+            "type": "text",
+            "value": "4）"
+          },
+          {
+            "type": "strong",
+            "value": "LCP 图"
+          },
+          {
+            "type": "text",
+            "value": "：Chrome 可对最大内容绘制图设 "
+          },
+          {
+            "type": "code",
+            "value": "fetchpriority=\"high\""
+          },
+          {
+            "type": "text",
+            "value": " 提高优先级。"
+          }
         ]
       ]
     },
@@ -199,24 +502,60 @@
       "questionNote": "字体阻塞显示（FOIT）/字体闪烁（FOUT）与 font-display、preload 策略相关。",
       "answer": [
         [
-          { "type": "strong", "value": "策略：" },
-          { "type": "code", "value": "font-display: swap" },
-          { "type": "text", "value": " 先系统字再换 webfont，可读优先，可能闪一下。" }
+          {
+            "type": "strong",
+            "value": "策略："
+          },
+          {
+            "type": "code",
+            "value": "font-display: swap"
+          },
+          {
+            "type": "text",
+            "value": " 先系统字再换 webfont，可读优先，可能闪一下。"
+          }
         ],
         [
-          { "type": "text", "value": "1）弱网可用 " },
-          { "type": "code", "value": "font-display: optional" },
-          { "type": "text", "value": "，超时就不换字，减轻字体闪烁（FOUT）。" }
+          {
+            "type": "text",
+            "value": "1）弱网可用 "
+          },
+          {
+            "type": "code",
+            "value": "font-display: optional"
+          },
+          {
+            "type": "text",
+            "value": "，超时就不换字，减轻字体闪烁（FOUT）。"
+          }
         ],
         [
-          { "type": "text", "value": "2）关键字体 " },
-          { "type": "code", "value": "preload" },
-          { "type": "text", "value": " woff2，并做子集化减体积。" }
+          {
+            "type": "text",
+            "value": "2）关键字体 "
+          },
+          {
+            "type": "code",
+            "value": "preload"
+          },
+          {
+            "type": "text",
+            "value": " woff2，并做子集化减体积。"
+          }
         ],
         [
-          { "type": "text", "value": "3）可变字体用 " },
-          { "type": "code", "value": "font-variation-settings" },
-          { "type": "text", "value": " 一文件多字重；注意版权与许可。" }
+          {
+            "type": "text",
+            "value": "3）可变字体用 "
+          },
+          {
+            "type": "code",
+            "value": "font-variation-settings"
+          },
+          {
+            "type": "text",
+            "value": " 一文件多字重；注意版权与许可。"
+          }
         ]
       ]
     },
@@ -227,28 +566,76 @@
       "questionNote": "preload 抢带宽拉本页关键资源；prefetch 空闲预取下一路由。",
       "answer": [
         [
-          { "type": "code", "value": "preload" },
-          { "type": "text", "value": "：" },
-          { "type": "strong", "value": "高优先级" },
-          { "type": "text", "value": "提前拿「本页马上要用」的字体、首屏 CSS、最大内容绘制（LCP）图或拆分 chunk。" }
+          {
+            "type": "code",
+            "value": "preload"
+          },
+          {
+            "type": "text",
+            "value": "："
+          },
+          {
+            "type": "strong",
+            "value": "高优先级"
+          },
+          {
+            "type": "text",
+            "value": "提前拿「本页马上要用」的字体、首屏 CSS、最大内容绘制（LCP）图或拆分 chunk。"
+          }
         ],
         [
-          { "type": "text", "value": "1）" },
-          { "type": "code", "value": "as" },
-          { "type": "text", "value": " 须与真实请求类型一致，否则浏览器可能浪费带宽或重复拉取。" }
+          {
+            "type": "text",
+            "value": "1）"
+          },
+          {
+            "type": "code",
+            "value": "as"
+          },
+          {
+            "type": "text",
+            "value": " 须与真实请求类型一致，否则浏览器可能浪费带宽或重复拉取。"
+          }
         ],
         [
-          { "type": "code", "value": "prefetch" },
-          { "type": "text", "value": "：" },
-          { "type": "strong", "value": "低优先级" },
-          { "type": "text", "value": "在空闲时预取下一页可能用到的资源，适合单页应用（SPA）路由切换。" }
+          {
+            "type": "code",
+            "value": "prefetch"
+          },
+          {
+            "type": "text",
+            "value": "："
+          },
+          {
+            "type": "strong",
+            "value": "低优先级"
+          },
+          {
+            "type": "text",
+            "value": "在空闲时预取下一页可能用到的资源，适合单页应用（SPA）路由切换。"
+          }
         ],
         [
-          { "type": "text", "value": "2）" },
-          { "type": "code", "value": "preconnect" },
-          { "type": "text", "value": " / " },
-          { "type": "code", "value": "dns-prefetch" },
-          { "type": "text", "value": " 则提前建连或做域名解析（DNS），减传输层安全（TLS）往返时延。" }
+          {
+            "type": "text",
+            "value": "2）"
+          },
+          {
+            "type": "code",
+            "value": "preconnect"
+          },
+          {
+            "type": "text",
+            "value": " / "
+          },
+          {
+            "type": "code",
+            "value": "dns-prefetch"
+          },
+          {
+            "type": "text",
+            "value": " 则提前建连或做域名解析（DNS），减传输层安全（TLS）往返时延。"
+          }
         ]
       ]
     },
@@ -259,31 +646,88 @@
       "questionNote": "路由级与组件级动态 import；打包工具 manualChunks 配合验证首包。",
       "answer": [
         [
-          { "type": "strong", "value": "结论：" },
-          { "type": "text", "value": "按路由和重组件拆包，首屏只拉当前页需要的 JavaScript。" }
+          {
+            "type": "strong",
+            "value": "结论："
+          },
+          {
+            "type": "text",
+            "value": "按路由和重组件拆包，首屏只拉当前页需要的 JavaScript。"
+          }
         ],
         [
-          { "type": "text", "value": "1）" },
-          { "type": "strong", "value": "路由级" },
-          { "type": "text", "value": "：" },
-          { "type": "code", "value": "() => import('./Page.vue')" },
-          { "type": "text", "value": " 或 React " },
-          { "type": "code", "value": "lazy(() => import('./Page'))" },
-          { "type": "text", "value": "。" }
+          {
+            "type": "text",
+            "value": "1）"
+          },
+          {
+            "type": "strong",
+            "value": "路由级"
+          },
+          {
+            "type": "text",
+            "value": "："
+          },
+          {
+            "type": "code",
+            "value": "() => import('./Page.vue')"
+          },
+          {
+            "type": "text",
+            "value": " 或 React "
+          },
+          {
+            "type": "code",
+            "value": "lazy(() => import('./Page'))"
+          },
+          {
+            "type": "text",
+            "value": "。"
+          }
         ],
         [
-          { "type": "text", "value": "2）" },
-          { "type": "strong", "value": "组件级" },
-          { "type": "text", "value": "：图表、编辑器等大 SDK 进弹窗再动态 import 挂载。" }
+          {
+            "type": "text",
+            "value": "2）"
+          },
+          {
+            "type": "strong",
+            "value": "组件级"
+          },
+          {
+            "type": "text",
+            "value": "：图表、编辑器等大 SDK 进弹窗再动态 import 挂载。"
+          }
         ],
         [
-          { "type": "text", "value": "3）" },
-          { "type": "strong", "value": "构建配置" },
-          { "type": "text", "value": "：Webpack 魔法注释 " },
-          { "type": "code", "value": "webpackChunkName" },
-          { "type": "text", "value": "，或 Vite/Rollup 的 " },
-          { "type": "code", "value": "manualChunks" },
-          { "type": "text", "value": " 把框架与业务拆开；改完测首包与二次导航耗时。" }
+          {
+            "type": "text",
+            "value": "3）"
+          },
+          {
+            "type": "strong",
+            "value": "构建配置"
+          },
+          {
+            "type": "text",
+            "value": "：Webpack 魔法注释 "
+          },
+          {
+            "type": "code",
+            "value": "webpackChunkName"
+          },
+          {
+            "type": "text",
+            "value": "，或 Vite/Rollup 的 "
+          },
+          {
+            "type": "code",
+            "value": "manualChunks"
+          },
+          {
+            "type": "text",
+            "value": " 把框架与业务拆开；改完测首包与二次导航耗时。"
+          }
         ]
       ]
     },
@@ -294,24 +738,66 @@
       "questionNote": "虚拟列表是标准答案；简单场景可分页或无限滚动。",
       "answer": [
         [
-          { "type": "strong", "value": "首选：虚拟列表" },
-          { "type": "text", "value": "，只渲染可视区上下各多几十条缓冲，滚动时复用 DOM。" }
+          {
+            "type": "strong",
+            "value": "首选：虚拟列表"
+          },
+          {
+            "type": "text",
+            "value": "，只渲染可视区上下各多几十条缓冲，滚动时复用 DOM。"
+          }
         ],
         [
-          { "type": "text", "value": "1）按 " },
-          { "type": "code", "value": "scrollTop" },
-          { "type": "text", "value": " 换算 " },
-          { "type": "code", "value": "startIndex" },
-          { "type": "text", "value": "，库如 " },
-          { "type": "code", "value": "@tanstack/react-virtual" },
-          { "type": "text", "value": "、" },
-          { "type": "code", "value": "vue-virtual-scroller" },
-          { "type": "text", "value": "。" }
+          {
+            "type": "text",
+            "value": "1）按 "
+          },
+          {
+            "type": "code",
+            "value": "scrollTop"
+          },
+          {
+            "type": "text",
+            "value": " 换算 "
+          },
+          {
+            "type": "code",
+            "value": "startIndex"
+          },
+          {
+            "type": "text",
+            "value": "，库如 "
+          },
+          {
+            "type": "code",
+            "value": "@tanstack/react-virtual"
+          },
+          {
+            "type": "text",
+            "value": "、"
+          },
+          {
+            "type": "code",
+            "value": "vue-virtual-scroller"
+          },
+          {
+            "type": "text",
+            "value": "。"
+          }
         ],
         [
-          { "type": "text", "value": "2）交互简单可用分页或无限滚动 + 节流，本质是" },
-          { "type": "strong", "value": "减少 DOM 节点与布局次数" },
-          { "type": "text", "value": "。" }
+          {
+            "type": "text",
+            "value": "2）交互简单可用分页或无限滚动 + 节流，本质是"
+          },
+          {
+            "type": "strong",
+            "value": "减少 DOM 节点与布局次数"
+          },
+          {
+            "type": "text",
+            "value": "。"
+          }
         ]
       ]
     },
@@ -322,25 +808,64 @@
       "questionNote": "延后加载、异步属性、审计体积；Partytown 等按兼容性提及即可。",
       "answer": [
         [
-          { "type": "strong", "value": "原则：" },
-          { "type": "text", "value": "能不上就不上；必须上的尽量别抢首屏主线程。" }
+          {
+            "type": "strong",
+            "value": "原则："
+          },
+          {
+            "type": "text",
+            "value": "能不上就不上；必须上的尽量别抢首屏主线程。"
+          }
         ],
         [
-          { "type": "text", "value": "1）延后到 " },
-          { "type": "code", "value": "load" },
-          { "type": "text", "value": " 或 " },
-          { "type": "code", "value": "requestIdleCallback" },
-          { "type": "text", "value": " 再注入；用 " },
-          { "type": "code", "value": "async/defer" },
-          { "type": "text", "value": "。" }
+          {
+            "type": "text",
+            "value": "1）延后到 "
+          },
+          {
+            "type": "code",
+            "value": "load"
+          },
+          {
+            "type": "text",
+            "value": " 或 "
+          },
+          {
+            "type": "code",
+            "value": "requestIdleCallback"
+          },
+          {
+            "type": "text",
+            "value": " 再注入；用 "
+          },
+          {
+            "type": "code",
+            "value": "async/defer"
+          },
+          {
+            "type": "text",
+            "value": "。"
+          }
         ],
         [
-          { "type": "text", "value": "2）能 " },
-          { "type": "code", "value": "import()" },
-          { "type": "text", "value": " 的走动态加载；可用 Partytown 等把脚本迁到 Worker（视兼容性）。" }
+          {
+            "type": "text",
+            "value": "2）能 "
+          },
+          {
+            "type": "code",
+            "value": "import()"
+          },
+          {
+            "type": "text",
+            "value": " 的走动态加载；可用 Partytown 等把脚本迁到 Worker（视兼容性）。"
+          }
         ],
         [
-          { "type": "text", "value": "3）定期用打包分析看 bundle 里谁最大，和业务方对齐是否可删。" }
+          {
+            "type": "text",
+            "value": "3）定期用打包分析看 bundle 里谁最大，和业务方对齐是否可删。"
+          }
         ]
       ]
     },
@@ -351,25 +876,146 @@
       "questionNote": "真实用户监控（RUM）与实验室 Lighthouse 互补；强调分位与维度切片。",
       "answer": [
         [
-          { "type": "strong", "value": "目标：" },
-          { "type": "text", "value": "在真实用户环境打点，按版本、地区、机型切片，发现长尾问题。" }
+          {
+            "type": "strong",
+            "value": "目标："
+          },
+          {
+            "type": "text",
+            "value": "在真实用户环境打点，按版本、地区、机型切片，发现长尾问题。"
+          }
         ],
         [
-          { "type": "text", "value": "1）指标：首字节时间（TTFB）、首次内容绘制（FCP）、最大内容绘制（LCP）、长任务、接口 P95、白屏率。" }
+          {
+            "type": "text",
+            "value": "1）指标：首字节时间（TTFB）、首次内容绘制（FCP）、最大内容绘制（LCP）、长任务、接口 P95、白屏率。"
+          }
         ],
         [
-          { "type": "text", "value": "2）实现：" },
-          { "type": "code", "value": "PerformanceObserver" },
-          { "type": "text", "value": " 监听 " },
-          { "type": "code", "value": "largest-contentful-paint" },
-          { "type": "text", "value": "、" },
-          { "type": "code", "value": "longtask" },
-          { "type": "text", "value": " 等。" }
+          {
+            "type": "text",
+            "value": "2）实现："
+          },
+          {
+            "type": "code",
+            "value": "PerformanceObserver"
+          },
+          {
+            "type": "text",
+            "value": " 监听 "
+          },
+          {
+            "type": "code",
+            "value": "largest-contentful-paint"
+          },
+          {
+            "type": "text",
+            "value": "、"
+          },
+          {
+            "type": "code",
+            "value": "longtask"
+          },
+          {
+            "type": "text",
+            "value": " 等。"
+          }
         ],
         [
-          { "type": "text", "value": "3）关页用 " },
-          { "type": "code", "value": "navigator.sendBeacon" },
-          { "type": "text", "value": " 尽量把队列发出去；与单次 Lighthouse 跑分互补，别只信实验室。" }
+          {
+            "type": "text",
+            "value": "3）关页用 "
+          },
+          {
+            "type": "code",
+            "value": "navigator.sendBeacon"
+          },
+          {
+            "type": "text",
+            "value": " 尽量把队列发出去；与单次 Lighthouse 跑分互补，别只信实验室。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-observability",
+      "navLabel": "埋点与可观测",
+      "question": "埋点、性能监控和错误上报怎么分工？",
+      "questionNote": "三者都上报，但目的不同；面试能说清指标类型与谁消费。",
+      "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "一句话："
+          },
+          {
+            "type": "text",
+            "value": "埋点看「用户做了什么」，性能监控看「快不快、卡不卡」，错误上报看「哪里挂了」。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "1）"
+          },
+          {
+            "type": "strong",
+            "value": "行为埋点"
+          },
+          {
+            "type": "text",
+            "value": "：点击、曝光、漏斗转化，给产品/运营；注意采样与隐私合规。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2）"
+          },
+          {
+            "type": "strong",
+            "value": "性能监控（RUM）"
+          },
+          {
+            "type": "text",
+            "value": "：Web Vitals、接口耗时、白屏率；用 "
+          },
+          {
+            "type": "code",
+            "value": "PerformanceObserver"
+          },
+          {
+            "type": "text",
+            "value": " 采集，与 Lighthouse 互补。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3）"
+          },
+          {
+            "type": "strong",
+            "value": "错误上报"
+          },
+          {
+            "type": "text",
+            "value": "：JS 异常、资源 404、接口 5xx；接 Sentry 等，带 release、路由、breadcrumb。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "4）可共用 "
+          },
+          {
+            "type": "code",
+            "value": "sendBeacon"
+          },
+          {
+            "type": "text",
+            "value": " 通道，但指标定义与告警要分开，避免一个大盘塞所有字段。"
+          }
         ]
       ]
     },
@@ -380,22 +1026,52 @@
       "questionNote": "资源提示（Resource Hints）按「解析 → 建连 → 本页关键 → 下页预取」递进使用。",
       "answer": [
         [
-          { "type": "code", "value": "dns-prefetch" },
-          { "type": "text", "value": "：只做域名解析（DNS）。" }
+          {
+            "type": "code",
+            "value": "dns-prefetch"
+          },
+          {
+            "type": "text",
+            "value": "：只做域名解析（DNS）。"
+          }
         ],
         [
-          { "type": "code", "value": "preconnect" },
-          { "type": "text", "value": "：解析 + TCP + 传输层安全（TLS），适合马上要用第三方接口或 CDN。" }
+          {
+            "type": "code",
+            "value": "preconnect"
+          },
+          {
+            "type": "text",
+            "value": "：解析 + TCP + 传输层安全（TLS），适合马上要用第三方接口或 CDN。"
+          }
         ],
         [
-          { "type": "code", "value": "preload" },
-          { "type": "text", "value": "：高优先级拉本页 LCP 图、关键 CSS；" },
-          { "type": "code", "value": "as" },
-          { "type": "text", "value": " 类型须与真实请求一致，滥用会抢带宽。" }
+          {
+            "type": "code",
+            "value": "preload"
+          },
+          {
+            "type": "text",
+            "value": "：高优先级拉本页 LCP 图、关键 CSS；"
+          },
+          {
+            "type": "code",
+            "value": "as"
+          },
+          {
+            "type": "text",
+            "value": " 类型须与真实请求一致，滥用会抢带宽。"
+          }
         ],
         [
-          { "type": "code", "value": "prefetch" },
-          { "type": "text", "value": "：空闲预取下一路由 chunk。可与网络章 DNS/TLS 优化一起答。" }
+          {
+            "type": "code",
+            "value": "prefetch"
+          },
+          {
+            "type": "text",
+            "value": "：空闲预取下一路由 chunk。可与网络章 DNS/TLS 优化一起答。"
+          }
         ]
       ]
     }

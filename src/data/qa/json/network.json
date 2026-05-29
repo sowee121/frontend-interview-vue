@@ -1,7 +1,7 @@
 {
   "slug": "network",
-  "title": "网络与安全",
-  "documentTitle": "网络与安全",
+  "title": "网络/安全",
+  "documentTitle": "网络/安全",
   "description": "覆盖建连、HTTP 演进、缓存与跨域，以及鉴权与 XSS/CSRF/CSP 等前端必知的安全机制。",
   "lead": "聚焦接口交互、鉴权选型与常见攻击面的防护思路。",
   "items": [
@@ -12,24 +12,60 @@
       "questionNote": "前端点到「双方确认收发能力、同步序列号」即可；深挖 RTT、半连接队列交给后端。",
       "answer": [
         [
-          { "type": "text", "value": "1）客户端发 " },
-          { "type": "strong", "value": "同步报文 SYN" },
-          { "type": "text", "value": "，携带初始序列号。" }
+          {
+            "type": "text",
+            "value": "1）客户端发 "
+          },
+          {
+            "type": "strong",
+            "value": "同步报文 SYN"
+          },
+          {
+            "type": "text",
+            "value": "，携带初始序列号。"
+          }
         ],
         [
-          { "type": "text", "value": "2）服务端回 " },
-          { "type": "code", "value": "SYN-ACK" },
-          { "type": "text", "value": "，确认客户端序号并带上自己的序号。" }
+          {
+            "type": "text",
+            "value": "2）服务端回 "
+          },
+          {
+            "type": "code",
+            "value": "SYN-ACK"
+          },
+          {
+            "type": "text",
+            "value": "，确认客户端序号并带上自己的序号。"
+          }
         ],
         [
-          { "type": "text", "value": "3）客户端发 " },
-          { "type": "strong", "value": "确认 ACK" },
-          { "type": "text", "value": "，双方确认收发能力，连接进入 " },
-          { "type": "code", "value": "ESTABLISHED" },
-          { "type": "text", "value": "。" }
+          {
+            "type": "text",
+            "value": "3）客户端发 "
+          },
+          {
+            "type": "strong",
+            "value": "确认 ACK"
+          },
+          {
+            "type": "text",
+            "value": "，双方确认收发能力，连接进入 "
+          },
+          {
+            "type": "code",
+            "value": "ESTABLISHED"
+          },
+          {
+            "type": "text",
+            "value": "。"
+          }
         ],
         [
-          { "type": "text", "value": "两次不够：防历史滞留连接被误认；三次让双方同步初始序列号，可靠传输才有基础。" }
+          {
+            "type": "text",
+            "value": "两次不够：防历史滞留连接被误认；三次让双方同步初始序列号，可靠传输才有基础。"
+          }
         ]
       ]
     },
@@ -40,18 +76,42 @@
       "questionNote": "资源提示（Resource Hints）是前端可直接落地的优化；HTTP/2 下域名分片反效果。",
       "answer": [
         [
-          { "type": "code", "value": "dns-prefetch" },
-          { "type": "text", "value": " 提前解析第三方域名；" },
-          { "type": "code", "value": "preconnect" },
-          { "type": "text", "value": " 进一步完成 TCP+TLS 握手。" }
+          {
+            "type": "code",
+            "value": "dns-prefetch"
+          },
+          {
+            "type": "text",
+            "value": " 提前解析第三方域名；"
+          },
+          {
+            "type": "code",
+            "value": "preconnect"
+          },
+          {
+            "type": "text",
+            "value": " 进一步完成 TCP+TLS 握手。"
+          }
         ],
         [
-          { "type": "text", "value": "静态资源尽量与主文档同站；HTTP/2 多路复用下过多域名分片反而增加连接开销。" }
+          {
+            "type": "text",
+            "value": "静态资源尽量与主文档同站；HTTP/2 多路复用下过多域名分片反而增加连接开销。"
+          }
         ],
         [
-          { "type": "text", "value": "HTTP/3 QUIC 首包建连更快，属基础设施选型；页面侧把 " },
-          { "type": "code", "value": "preconnect" },
-          { "type": "text", "value": " 用对通常就够。" }
+          {
+            "type": "text",
+            "value": "HTTP/3 QUIC 首包建连更快，属基础设施选型；页面侧把 "
+          },
+          {
+            "type": "code",
+            "value": "preconnect"
+          },
+          {
+            "type": "text",
+            "value": " 用对通常就够。"
+          }
         ]
       ]
     },
@@ -62,22 +122,58 @@
       "questionNote": "理解差异才能解释「为什么 HTTP/2 后少做域名分片、雪碧图」等历史优化。",
       "answer": [
         [
-          { "type": "text", "value": "HTTP/1.1：同域名并发连接数有限（常见 6 条），多了要靠" },
-          { "type": "strong", "value": "域名分片" },
-          { "type": "text", "value": "、合并资源绕瓶颈；文本头部重复传输多。" }
+          {
+            "type": "text",
+            "value": "HTTP/1.1：同域名并发连接数有限（常见 6 条），多了要靠"
+          },
+          {
+            "type": "strong",
+            "value": "域名分片"
+          },
+          {
+            "type": "text",
+            "value": "、合并资源绕瓶颈；文本头部重复传输多。"
+          }
         ],
         [
-          { "type": "strong", "value": "HTTP/2" },
-          { "type": "text", "value": "：单连接" },
-          { "type": "strong", "value": "多路复用" },
-          { "type": "text", "value": "多个流，二进制分帧，" },
-          { "type": "strong", "value": "头部压缩（HPACK）" },
-          { "type": "text", "value": "减少重复头；服务端推送（Server Push）实际用得少。" }
+          {
+            "type": "strong",
+            "value": "HTTP/2"
+          },
+          {
+            "type": "text",
+            "value": "：单连接"
+          },
+          {
+            "type": "strong",
+            "value": "多路复用"
+          },
+          {
+            "type": "text",
+            "value": "多个流，二进制分帧，"
+          },
+          {
+            "type": "strong",
+            "value": "头部压缩（HPACK）"
+          },
+          {
+            "type": "text",
+            "value": "减少重复头；服务端推送（Server Push）实际用得少。"
+          }
         ],
         [
-          { "type": "text", "value": "HTTP/3 跑在 " },
-          { "type": "code", "value": "QUIC/UDP" },
-          { "type": "text", "value": " 上，减少握手 RTT，弱网丢包只阻塞单流。" }
+          {
+            "type": "text",
+            "value": "HTTP/3 跑在 "
+          },
+          {
+            "type": "code",
+            "value": "QUIC/UDP"
+          },
+          {
+            "type": "text",
+            "value": " 上，减少握手 RTT，弱网丢包只阻塞单流。"
+          }
         ]
       ]
     },
@@ -88,25 +184,64 @@
       "questionNote": "TLS 解决机密性与完整性；证书链校验防中间人——前端应知道 HSTS 等配套。",
       "answer": [
         [
-          { "type": "text", "value": "HTTP 明文，链路任一点抓包可见 body。HTTPS = HTTP + " },
-          { "type": "strong", "value": "TLS" },
-          { "type": "text", "value": "。" }
+          {
+            "type": "text",
+            "value": "HTTP 明文，链路任一点抓包可见 body。HTTPS = HTTP + "
+          },
+          {
+            "type": "strong",
+            "value": "TLS"
+          },
+          {
+            "type": "text",
+            "value": "。"
+          }
         ],
         [
-          { "type": "text", "value": "握手阶段用非对称加密协商 " },
-          { "type": "strong", "value": "对称会话密钥" },
-          { "type": "text", "value": "，之后数据对称加密传输。" }
+          {
+            "type": "text",
+            "value": "握手阶段用非对称加密协商 "
+          },
+          {
+            "type": "strong",
+            "value": "对称会话密钥"
+          },
+          {
+            "type": "text",
+            "value": "，之后数据对称加密传输。"
+          }
         ],
         [
-          { "type": "strong", "value": "证书链" },
-          { "type": "text", "value": "由客户端校验域名、有效期与吊销状态，防中间人冒充。" }
+          {
+            "type": "strong",
+            "value": "证书链"
+          },
+          {
+            "type": "text",
+            "value": "由客户端校验域名、有效期与吊销状态，防中间人冒充。"
+          }
         ],
         [
-          { "type": "text", "value": "顺带提 " },
-          { "type": "code", "value": "HSTS" },
-          { "type": "text", "value": " 强制 HTTPS；" },
-          { "type": "code", "value": "HPKP" },
-          { "type": "text", "value": " 已废弃，不必再背。" }
+          {
+            "type": "text",
+            "value": "顺带提 "
+          },
+          {
+            "type": "code",
+            "value": "HSTS"
+          },
+          {
+            "type": "text",
+            "value": " 强制 HTTPS；"
+          },
+          {
+            "type": "code",
+            "value": "HPKP"
+          },
+          {
+            "type": "text",
+            "value": " 已废弃，不必再背。"
+          }
         ]
       ]
     },
@@ -117,20 +252,44 @@
       "questionNote": "语义与缓存行为是重点；「POST 更安全」是常见误区。",
       "answer": [
         [
-          { "type": "code", "value": "GET" },
-          { "type": "text", "value": "：语义宜幂等、读资源，参数通常在 URL query，可被缓存、书签、服务端日志记录。" }
+          {
+            "type": "code",
+            "value": "GET"
+          },
+          {
+            "type": "text",
+            "value": "：语义宜幂等、读资源，参数通常在 URL query，可被缓存、书签、服务端日志记录。"
+          }
         ],
         [
-          { "type": "code", "value": "POST" },
-          { "type": "text", "value": "：常表示创建/提交，body 可带复杂结构，默认不被强缓存。" }
+          {
+            "type": "code",
+            "value": "POST"
+          },
+          {
+            "type": "text",
+            "value": "：常表示创建/提交，body 可带复杂结构，默认不被强缓存。"
+          }
         ],
         [
-          { "type": "text", "value": "HTTPS 下两者都加密传输；「POST 更安全」是误区。" },
-          { "type": "code", "value": "GET" },
-          { "type": "text", "value": " 也能带 body 但不推荐，中间件与缓存行为不一致。" }
+          {
+            "type": "text",
+            "value": "HTTPS 下两者都加密传输；「POST 更安全」是误区。"
+          },
+          {
+            "type": "code",
+            "value": "GET"
+          },
+          {
+            "type": "text",
+            "value": " 也能带 body 但不推荐，中间件与缓存行为不一致。"
+          }
         ],
         [
-          { "type": "text", "value": "敏感信息别放 URL，防泄露在日志、Referer 与浏览器历史里。" }
+          {
+            "type": "text",
+            "value": "敏感信息别放 URL，防泄露在日志、Referer 与浏览器历史里。"
+          }
         ]
       ]
     },
@@ -141,23 +300,62 @@
       "questionNote": "REST 是资源+动词语义；现实项目常有 RPC 风格，不必教条。",
       "answer": [
         [
-          { "type": "text", "value": "用 " },
-          { "type": "code", "value": "HTTP 方法 + 资源名词 URL" },
-          { "type": "text", "value": " 表达操作：" },
-          { "type": "code", "value": "GET /users/1" },
-          { "type": "text", "value": " 查、" },
-          { "type": "code", "value": "POST /users" },
-          { "type": "text", "value": " 建。" }
+          {
+            "type": "text",
+            "value": "用 "
+          },
+          {
+            "type": "code",
+            "value": "HTTP 方法 + 资源名词 URL"
+          },
+          {
+            "type": "text",
+            "value": " 表达操作："
+          },
+          {
+            "type": "code",
+            "value": "GET /users/1"
+          },
+          {
+            "type": "text",
+            "value": " 查、"
+          },
+          {
+            "type": "code",
+            "value": "POST /users"
+          },
+          {
+            "type": "text",
+            "value": " 建。"
+          }
         ],
         [
-          { "type": "code", "value": "PUT/PATCH" },
-          { "type": "text", "value": " 改、" },
-          { "type": "code", "value": "DELETE" },
-          { "type": "text", "value": " 删；状态码表达结果。实际接口常有 RPC 风格，按团队约定即可。" }
+          {
+            "type": "code",
+            "value": "PUT/PATCH"
+          },
+          {
+            "type": "text",
+            "value": " 改、"
+          },
+          {
+            "type": "code",
+            "value": "DELETE"
+          },
+          {
+            "type": "text",
+            "value": " 删；状态码表达结果。实际接口常有 RPC 风格，按团队约定即可。"
+          }
         ],
         [
-          { "type": "code", "value": "GraphQL" },
-          { "type": "text", "value": "：单端点按需取字段，减少 over-fetching；代价是缓存、复杂度与 N+1 需服务端治理。" }
+          {
+            "type": "code",
+            "value": "GraphQL"
+          },
+          {
+            "type": "text",
+            "value": "：单端点按需取字段，减少 over-fetching；代价是缓存、复杂度与 N+1 需服务端治理。"
+          }
         ]
       ]
     },
@@ -168,36 +366,108 @@
       "questionNote": "强缓存 vs 协商缓存决定 Network 面板是否发请求；静态资源常配合 contenthash。",
       "answer": [
         [
-          { "type": "strong", "value": "强缓存" },
-          { "type": "text", "value": "：响应含 " },
-          { "type": "code", "value": "Cache-Control: max-age=..." },
-          { "type": "text", "value": " 或 " },
-          { "type": "code", "value": "Expires" },
-          { "type": "text", "value": "，未过期" },
-          { "type": "strong", "value": "不发网络请求" },
-          { "type": "text", "value": "，直接用本地副本。" }
+          {
+            "type": "strong",
+            "value": "强缓存"
+          },
+          {
+            "type": "text",
+            "value": "：响应含 "
+          },
+          {
+            "type": "code",
+            "value": "Cache-Control: max-age=..."
+          },
+          {
+            "type": "text",
+            "value": " 或 "
+          },
+          {
+            "type": "code",
+            "value": "Expires"
+          },
+          {
+            "type": "text",
+            "value": "，未过期"
+          },
+          {
+            "type": "strong",
+            "value": "不发网络请求"
+          },
+          {
+            "type": "text",
+            "value": "，直接用本地副本。"
+          }
         ],
         [
-          { "type": "strong", "value": "协商缓存" },
-          { "type": "text", "value": "：过期后带 " },
-          { "type": "code", "value": "If-None-Match" },
-          { "type": "text", "value": " / " },
-          { "type": "code", "value": "If-Modified-Since" },
-          { "type": "text", "value": " 询问服务端。" }
+          {
+            "type": "strong",
+            "value": "协商缓存"
+          },
+          {
+            "type": "text",
+            "value": "：过期后带 "
+          },
+          {
+            "type": "code",
+            "value": "If-None-Match"
+          },
+          {
+            "type": "text",
+            "value": " / "
+          },
+          {
+            "type": "code",
+            "value": "If-Modified-Since"
+          },
+          {
+            "type": "text",
+            "value": " 询问服务端。"
+          }
         ],
         [
-          { "type": "text", "value": "返回 " },
-          { "type": "code", "value": "304" },
-          { "type": "text", "value": " 则体为空继续用旧文件；" },
-          { "type": "code", "value": "200" },
-          { "type": "text", "value": " 则下载新内容。" }
+          {
+            "type": "text",
+            "value": "返回 "
+          },
+          {
+            "type": "code",
+            "value": "304"
+          },
+          {
+            "type": "text",
+            "value": " 则体为空继续用旧文件；"
+          },
+          {
+            "type": "code",
+            "value": "200"
+          },
+          {
+            "type": "text",
+            "value": " 则下载新内容。"
+          }
         ],
         [
-          { "type": "text", "value": "静态资源文件名带 " },
-          { "type": "code", "value": "contenthash" },
-          { "type": "text", "value": " + 长 " },
-          { "type": "code", "value": "max-age" },
-          { "type": "text", "value": " 是常见生产组合。" }
+          {
+            "type": "text",
+            "value": "静态资源文件名带 "
+          },
+          {
+            "type": "code",
+            "value": "contenthash"
+          },
+          {
+            "type": "text",
+            "value": " + 长 "
+          },
+          {
+            "type": "code",
+            "value": "max-age"
+          },
+          {
+            "type": "text",
+            "value": " 是常见生产组合。"
+          }
         ]
       ]
     },
@@ -208,19 +478,46 @@
       "questionNote": "压缩由服务端返回 Content-Encoding；前端主要确保构建产物可被压缩且体积合理。",
       "answer": [
         [
-          { "type": "text", "value": "服务端返回 " },
-          { "type": "code", "value": "Content-Encoding: gzip / br" },
-          { "type": "text", "value": "，浏览器自动解压；" },
-          { "type": "code", "value": "br" },
-          { "type": "text", "value": " 文本压缩率通常优于 gzip。" }
+          {
+            "type": "text",
+            "value": "服务端返回 "
+          },
+          {
+            "type": "code",
+            "value": "Content-Encoding: gzip / br"
+          },
+          {
+            "type": "text",
+            "value": "，浏览器自动解压；"
+          },
+          {
+            "type": "code",
+            "value": "br"
+          },
+          {
+            "type": "text",
+            "value": " 文本压缩率通常优于 gzip。"
+          }
         ],
         [
-          { "type": "text", "value": "需 CDN/Nginx 开启并与 " },
-          { "type": "code", "value": "Accept-Encoding" },
-          { "type": "text", "value": " 协商；构建侧 tree-shaking、拆包决定可压缩文本量。" }
+          {
+            "type": "text",
+            "value": "需 CDN/Nginx 开启并与 "
+          },
+          {
+            "type": "code",
+            "value": "Accept-Encoding"
+          },
+          {
+            "type": "text",
+            "value": " 协商；构建侧 tree-shaking、拆包决定可压缩文本量。"
+          }
         ],
         [
-          { "type": "text", "value": "jpeg/png/webp 等已压缩格式再 gzip 收益小；小文件可能因字典开销不划算，可设阈值。" }
+          {
+            "type": "text",
+            "value": "jpeg/png/webp 等已压缩格式再 gzip 收益小；小文件可能因字典开销不划算，可设阈值。"
+          }
         ]
       ]
     },
@@ -231,34 +528,100 @@
       "questionNote": "CORS 是浏览器对 JS 读响应的限制；curl/服务端互调不受此限。",
       "answer": [
         [
-          { "type": "text", "value": "协议/主机/端口任一不同即为跨源；页面 JS 用 " },
-          { "type": "code", "value": "fetch/XHR" },
-          { "type": "text", "value": " " },
-          { "type": "strong", "value": "读另一源响应" },
-          { "type": "text", "value": "会被浏览器拦截。" }
+          {
+            "type": "text",
+            "value": "协议/主机/端口任一不同即为跨源；页面 JS 用 "
+          },
+          {
+            "type": "code",
+            "value": "fetch/XHR"
+          },
+          {
+            "type": "text",
+            "value": " "
+          },
+          {
+            "type": "strong",
+            "value": "读另一源响应"
+          },
+          {
+            "type": "text",
+            "value": "会被浏览器拦截。"
+          }
         ],
         [
-          { "type": "text", "value": "简单请求直接发；复杂请求先 " },
-          { "type": "code", "value": "OPTIONS" },
-          { "type": "text", "value": " 预检。" },
-          { "type": "code", "value": "curl" },
-          { "type": "text", "value": "、服务端互调不受跨域资源共享（CORS）限制。" }
+          {
+            "type": "text",
+            "value": "简单请求直接发；复杂请求先 "
+          },
+          {
+            "type": "code",
+            "value": "OPTIONS"
+          },
+          {
+            "type": "text",
+            "value": " 预检。"
+          },
+          {
+            "type": "code",
+            "value": "curl"
+          },
+          {
+            "type": "text",
+            "value": "、服务端互调不受跨域资源共享（CORS）限制。"
+          }
         ],
         [
-          { "type": "text", "value": "生产：服务端返回 " },
-          { "type": "code", "value": "Access-Control-Allow-Origin" },
-          { "type": "text", "value": "；带凭证时需 " },
-          { "type": "code", "value": "Allow-Credentials" },
-          { "type": "text", "value": " + 具体 Origin。" }
+          {
+            "type": "text",
+            "value": "生产：服务端返回 "
+          },
+          {
+            "type": "code",
+            "value": "Access-Control-Allow-Origin"
+          },
+          {
+            "type": "text",
+            "value": "；带凭证时需 "
+          },
+          {
+            "type": "code",
+            "value": "Allow-Credentials"
+          },
+          {
+            "type": "text",
+            "value": " + 具体 Origin。"
+          }
         ],
         [
-          { "type": "text", "value": "本地开发用 dev server " },
-          { "type": "strong", "value": "代理" },
-          { "type": "text", "value": " 把 " },
-          { "type": "code", "value": "/api" },
-          { "type": "text", "value": " 转后端同源；" },
-          { "type": "code", "value": "JSONP" },
-          { "type": "text", "value": " 仅 GET，属历史方案。" }
+          {
+            "type": "text",
+            "value": "本地开发用 dev server "
+          },
+          {
+            "type": "strong",
+            "value": "代理"
+          },
+          {
+            "type": "text",
+            "value": " 把 "
+          },
+          {
+            "type": "code",
+            "value": "/api"
+          },
+          {
+            "type": "text",
+            "value": " 转后端同源；"
+          },
+          {
+            "type": "code",
+            "value": "JSONP"
+          },
+          {
+            "type": "text",
+            "value": " 仅 GET，属历史方案。"
+          }
         ]
       ]
     },
@@ -269,26 +632,74 @@
       "questionNote": "「所有 POST 都预检」是误区；看方法、头与 Content-Type 是否属于简单请求。",
       "answer": [
         [
-          { "type": "text", "value": "简单请求：" },
-          { "type": "code", "value": "GET/HEAD/POST" },
-          { "type": "text", "value": " + 安全头 + 简单 Content-Type（" },
-          { "type": "code", "value": "text/plain" },
-          { "type": "text", "value": " 等），不预检。" }
+          {
+            "type": "text",
+            "value": "简单请求："
+          },
+          {
+            "type": "code",
+            "value": "GET/HEAD/POST"
+          },
+          {
+            "type": "text",
+            "value": " + 安全头 + 简单 Content-Type（"
+          },
+          {
+            "type": "code",
+            "value": "text/plain"
+          },
+          {
+            "type": "text",
+            "value": " 等），不预检。"
+          }
         ],
         [
-          { "type": "strong", "value": "非简单请求" },
-          { "type": "text", "value": "：如带 " },
-          { "type": "code", "value": "Authorization" },
-          { "type": "text", "value": "、" },
-          { "type": "code", "value": "Content-Type: application/json" },
-          { "type": "text", "value": "、自定义头，先 " },
-          { "type": "code", "value": "OPTIONS" },
-          { "type": "text", "value": "。" }
+          {
+            "type": "strong",
+            "value": "非简单请求"
+          },
+          {
+            "type": "text",
+            "value": "：如带 "
+          },
+          {
+            "type": "code",
+            "value": "Authorization"
+          },
+          {
+            "type": "text",
+            "value": "、"
+          },
+          {
+            "type": "code",
+            "value": "Content-Type: application/json"
+          },
+          {
+            "type": "text",
+            "value": "、自定义头，先 "
+          },
+          {
+            "type": "code",
+            "value": "OPTIONS"
+          },
+          {
+            "type": "text",
+            "value": "。"
+          }
         ],
         [
-          { "type": "text", "value": "优化：GET 尽量简单；网关对 OPTIONS 快速 " },
-          { "type": "code", "value": "204" },
-          { "type": "text", "value": "；开发期代理同源可绕预检。" }
+          {
+            "type": "text",
+            "value": "优化：GET 尽量简单；网关对 OPTIONS 快速 "
+          },
+          {
+            "type": "code",
+            "value": "204"
+          },
+          {
+            "type": "text",
+            "value": "；开发期代理同源可绕预检。"
+          }
         ]
       ]
     },
@@ -299,24 +710,66 @@
       "questionNote": "payload 仅 Base64URL 编码非加密；鉴权结论以服务端验签为准。",
       "answer": [
         [
-          { "type": "text", "value": "Header.Payload.Signature：前两段 Base64URL 解码为 JSON，" },
-          { "type": "strong", "value": "签名防篡改" },
-          { "type": "text", "value": "，密钥只在服务端。" }
+          {
+            "type": "text",
+            "value": "Header.Payload.Signature：前两段 Base64URL 解码为 JSON，"
+          },
+          {
+            "type": "strong",
+            "value": "签名防篡改"
+          },
+          {
+            "type": "text",
+            "value": "，密钥只在服务端。"
+          }
         ],
         [
-          { "type": "code", "value": "payload" },
-          { "type": "text", "value": " 里 " },
-          { "type": "code", "value": "exp" },
-          { "type": "text", "value": "、用户 id 可被任何人解码，" },
-          { "type": "strong", "value": "不能放密码" },
-          { "type": "text", "value": "；前端不可据此单独判定登录态。" }
+          {
+            "type": "code",
+            "value": "payload"
+          },
+          {
+            "type": "text",
+            "value": " 里 "
+          },
+          {
+            "type": "code",
+            "value": "exp"
+          },
+          {
+            "type": "text",
+            "value": "、用户 id 可被任何人解码，"
+          },
+          {
+            "type": "strong",
+            "value": "不能放密码"
+          },
+          {
+            "type": "text",
+            "value": "；前端不可据此单独判定登录态。"
+          }
         ],
         [
-          { "type": "text", "value": "存 " },
-          { "type": "code", "value": "localStorage" },
-          { "type": "text", "value": " 的 JWT 怕跨站脚本（XSS）；" },
-          { "type": "code", "value": "HttpOnly Cookie" },
-          { "type": "text", "value": " 装 session id 仍是常见折中。" }
+          {
+            "type": "text",
+            "value": "存 "
+          },
+          {
+            "type": "code",
+            "value": "localStorage"
+          },
+          {
+            "type": "text",
+            "value": " 的 JWT 怕跨站脚本（XSS）；"
+          },
+          {
+            "type": "code",
+            "value": "HttpOnly Cookie"
+          },
+          {
+            "type": "text",
+            "value": " 装 session id 仍是常见折中。"
+          }
         ]
       ]
     },
@@ -327,36 +780,108 @@
       "questionNote": "XSS 是脚本进页面上下文；CSRF 是浏览器自动带 Cookie 发恶意请求——攻击面不同。",
       "answer": [
         [
-          { "type": "strong", "value": "跨站脚本（XSS）" },
-          { "type": "text", "value": "：恶意脚本进入页面上下文，能读 " },
-          { "type": "code", "value": "document.cookie" },
-          { "type": "text", "value": "（非 HttpOnly）、调接口、改 DOM。" }
+          {
+            "type": "strong",
+            "value": "跨站脚本（XSS）"
+          },
+          {
+            "type": "text",
+            "value": "：恶意脚本进入页面上下文，能读 "
+          },
+          {
+            "type": "code",
+            "value": "document.cookie"
+          },
+          {
+            "type": "text",
+            "value": "（非 HttpOnly）、调接口、改 DOM。"
+          }
         ],
         [
-          { "type": "text", "value": "防：输出转义、模板默认转义、" },
-          { "type": "code", "value": "Content-Security-Policy" },
-          { "type": "text", "value": " 限脚本源、敏感 Cookie 设 " },
-          { "type": "code", "value": "HttpOnly" },
-          { "type": "text", "value": "、慎用 " },
-          { "type": "code", "value": "v-html" },
-          { "type": "text", "value": "。" }
+          {
+            "type": "text",
+            "value": "防：输出转义、模板默认转义、"
+          },
+          {
+            "type": "code",
+            "value": "Content-Security-Policy"
+          },
+          {
+            "type": "text",
+            "value": " 限脚本源、敏感 Cookie 设 "
+          },
+          {
+            "type": "code",
+            "value": "HttpOnly"
+          },
+          {
+            "type": "text",
+            "value": "、慎用 "
+          },
+          {
+            "type": "code",
+            "value": "v-html"
+          },
+          {
+            "type": "text",
+            "value": "。"
+          }
         ],
         [
-          { "type": "strong", "value": "跨站请求伪造（CSRF）" },
-          { "type": "text", "value": "：诱导已登录用户访问恶意页，浏览器" },
-          { "type": "strong", "value": "自动带 Cookie" },
-          { "type": "text", "value": " 发状态改变请求。" }
+          {
+            "type": "strong",
+            "value": "跨站请求伪造（CSRF）"
+          },
+          {
+            "type": "text",
+            "value": "：诱导已登录用户访问恶意页，浏览器"
+          },
+          {
+            "type": "strong",
+            "value": "自动带 Cookie"
+          },
+          {
+            "type": "text",
+            "value": " 发状态改变请求。"
+          }
         ],
         [
-          { "type": "text", "value": "防：" },
-          { "type": "code", "value": "SameSite=Lax/Strict" },
-          { "type": "text", "value": "、关键接口 " },
-          { "type": "code", "value": "CSRF Token" },
-          { "type": "text", "value": " 或 " },
-          { "type": "code", "value": "Origin/Referer" },
-          { "type": "text", "value": " 校验、敏感操作用 " },
-          { "type": "code", "value": "Authorization" },
-          { "type": "text", "value": " 头（不自动发送）。" }
+          {
+            "type": "text",
+            "value": "防："
+          },
+          {
+            "type": "code",
+            "value": "SameSite=Lax/Strict"
+          },
+          {
+            "type": "text",
+            "value": "、关键接口 "
+          },
+          {
+            "type": "code",
+            "value": "CSRF Token"
+          },
+          {
+            "type": "text",
+            "value": " 或 "
+          },
+          {
+            "type": "code",
+            "value": "Origin/Referer"
+          },
+          {
+            "type": "text",
+            "value": " 校验、敏感操作用 "
+          },
+          {
+            "type": "code",
+            "value": "Authorization"
+          },
+          {
+            "type": "text",
+            "value": " 头（不自动发送）。"
+          }
         ]
       ]
     },
@@ -367,34 +892,100 @@
       "questionNote": "CSP 从加载源收紧 XSS 面；上线先用 Report-Only 收集违规再 enforce。",
       "answer": [
         [
-          { "type": "text", "value": "响应头声明" },
-          { "type": "strong", "value": "哪些来源的脚本、样式、图片、接口可加载/执行" },
-          { "type": "text", "value": "，从根上收紧 XSS 面。" }
+          {
+            "type": "text",
+            "value": "响应头声明"
+          },
+          {
+            "type": "strong",
+            "value": "哪些来源的脚本、样式、图片、接口可加载/执行"
+          },
+          {
+            "type": "text",
+            "value": "，从根上收紧 XSS 面。"
+          }
         ],
         [
-          { "type": "text", "value": "默认 " },
-          { "type": "code", "value": "default-src 'self'" },
-          { "type": "text", "value": "；内联脚本需 " },
-          { "type": "code", "value": "'nonce-xxx'" },
-          { "type": "text", "value": " 或 " },
-          { "type": "code", "value": "'sha256-...'" },
-          { "type": "text", "value": "。" }
+          {
+            "type": "text",
+            "value": "默认 "
+          },
+          {
+            "type": "code",
+            "value": "default-src 'self'"
+          },
+          {
+            "type": "text",
+            "value": "；内联脚本需 "
+          },
+          {
+            "type": "code",
+            "value": "'nonce-xxx'"
+          },
+          {
+            "type": "text",
+            "value": " 或 "
+          },
+          {
+            "type": "code",
+            "value": "'sha256-...'"
+          },
+          {
+            "type": "text",
+            "value": "。"
+          }
         ],
         [
-          { "type": "text", "value": "第三方统计域名要显式列入 " },
-          { "type": "code", "value": "script-src" },
-          { "type": "text", "value": " / " },
-          { "type": "code", "value": "connect-src" },
-          { "type": "text", "value": "，漏配会导致功能静默失败。" }
+          {
+            "type": "text",
+            "value": "第三方统计域名要显式列入 "
+          },
+          {
+            "type": "code",
+            "value": "script-src"
+          },
+          {
+            "type": "text",
+            "value": " / "
+          },
+          {
+            "type": "code",
+            "value": "connect-src"
+          },
+          {
+            "type": "text",
+            "value": "，漏配会导致功能静默失败。"
+          }
         ],
         [
-          { "type": "text", "value": "先用 " },
-          { "type": "code", "value": "Content-Security-Policy-Report-Only" },
-          { "type": "text", "value": " + " },
-          { "type": "code", "value": "report-uri / report-to" },
-          { "type": "text", "value": " 收集违规，再切 enforce；" },
-          { "type": "code", "value": "'unsafe-inline'" },
-          { "type": "text", "value": " 能不开就不开。" }
+          {
+            "type": "text",
+            "value": "先用 "
+          },
+          {
+            "type": "code",
+            "value": "Content-Security-Policy-Report-Only"
+          },
+          {
+            "type": "text",
+            "value": " + "
+          },
+          {
+            "type": "code",
+            "value": "report-uri / report-to"
+          },
+          {
+            "type": "text",
+            "value": " 收集违规，再切 enforce；"
+          },
+          {
+            "type": "code",
+            "value": "'unsafe-inline'"
+          },
+          {
+            "type": "text",
+            "value": " 能不开就不开。"
+          }
         ]
       ]
     },
@@ -405,19 +996,84 @@
       "questionNote": "搜索框、路由切换是典型竞态场景；Strict Mode 双挂载要注意清理。",
       "answer": [
         [
-          { "type": "code", "value": "const ctrl = new AbortController(); fetch(url, { signal: ctrl.signal }); ctrl.abort()" },
-          { "type": "text", "value": " 会 reject。" }
+          {
+            "type": "code",
+            "value": "const ctrl = new AbortController(); fetch(url, { signal: ctrl.signal }); ctrl.abort()"
+          },
+          {
+            "type": "text",
+            "value": " 会 reject。"
+          }
         ],
         [
-          { "type": "text", "value": "catch 里用 " },
-          { "type": "code", "value": "e.name === \"AbortError\"" },
-          { "type": "text", "value": " 区分用户取消与真实网络错误，避免误报。" }
+          {
+            "type": "text",
+            "value": "catch 里用 "
+          },
+          {
+            "type": "code",
+            "value": "e.name === \"AbortError\""
+          },
+          {
+            "type": "text",
+            "value": " 区分用户取消与真实网络错误，避免误报。"
+          }
         ],
         [
-          { "type": "text", "value": "搜索框、路由切换：新请求前 abort 上一次，或维护递增 requestId，响应回来时比对再 setState。" }
+          {
+            "type": "text",
+            "value": "搜索框、路由切换：新请求前 abort 上一次，或维护递增 requestId，响应回来时比对再 setState。"
+          }
         ],
         [
-          { "type": "text", "value": "React Strict Mode 双挂载时，在 effect cleanup 里 abort，防慢请求覆盖新结果或内存泄漏。" }
+          {
+            "type": "text",
+            "value": "React Strict Mode 双挂载时，在 effect cleanup 里 abort，防慢请求覆盖新结果或内存泄漏。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-websocket-basics",
+      "navLabel": "WebSocket 基础",
+      "question": "WebSocket 和 HTTP 是什么关系？",
+      "questionNote": "握手走 HTTP 升级；全双工长连接；重连与 SSE 选型见场景题。",
+      "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "一句话："
+          },
+          {
+            "type": "text",
+            "value": "先 HTTP 协议升级（Upgrade），再在同一条 TCP 上双向传帧，不是短连接一问一答。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "1）请求头带 "
+          },
+          {
+            "type": "code",
+            "value": "Upgrade: websocket"
+          },
+          {
+            "type": "text",
+            "value": "，服务端 101 后进入 WebSocket。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2）适合聊天、协同、行情等低延迟双向场景；只读推送可评估服务端发送事件（SSE）。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3）注意代理超时、握手鉴权；断线重连与心跳见场景题。"
+          }
         ]
       ]
     }

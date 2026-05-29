@@ -19,12 +19,20 @@ export interface QaItem {
   answer: RichSegment[][]
 }
 
+/** 章节导语中的外链（可选） */
+export interface ChapterLeadLink {
+  href: string
+  label: string
+}
+
 export interface ChapterPayload {
   slug: string
   title: string
   documentTitle: string
   description: string
   lead: string
+  /** 导语末尾可点击链接，如对照阮一峰 ES6 教程 */
+  leadLink?: ChapterLeadLink
   items: QaItem[]
 }
 
