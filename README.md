@@ -7,7 +7,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
 [![Live Demo](https://img.shields.io/badge/demo-GitHub%20Pages-2ea44f)](https://sowee121.github.io/frontend-interview-vue/)
 
-面向前端工程师的面试题库静态站点：12 个专题章节、结构化 JSON 答案、章内目录与代码高亮，支持桌面与手机浏览器复习。内容构建时打包进前端，**无需后端**。
+面向前端工程师的面试题库静态站点：16 个专题章节、结构化 JSON 答案、章内目录与代码高亮，支持桌面与手机浏览器复习。内容构建时打包进前端，**无需后端**。
 
 **在线访问**：https://sowee121.github.io/frontend-interview-vue/
 
@@ -27,7 +27,7 @@
 
 | 特性 | 说明 |
 |------|------|
-| 12 个专题 | JavaScript、TypeScript、HTML/CSS、浏览器、网络与安全、性能、工程化、React、Vue 2、Vue 3、场景题、编程手写题 |
+| 16 个专题 | HTML/CSS、JavaScript、ES6、TypeScript、Vue 2、Vue 3、React、Node、小程序、浏览器、网络/安全、工程化、性能、场景题、Agent、编程手写题 |
 | 章内目录 | 桌面端侧栏锚点 + 吸顶，长文快速定位 |
 | 顶栏章节导航 | 顶栏可横向滑动的章节 tabs，跨章切换 |
 | 移动端目录 | 窄屏（900px 以下）隐藏侧栏，右下角 FAB 唤起底部章内目录 |

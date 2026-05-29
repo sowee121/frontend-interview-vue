@@ -1,0 +1,1117 @@
+{
+  "slug": "node",
+  "title": "Node",
+  "documentTitle": "Node",
+  "description": "面向前端初学 Node / BFF：从「Node 是什么」到事件循环、模块、中间件，答案偏白话，便于零基础建立图景。",
+  "lead": "默认你只熟悉浏览器里的 JavaScript；本章用前端能类比的说法讲 Node，每题可先记「一句话结论」再往下看细节。",
+  "items": [
+    {
+      "id": "q-node-vs-browser",
+      "navLabel": "Node 与浏览器 JS",
+      "question": "Node 里的 JavaScript 和浏览器里有什么本质区别？",
+      "questionNote": "先建立图景：写 Node 不是换一门语言，而是换了一个运行环境。",
+      "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "一句话："
+          },
+          {
+            "type": "text",
+            "value": "语法都是 JavaScript，但 Node 跑在服务器侧，能读写文件、监听端口，没有 DOM。"
+          }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "浏览器里："
+          },
+          {
+            "type": "text",
+            "value": "JS 主要操作页面（DOM）、发请求（fetch）、响应用户点击；代码在标签或打包后的 bundle 里执行，有 "
+          },
+          {
+            "type": "code",
+            "value": "window"
+          },
+          {
+            "type": "text",
+            "value": "、"
+          },
+          {
+            "type": "code",
+            "value": "document"
+          },
+          {
+            "type": "text",
+            "value": "。"
+          }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "Node 里："
+          },
+          {
+            "type": "text",
+            "value": "JS 跑在服务器（或本机终端），基于 "
+          },
+          {
+            "type": "code",
+            "value": "V8"
+          },
+          {
+            "type": "text",
+            "value": " 执行引擎 + "
+          },
+          {
+            "type": "code",
+            "value": "libuv"
+          },
+          {
+            "type": "text",
+            "value": " 处理文件、网络等 I/O。没有窗口对象，全局用 "
+          },
+          {
+            "type": "code",
+            "value": "globalThis"
+          },
+          {
+            "type": "text",
+            "value": "。"
+          }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "前端为什么要学："
+          },
+          {
+            "type": "text",
+            "value": "写本地开发工具（Vite）、写 BFF 聚合接口、写简单后端，都是「用 JS 在 Node 里跑」，不是重新学一门语言。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-node-event-loop",
+      "navLabel": "Node 事件循环",
+      "question": "Node 的事件循环和浏览器有啥不同？",
+      "questionNote": "和浏览器一样要理解「单线程 + 异步」，但调度细节由 libuv 负责。",
+      "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "一句话："
+          },
+          {
+            "type": "text",
+            "value": "主线程仍是一条，耗时 I/O 交给系统，完成后回调进队列；别在主线程做重计算。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "浏览器里你学过：宏任务（如 setTimeout）、微任务（Promise.then）。一次执行完同步代码，再清微任务，再取宏任务。"
+          }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "Node 里："
+          },
+          {
+            "type": "text",
+            "value": "由 "
+          },
+          {
+            "type": "code",
+            "value": "libuv"
+          },
+          {
+            "type": "text",
+            "value": " 管理阶段（如 timers、poll、check）。每个阶段结束后会清空微任务队列，再进入下一阶段。"
+          }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "和写前端的关系："
+          },
+          {
+            "type": "text",
+            "value": "写 "
+          },
+          {
+            "type": "code",
+            "value": "await fs.readFile"
+          },
+          {
+            "type": "text",
+            "value": " 时，读文件在后台进行，主线程可以继续接别的请求；读完后 Promise 进入微任务，你的 "
+          },
+          {
+            "type": "code",
+            "value": "await"
+          },
+          {
+            "type": "text",
+            "value": " 后面代码才继续。"
+          }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "小白易踩坑："
+          },
+          {
+            "type": "text",
+            "value": "在接口里做大量循环、压缩、加密会卡住所有用户请求。这类 CPU 任务用 "
+          },
+          {
+            "type": "code",
+            "value": "worker_threads"
+          },
+          {
+            "type": "text",
+            "value": " 或单独服务。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-node-modules",
+      "navLabel": "CommonJS 与 ESM",
+      "question": "Node 里 CommonJS 和 ESM 怎么选？",
+      "questionNote": "模块就是「怎么在一个文件里引用另一个文件」。",
+      "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "一句话："
+          },
+          {
+            "type": "text",
+            "value": "老项目常见 require；新项目推荐 import，和前端 Vite 一致。"
+          }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "CommonJS（CJS）："
+          },
+          {
+            "type": "code",
+            "value": "const fs = require('fs')"
+          },
+          {
+            "type": "text",
+            "value": "，"
+          },
+          {
+            "type": "code",
+            "value": "module.exports = {}"
+          },
+          {
+            "type": "text",
+            "value": "。在运行时加载，"
+          },
+          {
+            "type": "code",
+            "value": "require"
+          },
+          {
+            "type": "text",
+            "value": " 是同步的（所以不适合浏览器原生用）。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "导出对象的属性可以后续再改，引用方看到的是同一个对象引用。"
+          }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "ES Module（ESM）："
+          },
+          {
+            "type": "code",
+            "value": "import fs from 'node:fs'"
+          },
+          {
+            "type": "text",
+            "value": "，"
+          },
+          {
+            "type": "code",
+            "value": "export"
+          },
+          {
+            "type": "text",
+            "value": "。静态结构，利于打包分析；"
+          },
+          {
+            "type": "code",
+            "value": "package.json"
+          },
+          {
+            "type": "text",
+            "value": " 里写 "
+          },
+          {
+            "type": "code",
+            "value": "\"type\": \"module\""
+          },
+          {
+            "type": "text",
+            "value": " 则 "
+          },
+          {
+            "type": "code",
+            "value": ".js"
+          },
+          {
+            "type": "text",
+            "value": " 默认按 ESM 解析。"
+          }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "怎么记："
+          },
+          {
+            "type": "text",
+            "value": "前端工程化已是 ESM 为主；维护老 Express 项目时会见到 require。混用可在 ESM 里 "
+          },
+          {
+            "type": "code",
+            "value": "createRequire"
+          },
+          {
+            "type": "text",
+            "value": "，面试说清「新项目优先 ESM」即可。细节见 ES6 章 Module 题。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-node-buffer",
+      "navLabel": "Buffer",
+      "question": "Buffer 是干啥的？为啥前端很少见到？",
+      "questionNote": "处理「不是字符串」的二进制数据时用。",
+      "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "一句话："
+          },
+          {
+            "type": "text",
+            "value": "Buffer 是固定长度的字节数组，用来表示文件内容、图片、网络包等二进制。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "浏览器里图片、文件多用 Blob、ArrayBuffer；Node 早期用 "
+          },
+          {
+            "type": "code",
+            "value": "Buffer"
+          },
+          {
+            "type": "text",
+            "value": "，现在它本质上是 "
+          },
+          {
+            "type": "code",
+            "value": "Uint8Array"
+          },
+          {
+            "type": "text",
+            "value": " 的子类。"
+          }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "常见场景："
+          },
+          {
+            "type": "text",
+            "value": "读一张图片进内存、对接加密、拼 HTTP 响应体。字符串与 Buffer 互转要指定编码，如 "
+          },
+          {
+            "type": "code",
+            "value": "utf8"
+          },
+          {
+            "type": "text",
+            "value": "、"
+          },
+          {
+            "type": "code",
+            "value": "base64"
+          },
+          {
+            "type": "text",
+            "value": "。"
+          }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "小白注意："
+          },
+          {
+            "type": "text",
+            "value": "不要用 "
+          },
+          {
+            "type": "code",
+            "value": "fs.readFile"
+          },
+          {
+            "type": "text",
+            "value": " 一次读几个 G 的大文件，会把内存撑爆；大文件用流（下一题）。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-node-stream",
+      "navLabel": "Stream 流",
+      "question": "Node Stream 解决什么问题？",
+      "questionNote": "像水管一样「边读边处理」，而不是一次装进内存。",
+      "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "一句话："
+          },
+          {
+            "type": "text",
+            "value": "数据太大或来得持续时，用流一块块处理，省内存、能显示进度。"
+          }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "四种类型："
+          },
+          {
+            "type": "text",
+            "value": "Readable（读）、Writable（写）、Duplex（读写）、Transform（读进来加工再写出，如 gzip）。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "类比前端：上传大文件分片、下载时边下边写，底层常是流；"
+          },
+          {
+            "type": "code",
+            "value": "response.body"
+          },
+          {
+            "type": "text",
+            "value": " 在浏览器里也是 ReadableStream。"
+          }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "pipe 与背压："
+          },
+          {
+            "type": "code",
+            "value": "readStream.pipe(writeStream)"
+          },
+          {
+            "type": "text",
+            "value": " 把读端接到写端；若写端慢，读端会暂停，避免内存堆积，这叫背压（backpressure）。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-node-middleware",
+      "navLabel": "中间件",
+      "question": "Koa / Express 中间件怎么理解？",
+      "questionNote": "写接口时「一层层经过的函数」，和前端路由守卫有点像。",
+      "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "一句话："
+          },
+          {
+            "type": "text",
+            "value": "每个 HTTP 请求会依次穿过多个中间件函数，做日志、解析 body、鉴权等，最后才到你的业务 handler。"
+          }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "Express（更常见入门）："
+          },
+          {
+            "type": "text",
+            "value": "线性结构 "
+          },
+          {
+            "type": "code",
+            "value": "(req, res, next)"
+          },
+          {
+            "type": "text",
+            "value": "。调用 "
+          },
+          {
+            "type": "code",
+            "value": "next()"
+          },
+          {
+            "type": "text",
+            "value": " 交给下一个；不调用或已 "
+          },
+          {
+            "type": "code",
+            "value": "res.send"
+          },
+          {
+            "type": "text",
+            "value": " 就结束。适合快速写 REST API。"
+          }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "Koa（更现代）："
+          },
+          {
+            "type": "text",
+            "value": "洋葱模型 "
+          },
+          {
+            "type": "code",
+            "value": "async (ctx, next) => { ... await next(); ... }"
+          },
+          {
+            "type": "text",
+            "value": "。"
+          },
+          {
+            "type": "code",
+            "value": "await next()"
+          },
+          {
+            "type": "text",
+            "value": " 之前的代码像「进去」，之后的像「出来」，适合统一错误处理、链路日志。"
+          }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "常见中间件："
+          },
+          {
+            "type": "text",
+            "value": "解析 JSON body、CORS、记录请求日志、JWT 鉴权、统一 try/catch 返回 500。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-node-bff",
+      "navLabel": "BFF",
+      "question": "什么是 BFF？前端为什么要一层 Node？",
+      "questionNote": "BFF = 给前端量身定做的薄后端。",
+      "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "一句话："
+          },
+          {
+            "type": "text",
+            "value": "浏览器不直接打十个微服务，而是打你的 Node 层，由 Node 聚合、裁剪、鉴权后再返回给页面。"
+          }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "解决什么问题："
+          },
+          {
+            "type": "text",
+            "value": "1）减少浏览器跨域和暴露多个域名。2）把数据库密钥、内部 API Key 放在服务端。3）按页面需要组装字段，移动端和 Web 可以各有一个 BFF。"
+          }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "前端在 BFF 里常做什么："
+          },
+          {
+            "type": "text",
+            "value": "用 "
+          },
+          {
+            "type": "code",
+            "value": "Express/Koa"
+          },
+          {
+            "type": "text",
+            "value": " 写路由，"
+          },
+          {
+            "type": "code",
+            "value": "await"
+          },
+          {
+            "type": "text",
+            "value": " 调下游 HTTP，合并结果，返回 JSON 给 Vue/React。TypeScript 类型可与前端共享。"
+          }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "边界："
+          },
+          {
+            "type": "text",
+            "value": "BFF 别写成「万能后端」；复杂订单、支付规则仍应在领域服务里，BFF 只做聚合与适配。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-node-env",
+      "navLabel": "环境变量",
+      "question": "Node 环境变量怎么管理？",
+      "questionNote": "配置「不同环境用不同参数」，别把密码写进代码。",
+      "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "一句话："
+          },
+          {
+            "type": "text",
+            "value": "用 "
+          },
+          {
+            "type": "code",
+            "value": "process.env.XXX"
+          },
+          {
+            "type": "text",
+            "value": " 读配置；本地用 "
+          },
+          {
+            "type": "code",
+            "value": ".env"
+          },
+          {
+            "type": "text",
+            "value": "，生产由运维/CI 注入。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "例如 "
+          },
+          {
+            "type": "code",
+            "value": "process.env.PORT"
+          },
+          {
+            "type": "text",
+            "value": " 决定监听端口，"
+          },
+          {
+            "type": "code",
+            "value": "process.env.API_BASE"
+          },
+          {
+            "type": "text",
+            "value": " 决定转发到哪个下游。"
+          }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "本地开发："
+          },
+          {
+            "type": "text",
+            "value": "常装 "
+          },
+          {
+            "type": "code",
+            "value": "dotenv"
+          },
+          {
+            "type": "text",
+            "value": "，启动时加载 "
+          },
+          {
+            "type": "code",
+            "value": ".env"
+          },
+          {
+            "type": "text",
+            "value": " 文件（只放开发用假数据）。"
+          },
+          {
+            "type": "code",
+            "value": ".env"
+          },
+          {
+            "type": "text",
+            "value": " 应加入 "
+          },
+          {
+            "type": "code",
+            "value": ".gitignore"
+          },
+          {
+            "type": "text",
+            "value": "，勿提交仓库。"
+          }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "生产环境："
+          },
+          {
+            "type": "text",
+            "value": "在 Docker/K8s/云平台上配置环境变量；"
+          },
+          {
+            "type": "code",
+            "value": "NODE_ENV=production"
+          },
+          {
+            "type": "text",
+            "value": " 时关闭详细错误堆栈、收紧日志。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "和前端对应：Vite 的 "
+          },
+          {
+            "type": "code",
+            "value": "import.meta.env.VITE_XXX"
+          },
+          {
+            "type": "text",
+            "value": " 是打包时注入；Node 是运行时读 "
+          },
+          {
+            "type": "code",
+            "value": "process.env"
+          },
+          {
+            "type": "text",
+            "value": "，概念类似但时机不同。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-node-fs-path",
+      "navLabel": "fs 与 path",
+      "question": "读写文件和路径要注意啥？",
+      "questionNote": "Node 可以直接碰磁盘，这是和浏览器最大的能力差异之一。",
+      "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "一句话："
+          },
+          {
+            "type": "text",
+            "value": "用 "
+          },
+          {
+            "type": "code",
+            "value": "fs"
+          },
+          {
+            "type": "text",
+            "value": " 模块读写文件，用 "
+          },
+          {
+            "type": "code",
+            "value": "path"
+          },
+          {
+            "type": "text",
+            "value": " 安全拼接路径，别手写 "
+          },
+          {
+            "type": "code",
+            "value": "../"
+          },
+          {
+            "type": "text",
+            "value": " 字符串。"
+          }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "读文件："
+          },
+          {
+            "type": "text",
+            "value": "推荐 "
+          },
+          {
+            "type": "code",
+            "value": "node:fs/promises"
+          },
+          {
+            "type": "text",
+            "value": " + "
+          },
+          {
+            "type": "code",
+            "value": "async/await"
+          },
+          {
+            "type": "text",
+            "value": "。文本用 "
+          },
+          {
+            "type": "code",
+            "value": "utf8"
+          },
+          {
+            "type": "text",
+            "value": " 编码；二进制不指定编码得 Buffer。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "例："
+          },
+          {
+            "type": "code",
+            "value": "await fs.readFile('a.txt', 'utf8')"
+          },
+          {
+            "type": "text",
+            "value": "。CJS 用 "
+          },
+          {
+            "type": "code",
+            "value": "require('node:fs/promises')"
+          },
+          {
+            "type": "text",
+            "value": "，ESM 用 "
+          },
+          {
+            "type": "code",
+            "value": "import fs from 'node:fs/promises'"
+          },
+          {
+            "type": "text",
+            "value": "。"
+          }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "路径："
+          },
+          {
+            "type": "code",
+            "value": "path.join(__dirname, 'data', 'file.json')"
+          },
+          {
+            "type": "text",
+            "value": " 自动处理斜杠；"
+          },
+          {
+            "type": "code",
+            "value": "path.resolve"
+          },
+          {
+            "type": "text",
+            "value": " 转绝对路径。对外暴露下载接口时要校验路径，防止 "
+          },
+          {
+            "type": "code",
+            "value": "../../../etc/passwd"
+          },
+          {
+            "type": "text",
+            "value": " 这类目录遍历攻击。"
+          }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "目录操作："
+          },
+          {
+            "type": "code",
+            "value": "fs.mkdir"
+          },
+          {
+            "type": "text",
+            "value": "、"
+          },
+          {
+            "type": "code",
+            "value": "fs.readdir"
+          },
+          {
+            "type": "text",
+            "value": " 等；删除、重命名前想清楚是否递归，避免误删。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-node-worker",
+      "navLabel": "Worker 线程",
+      "question": "CPU 密集怎么办？",
+      "questionNote": "单线程忙不过来时的三种出路。",
+      "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "一句话："
+          },
+          {
+            "type": "text",
+            "value": "主线程只适合 I/O 密集；算密码、压图、跑复杂算法要挪走。"
+          }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "1）worker_threads："
+          },
+          {
+            "type": "text",
+            "value": "同一进程里开线程，适合算得快、要共享部分内存的任务。"
+          }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "2）child_process："
+          },
+          {
+            "type": "text",
+            "value": "spawn 子进程，隔离更好，像另起一个 Node 程序干活。"
+          }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "3）架构层："
+          },
+          {
+            "type": "text",
+            "value": "多开几个 Node 实例 + Nginx 负载均衡，或把计算交给专门的服务（Java/Go/云函数）。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "小白记法：接口卡死先想是不是在主线程算了太久；上传下载慢多半是 I/O，用流和异步即可，不必上线程。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-node-security",
+      "navLabel": "Node 安全",
+      "question": "写 Node 接口时前端常协作的安全点有哪些？",
+      "questionNote": "BFF 一旦对外，就要当「真的后端」来想安全。",
+      "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "一句话："
+          },
+          {
+            "type": "text",
+            "value": "所有入参都不可信；密钥只在服务端；浏览器侧仍要防 XSS/CSRF。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "1）校验与限流：body/query 做 schema 校验；登录、发短信接口加频率限制，防刷。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2）CORS：只允许公司前端域名，慎用 "
+          },
+          {
+            "type": "code",
+            "value": "Access-Control-Allow-Origin: *"
+          },
+          {
+            "type": "text",
+            "value": " 配凭证。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3）HTTP 头：可用 helmet 设置安全头；错误响应生产环境别返回完整堆栈给外网。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "4）依赖：定期 "
+          },
+          {
+            "type": "code",
+            "value": "npm audit"
+          },
+          {
+            "type": "text",
+            "value": "；XSS/CSRF/CSP 机制见网络/安全章。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-node-npm-scripts",
+      "navLabel": "npm scripts",
+      "question": "package.json 里 dependencies 和 scripts 怎么理解？",
+      "questionNote": "和前端项目里的 package.json 是同一套概念。",
+      "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "一句话："
+          },
+          {
+            "type": "text",
+            "value": "dependencies 是运行时要的包；scripts 是 "
+          },
+          {
+            "type": "code",
+            "value": "npm run xxx"
+          },
+          {
+            "type": "text",
+            "value": " 的快捷命令。"
+          }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "依赖分类："
+          },
+          {
+            "type": "code",
+            "value": "dependencies"
+          },
+          {
+            "type": "text",
+            "value": "（线上运行要，如 express）、"
+          },
+          {
+            "type": "code",
+            "value": "devDependencies"
+          },
+          {
+            "type": "text",
+            "value": "（仅开发，如 nodemon）、"
+          },
+          {
+            "type": "code",
+            "value": "peerDependencies"
+          },
+          {
+            "type": "text",
+            "value": "（插件声明「宿主项目请自行安装」）。"
+          }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "scripts 示例："
+          },
+          {
+            "type": "code",
+            "value": "\"dev\": \"node --watch server.js\""
+          },
+          {
+            "type": "text",
+            "value": "、"
+          },
+          {
+            "type": "code",
+            "value": "\"start\": \"node server.js\""
+          },
+          {
+            "type": "text",
+            "value": "。本地 "
+          },
+          {
+            "type": "code",
+            "value": "npm run dev"
+          },
+          {
+            "type": "text",
+            "value": " 启动；"
+          },
+          {
+            "type": "code",
+            "value": "npx"
+          },
+          {
+            "type": "text",
+            "value": " 临时执行没装进 dependencies 的 CLI。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "和前端一样会有 "
+          },
+          {
+            "type": "code",
+            "value": "package-lock.json"
+          },
+          {
+            "type": "text",
+            "value": " / "
+          },
+          {
+            "type": "code",
+            "value": "pnpm-lock.yaml"
+          },
+          {
+            "type": "text",
+            "value": " 锁版本；monorepo、pnpm 细节见工程化章。"
+          }
+        ]
+      ]
+    }
+  ]
+}

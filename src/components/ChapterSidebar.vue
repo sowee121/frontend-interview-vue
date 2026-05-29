@@ -1,21 +1,15 @@
 <script setup lang="ts">
-import { RouterLink, useRoute } from 'vue-router'
+import { RouterLink } from 'vue-router'
 
 import type { TocItem } from '@/data/chapters'
+import { useChapterTocHighlight } from '@/composables/useChapterTocHighlight'
 
 const props = defineProps<{
   slug: string
   toc: TocItem[]
 }>()
 
-const route = useRoute()
-
-/** 同章节下仅当地址 hash 与该项一致时为「当前锚点」（避免整章 TOC 都被 router-link-active 点亮） */
-function isCurrentAnchor(id: string) {
-  if (route.name !== 'chapter') return false
-  if (String(route.params.slug ?? '') !== props.slug) return false
-  return route.hash === `#${id}`
-}
+const { isCurrentAnchor } = useChapterTocHighlight(props.slug)
 </script>
 
 <template>

@@ -3,6 +3,7 @@ import { onMounted, onUnmounted, ref, watch } from 'vue'
 import { RouterLink, useRoute } from 'vue-router'
 
 import type { TocItem } from '@/data/chapters'
+import { useChapterTocHighlight } from '@/composables/useChapterTocHighlight'
 
 const props = defineProps<{
   slug: string
@@ -12,11 +13,7 @@ const props = defineProps<{
 const route = useRoute()
 const isOpen = ref(false)
 
-function isCurrentAnchor(id: string) {
-  if (route.name !== 'chapter') return false
-  if (String(route.params.slug ?? '') !== props.slug) return false
-  return route.hash === `#${id}`
-}
+const { isCurrentAnchor } = useChapterTocHighlight(props.slug)
 
 function closeSheet() {
   isOpen.value = false

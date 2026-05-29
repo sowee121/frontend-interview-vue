@@ -1,0 +1,877 @@
+{
+  "slug": "miniprogram",
+  "title": "小程序",
+  "documentTitle": "小程序",
+  "description": "微信等小程序高频面试：架构、生命周期、setData、登录、分包与性能，偏前端已有 Vue/React 基础的视角。",
+  "lead": "默认你会写 H5；本章说明小程序和网页的关键差异，以及面试常问的「为什么这样设计」。",
+  "items": [
+    {
+      "id": "q-mp-vs-h5",
+      "navLabel": "小程序 vs H5",
+      "question": "小程序、H5、原生 App 有啥区别？为什么要有小程序？",
+      "questionNote": "先讲清三端定位，再记微信的实现特点。",
+      "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "一句话："
+          },
+          {
+            "type": "text",
+            "value": "小程序跑在微信里，体验接近原生，又能用前端技术栈，但受平台能力和审核规则约束。"
+          }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "对比："
+          },
+          {
+            "type": "text",
+            "value": "H5 是网页，能力受浏览器限制；原生 App 性能最好、能力最全，但开发和分发成本高。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "小程序：安装即用、可获取微信登录与支付、分享传播方便；代码包有大小限制，API 需用微信提供的 "
+          },
+          {
+            "type": "code",
+            "value": "wx.xxx"
+          },
+          {
+            "type": "text",
+            "value": "。"
+          }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "面试点："
+          },
+          {
+            "type": "text",
+            "value": "不是「在 WebView 里随便写网页」，而是双线程 + 定制组件 + 宿主环境。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-mp-architecture",
+      "navLabel": "双线程架构",
+      "question": "小程序的双线程架构是什么？",
+      "questionNote": "逻辑层与渲染层分离是高频题。",
+      "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "一句话："
+          },
+          {
+            "type": "text",
+            "value": "渲染层用 WebView 展示 WXML；逻辑层在独立线程跑 JS，通过 Native 桥通信。"
+          }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "渲染层："
+          },
+          {
+            "type": "text",
+            "value": "WXML + WXSS 类似 HTML + CSS，由多个 WebView 渲染各页面（控制包体积与隔离）。"
+          }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "逻辑层："
+          },
+          {
+            "type": "text",
+            "value": "你的业务 JS（含 "
+          },
+          {
+            "type": "code",
+            "value": "setData"
+          },
+          {
+            "type": "text",
+            "value": "）在 JSCore 等环境执行，不能直接操作 DOM。"
+          }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "为什么："
+          },
+          {
+            "type": "text",
+            "value": "避免逻辑阻塞页面绘制；"
+          },
+          {
+            "type": "code",
+            "value": "setData"
+          },
+          {
+            "type": "text",
+            "value": " 跨线程传数据，数据量大或过于频繁会卡。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-mp-lifecycle",
+      "navLabel": "生命周期",
+      "question": "App、Page、Component 生命周期分别有哪些？",
+      "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "App："
+          },
+          {
+            "type": "code",
+            "value": "onLaunch"
+          },
+          {
+            "type": "text",
+            "value": "（冷启动）、"
+          },
+          {
+            "type": "code",
+            "value": "onShow"
+          },
+          {
+            "type": "text",
+            "value": " / "
+          },
+          {
+            "type": "code",
+            "value": "onHide"
+          },
+          {
+            "type": "text",
+            "value": "（前后台切换）。"
+          }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "Page："
+          },
+          {
+            "type": "code",
+            "value": "onLoad"
+          },
+          {
+            "type": "text",
+            "value": "（入参 options）、"
+          },
+          {
+            "type": "code",
+            "value": "onShow"
+          },
+          {
+            "type": "text",
+            "value": "、"
+          },
+          {
+            "type": "code",
+            "value": "onReady"
+          },
+          {
+            "type": "text",
+            "value": "（首屏渲染完成）、"
+          },
+          {
+            "type": "code",
+            "value": "onHide"
+          },
+          {
+            "type": "text",
+            "value": "、"
+          },
+          {
+            "type": "code",
+            "value": "onUnload"
+          },
+          {
+            "type": "text",
+            "value": "（页面出栈销毁）。"
+          }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "Component："
+          },
+          {
+            "type": "code",
+            "value": "attached"
+          },
+          {
+            "type": "text",
+            "value": " / "
+          },
+          {
+            "type": "code",
+            "value": "ready"
+          },
+          {
+            "type": "text",
+            "value": " / "
+          },
+          {
+            "type": "code",
+            "value": "detached"
+          },
+          {
+            "type": "text",
+            "value": "，类似 Vue 的挂载与卸载。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "口述技巧：页面展示用 onShow 拉数据；onLoad 里拿路由参数；离开页在 onUnload 清定时器。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-mp-routing",
+      "navLabel": "路由与页面栈",
+      "question": "小程序路由怎么跳转？页面栈是什么？",
+      "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "跳转 API："
+          },
+          {
+            "type": "code",
+            "value": "wx.navigateTo"
+          },
+          {
+            "type": "text",
+            "value": "（压栈，可返回）、"
+          },
+          {
+            "type": "code",
+            "value": "wx.redirectTo"
+          },
+          {
+            "type": "text",
+            "value": "（替换当前页）、"
+          },
+          {
+            "type": "code",
+            "value": "wx.switchTab"
+          },
+          {
+            "type": "text",
+            "value": "（切 tab）、"
+          },
+          {
+            "type": "code",
+            "value": "wx.reLaunch"
+          },
+          {
+            "type": "text",
+            "value": "（清空栈重启）、"
+          },
+          {
+            "type": "code",
+            "value": "wx.navigateBack"
+          },
+          {
+            "type": "text",
+            "value": "。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "页面栈最多十层左右（平台可能调整）；"
+          },
+          {
+            "type": "code",
+            "value": "getCurrentPages()"
+          },
+          {
+            "type": "text",
+            "value": " 可读栈深度，过深用 redirect/reLaunch 避免栈满。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "tabBar 页面必须用 switchTab，不能 navigateTo 进 tab 页。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-mp-setdata",
+      "navLabel": "setData",
+      "question": "setData 是干啥的？为什么不能太频繁、数据不能太大？",
+      "questionNote": "和 Vue/React 的 setState 对比着记。",
+      "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "一句话："
+          },
+          {
+            "type": "text",
+            "value": "逻辑层改 "
+          },
+          {
+            "type": "code",
+            "value": "data"
+          },
+          {
+            "type": "text",
+            "value": "，经 Native 序列化到渲染层更新视图，类似单向数据流。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "1）只传变化字段，别把整个大对象每次全量拷贝。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2）合并多次更新：能放在同一 tick 的尽量一次 setData。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3）列表用稳定 "
+          },
+          {
+            "type": "code",
+            "value": "wx:key"
+          },
+          {
+            "type": "text",
+            "value": "；超长列表用分包、虚拟列表组件或自定义渲染优化。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "原因：跨线程通信有成本，频繁/大数据会掉帧、交互发粘。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-mp-component",
+      "navLabel": "自定义组件",
+      "question": "如何封装自定义组件？properties 和 data 区别？",
+      "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "结构："
+          },
+          {
+            "type": "text",
+            "value": "在 "
+          },
+          {
+            "type": "code",
+            "value": "Component({ ... })"
+          },
+          {
+            "type": "text",
+            "value": " 里写 "
+          },
+          {
+            "type": "code",
+            "value": "properties"
+          },
+          {
+            "type": "text",
+            "value": "（外部传入）、"
+          },
+          {
+            "type": "code",
+            "value": "data"
+          },
+          {
+            "type": "text",
+            "value": "（内部状态）、"
+          },
+          {
+            "type": "code",
+            "value": "methods"
+          },
+          {
+            "type": "text",
+            "value": "、"
+          },
+          {
+            "type": "code",
+            "value": "lifetimes"
+          },
+          {
+            "type": "text",
+            "value": "。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "properties 类似 props，可设 type、value、observer；"
+          },
+          {
+            "type": "code",
+            "value": "triggerEvent"
+          },
+          {
+            "type": "text",
+            "value": " 向父组件冒泡自定义事件。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "样式隔离：默认 "
+          },
+          {
+            "type": "code",
+            "value": "styleIsolation: 'isolated'"
+          },
+          {
+            "type": "text",
+            "value": "；需要穿透用 externalClasses 或 :host。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-mp-login",
+      "navLabel": "微信登录",
+      "question": "小程序登录流程大概怎样？code 能直接当前端凭证吗？",
+      "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "标准流程："
+          },
+          {
+            "type": "code",
+            "value": "wx.login"
+          },
+          {
+            "type": "text",
+            "value": " 得临时 "
+          },
+          {
+            "type": "code",
+            "value": "code"
+          },
+          {
+            "type": "text",
+            "value": "（短期、一次性）→ 发给自家后端 → 后端用 code 调微信接口换 "
+          },
+          {
+            "type": "code",
+            "value": "openid"
+          },
+          {
+            "type": "text",
+            "value": " / "
+          },
+          {
+            "type": "code",
+            "value": "session_key"
+          },
+          {
+            "type": "text",
+            "value": " → 后端发业务 token 给小程序。"
+          }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "注意："
+          },
+          {
+            "type": "text",
+            "value": "code、session_key 不能当前端长期凭证；"
+          },
+          {
+            "type": "code",
+            "value": "session_key"
+          },
+          {
+            "type": "text",
+            "value": " 勿下发前端。token 放 header，过期重新 login。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "获取用户信息需 "
+          },
+          {
+            "type": "code",
+            "value": "wx.getUserProfile"
+          },
+          {
+            "type": "text",
+            "value": " 等合规接口，不能静默拿头像昵称。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-mp-request",
+      "navLabel": "请求与域名",
+      "question": "wx.request 和浏览器 fetch 有啥不同？配域名要注意啥？",
+      "answer": [
+        [
+          {
+            "type": "text",
+            "value": "需在小程序后台配置 "
+          },
+          {
+            "type": "strong",
+            "value": "request 合法域名"
+          },
+          {
+            "type": "text",
+            "value": "（HTTPS），开发工具可勾选「不校验合法域名」仅用于本地调试。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "不支持浏览器里随意的跨域概念，由微信客户端校验白名单；Cookie 行为与 H5 不同，登录态多用 header token。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "可配置超时、"
+          },
+          {
+            "type": "code",
+            "value": "enableHttp2"
+          },
+          {
+            "type": "text",
+            "value": " 等；上传下载用 "
+          },
+          {
+            "type": "code",
+            "value": "wx.uploadFile"
+          },
+          {
+            "type": "text",
+            "value": " / "
+          },
+          {
+            "type": "code",
+            "value": "wx.downloadFile"
+          },
+          {
+            "type": "text",
+            "value": "。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-mp-storage",
+      "navLabel": "本地存储",
+      "question": "wx.setStorage 和 localStorage 一样吗？",
+      "answer": [
+        [
+          {
+            "type": "text",
+            "value": "都是持久化键值存储，但 API 为异步 "
+          },
+          {
+            "type": "code",
+            "value": "wx.setStorage"
+          },
+          {
+            "type": "text",
+            "value": " / "
+          },
+          {
+            "type": "code",
+            "value": "wx.getStorage"
+          },
+          {
+            "type": "text",
+            "value": "，有容量上限（约 10MB 级，以文档为准）。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "敏感数据（token）仍建议短有效期 + 服务端刷新；可配合 "
+          },
+          {
+            "type": "code",
+            "value": "wx.setStorageSync"
+          },
+          {
+            "type": "text",
+            "value": " 简化代码（注意主线程阻塞）。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-mp-subpackage",
+      "navLabel": "分包加载",
+      "question": "什么是分包？主包、分包、独立分包区别？",
+      "questionNote": "包体积与首屏是常考点。",
+      "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "动机："
+          },
+          {
+            "type": "text",
+            "value": "主包过大影响首次启动；按功能拆 "
+          },
+          {
+            "type": "code",
+            "value": "subPackages"
+          },
+          {
+            "type": "text",
+            "value": "，用户进入对应页面再下载分包。"
+          }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "主包："
+          },
+          {
+            "type": "text",
+            "value": "默认包含 tabBar 页与公共资源；"
+          },
+          {
+            "type": "strong",
+            "value": "分包："
+          },
+          {
+            "type": "text",
+            "value": "按需加载的子包；"
+          },
+          {
+            "type": "strong",
+            "value": "独立分包："
+          },
+          {
+            "type": "text",
+            "value": "可不依赖主包直接启动（适合活动页）。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "配置在 "
+          },
+          {
+            "type": "code",
+            "value": "app.json"
+          },
+          {
+            "type": "text",
+            "value": "；注意公共组件、图片放主包或分包合理规划，避免主包超 2MB 等限制（以平台当前规则为准）。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-mp-performance",
+      "navLabel": "性能优化",
+      "question": "小程序性能优化你一般从哪几方面说？",
+      "answer": [
+        [
+          {
+            "type": "text",
+            "value": "1）启动：减主包体积、分包、图片压缩、避免 onLaunch 重活。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2）渲染：setData 减量、key 正确、长列表优化。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3）请求：并行必要接口、缓存、骨架屏。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "4）监控："
+          },
+          {
+            "type": "code",
+            "value": "wx.getPerformance"
+          },
+          {
+            "type": "text",
+            "value": "、体验分；必要时开 "
+          },
+          {
+            "type": "code",
+            "value": "按需注入"
+          },
+          {
+            "type": "text",
+            "value": " / "
+          },
+          {
+            "type": "code",
+            "value": "用时注入"
+          },
+          {
+            "type": "text",
+            "value": "（基础库版本相关）。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-mp-share",
+      "navLabel": "分享与转发",
+      "question": "onShareAppMessage 怎么用？如何自定义分享卡片？",
+      "answer": [
+        [
+          {
+            "type": "text",
+            "value": "在 Page 定义 "
+          },
+          {
+            "type": "code",
+            "value": "onShareAppMessage"
+          },
+          {
+            "type": "text",
+            "value": "，返回 "
+          },
+          {
+            "type": "code",
+            "value": "title"
+          },
+          {
+            "type": "text",
+            "value": "、"
+          },
+          {
+            "type": "code",
+            "value": "path"
+          },
+          {
+            "type": "text",
+            "value": "（带 query）、"
+          },
+          {
+            "type": "code",
+            "value": "imageUrl"
+          },
+          {
+            "type": "text",
+            "value": "。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "按钮 "
+          },
+          {
+            "type": "code",
+            "value": "<button open-type=\"share\">"
+          },
+          {
+            "type": "text",
+            "value": " 触发分享；"
+          },
+          {
+            "type": "code",
+            "value": "path"
+          },
+          {
+            "type": "text",
+            "value": " 要写清楚落地页参数，方便统计与还原场景。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-mp-taro-uni",
+      "navLabel": "Taro / uni-app",
+      "question": "Taro、uni-app 和原生小程序开发怎么选？",
+      "questionNote": "了解即可，说明「编译到多端」。",
+      "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "原生（微信语法）："
+          },
+          {
+            "type": "text",
+            "value": "WXML/WXSS + "
+          },
+          {
+            "type": "code",
+            "value": "wx"
+          },
+          {
+            "type": "text",
+            "value": " API，学习成本最低、官方能力跟进最快。"
+          }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "Taro："
+          },
+          {
+            "type": "text",
+            "value": "React 语法为主，编译到微信/支付宝等多端；适合团队已是 React。"
+          }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "uni-app："
+          },
+          {
+            "type": "text",
+            "value": "Vue 语法为主，多端一套代码；生态插件多。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "面试答法：业务只要微信，可用原生或 uni；要多端且团队 React 选 Taro。注意各端 API 差异与条件编译。"
+          }
+        ]
+      ]
+    }
+  ]
+}

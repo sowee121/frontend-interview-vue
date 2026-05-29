@@ -12,32 +12,86 @@
       "questionNote": "重点答「何时有 DOM、何时适合请求/绑事件/清理」，比背钩子名单更重要。",
       "answer": [
         [
-          { "type": "strong", "value": "主线：" },
-          { "type": "text", "value": "create（无 DOM）→ mount（有 DOM）→ update（数据驱动重渲染）→ destroy（清理）。" }
+          {
+            "type": "strong",
+            "value": "主线："
+          },
+          {
+            "type": "text",
+            "value": "create（无 DOM）→ mount（有 DOM）→ update（数据驱动重渲染）→ destroy（清理）。"
+          }
         ],
         [
-          { "type": "code", "value": "beforeCreate/created" },
-          { "type": "text", "value": "：实例初始化，" },
-          { "type": "strong", "value": "还拿不到真实 DOM" },
-          { "type": "text", "value": "。可做数据初始化、发不依赖 DOM 的请求。" }
+          {
+            "type": "code",
+            "value": "beforeCreate/created"
+          },
+          {
+            "type": "text",
+            "value": "：实例初始化，"
+          },
+          {
+            "type": "strong",
+            "value": "还拿不到真实 DOM"
+          },
+          {
+            "type": "text",
+            "value": "。可做数据初始化、发不依赖 DOM 的请求。"
+          }
         ],
         [
-          { "type": "code", "value": "beforeMount/mounted" },
-          { "type": "text", "value": "：挂载前后。" },
-          { "type": "code", "value": "mounted" },
-          { "type": "text", "value": " 后可安全读写 DOM、接三方库、测量尺寸、绑事件。" }
+          {
+            "type": "code",
+            "value": "beforeMount/mounted"
+          },
+          {
+            "type": "text",
+            "value": "：挂载前后。"
+          },
+          {
+            "type": "code",
+            "value": "mounted"
+          },
+          {
+            "type": "text",
+            "value": " 后可安全读写 DOM、接三方库、测量尺寸、绑事件。"
+          }
         ],
         [
-          { "type": "code", "value": "beforeUpdate/updated" },
-          { "type": "text", "value": "：更新前后。别在 " },
-          { "type": "code", "value": "updated" },
-          { "type": "text", "value": " 里无条件改数据，易循环；针对具体字段优先 " },
-          { "type": "code", "value": "watch" },
-          { "type": "text", "value": "。" }
+          {
+            "type": "code",
+            "value": "beforeUpdate/updated"
+          },
+          {
+            "type": "text",
+            "value": "：更新前后。别在 "
+          },
+          {
+            "type": "code",
+            "value": "updated"
+          },
+          {
+            "type": "text",
+            "value": " 里无条件改数据，易循环；针对具体字段优先 "
+          },
+          {
+            "type": "code",
+            "value": "watch"
+          },
+          {
+            "type": "text",
+            "value": "。"
+          }
         ],
         [
-          { "type": "code", "value": "beforeDestroy/destroyed" },
-          { "type": "text", "value": "：销毁前后，清定时器、解绑事件、取消订阅/请求，避免内存泄漏。" }
+          {
+            "type": "code",
+            "value": "beforeDestroy/destroyed"
+          },
+          {
+            "type": "text",
+            "value": "：销毁前后，清定时器、解绑事件、取消订阅/请求，避免内存泄漏。"
+          }
         ]
       ]
     },
@@ -48,24 +102,66 @@
       "questionNote": "Dep 管依赖集合，Watcher 管「谁要重新跑」；组件 render 本质是一个 watcher。",
       "answer": [
         [
-          { "type": "text", "value": "Vue 2 用 " },
-          { "type": "code", "value": "Object.defineProperty" },
-          { "type": "text", "value": " 把 data 每个 key 转成 getter/setter。" }
+          {
+            "type": "text",
+            "value": "Vue 2 用 "
+          },
+          {
+            "type": "code",
+            "value": "Object.defineProperty"
+          },
+          {
+            "type": "text",
+            "value": " 把 data 每个 key 转成 getter/setter。"
+          }
         ],
         [
-          { "type": "strong", "value": "读" },
-          { "type": "text", "value": "时在 getter 做依赖收集：" },
-          { "type": "code", "value": "Dep" },
-          { "type": "text", "value": " 记住当前正在执行的 " },
-          { "type": "code", "value": "Watcher" },
-          { "type": "text", "value": "。" },
-          { "type": "strong", "value": "写" },
-          { "type": "text", "value": "时在 setter 调 " },
-          { "type": "code", "value": "dep.notify()" },
-          { "type": "text", "value": "，通知 watcher 重新执行。" }
+          {
+            "type": "strong",
+            "value": "读"
+          },
+          {
+            "type": "text",
+            "value": "时在 getter 做依赖收集："
+          },
+          {
+            "type": "code",
+            "value": "Dep"
+          },
+          {
+            "type": "text",
+            "value": " 记住当前正在执行的 "
+          },
+          {
+            "type": "code",
+            "value": "Watcher"
+          },
+          {
+            "type": "text",
+            "value": "。"
+          },
+          {
+            "type": "strong",
+            "value": "写"
+          },
+          {
+            "type": "text",
+            "value": "时在 setter 调 "
+          },
+          {
+            "type": "code",
+            "value": "dep.notify()"
+          },
+          {
+            "type": "text",
+            "value": "，通知 watcher 重新执行。"
+          }
         ],
         [
-          { "type": "text", "value": "组件渲染是一个 render watcher：渲染时访问到的响应式属性被收集；属性变更后 watcher 入队，异步批量更新 DOM。" }
+          {
+            "type": "text",
+            "value": "组件渲染是一个 render watcher：渲染时访问到的响应式属性被收集；属性变更后 watcher 入队，异步批量更新 DOM。"
+          }
         ]
       ]
     },
@@ -76,26 +172,74 @@
       "questionNote": "根因是初始化只遍历已有 key；Vue 3 用 Proxy 后此题变成对比考点。",
       "answer": [
         [
-          { "type": "strong", "value": "原因：" },
-          { "type": "text", "value": "初始化时只遍历已有 key 做 defineProperty，" },
-          { "type": "strong", "value": "后加的 key 没有 getter/setter" },
-          { "type": "text", "value": "，不会触发依赖更新；删除属性同理。" }
+          {
+            "type": "strong",
+            "value": "原因："
+          },
+          {
+            "type": "text",
+            "value": "初始化时只遍历已有 key 做 defineProperty，"
+          },
+          {
+            "type": "strong",
+            "value": "后加的 key 没有 getter/setter"
+          },
+          {
+            "type": "text",
+            "value": "，不会触发依赖更新；删除属性同理。"
+          }
         ],
         [
-          { "type": "text", "value": "1）新增：用 " },
-          { "type": "code", "value": "Vue.set(obj, key, val)" },
-          { "type": "text", "value": " 或 " },
-          { "type": "code", "value": "this.$set" },
-          { "type": "text", "value": " 让新 key 也变成响应式。" }
+          {
+            "type": "text",
+            "value": "1）新增：用 "
+          },
+          {
+            "type": "code",
+            "value": "Vue.set(obj, key, val)"
+          },
+          {
+            "type": "text",
+            "value": " 或 "
+          },
+          {
+            "type": "code",
+            "value": "this.$set"
+          },
+          {
+            "type": "text",
+            "value": " 让新 key 也变成响应式。"
+          }
         ],
         [
-          { "type": "text", "value": "2）删除：用 " },
-          { "type": "code", "value": "Vue.delete" },
-          { "type": "text", "value": " / " },
-          { "type": "code", "value": "this.$delete" },
-          { "type": "text", "value": "；或整体替换对象 " },
-          { "type": "code", "value": "this.obj = { ...this.obj, a: 1 }" },
-          { "type": "text", "value": " 触发引用变更。" }
+          {
+            "type": "text",
+            "value": "2）删除：用 "
+          },
+          {
+            "type": "code",
+            "value": "Vue.delete"
+          },
+          {
+            "type": "text",
+            "value": " / "
+          },
+          {
+            "type": "code",
+            "value": "this.$delete"
+          },
+          {
+            "type": "text",
+            "value": "；或整体替换对象 "
+          },
+          {
+            "type": "code",
+            "value": "this.obj = { ...this.obj, a: 1 }"
+          },
+          {
+            "type": "text",
+            "value": " 触发引用变更。"
+          }
         ]
       ]
     },
@@ -106,28 +250,82 @@
       "questionNote": "数组下标和 length 拦截不了，靠重写变更方法补丁；这是 Vue 2 经典坑。",
       "answer": [
         [
-          { "type": "text", "value": "Vue 2 无法拦截数组下标赋值与 " },
-          { "type": "code", "value": "length" },
-          { "type": "text", "value": " 变化，于是" },
-          { "type": "strong", "value": "重写变更方法" },
-          { "type": "text", "value": "（push/pop/splice 等），在方法内部手动触发依赖更新。" }
+          {
+            "type": "text",
+            "value": "Vue 2 无法拦截数组下标赋值与 "
+          },
+          {
+            "type": "code",
+            "value": "length"
+          },
+          {
+            "type": "text",
+            "value": " 变化，于是"
+          },
+          {
+            "type": "strong",
+            "value": "重写变更方法"
+          },
+          {
+            "type": "text",
+            "value": "（push/pop/splice 等），在方法内部手动触发依赖更新。"
+          }
         ],
         [
-          { "type": "strong", "value": "不触发更新的坑：" },
-          { "type": "text", "value": "直接改下标 " },
-          { "type": "code", "value": "arr[1] = x" },
-          { "type": "text", "value": "，或改长度 " },
-          { "type": "code", "value": "arr.length = 0" },
-          { "type": "text", "value": "。" }
+          {
+            "type": "strong",
+            "value": "不触发更新的坑："
+          },
+          {
+            "type": "text",
+            "value": "直接改下标 "
+          },
+          {
+            "type": "code",
+            "value": "arr[1] = x"
+          },
+          {
+            "type": "text",
+            "value": "，或改长度 "
+          },
+          {
+            "type": "code",
+            "value": "arr.length = 0"
+          },
+          {
+            "type": "text",
+            "value": "。"
+          }
         ],
         [
-          { "type": "text", "value": "解决：用 " },
-          { "type": "code", "value": "splice" },
-          { "type": "text", "value": " 替换元素，或 " },
-          { "type": "code", "value": "Vue.set(arr, index, val)" },
-          { "type": "text", "value": "；需要清空时 " },
-          { "type": "code", "value": "arr.splice(0)" },
-          { "type": "text", "value": " 比改 length 更稳。" }
+          {
+            "type": "text",
+            "value": "解决：用 "
+          },
+          {
+            "type": "code",
+            "value": "splice"
+          },
+          {
+            "type": "text",
+            "value": " 替换元素，或 "
+          },
+          {
+            "type": "code",
+            "value": "Vue.set(arr, index, val)"
+          },
+          {
+            "type": "text",
+            "value": "；需要清空时 "
+          },
+          {
+            "type": "code",
+            "value": "arr.splice(0)"
+          },
+          {
+            "type": "text",
+            "value": " 比改 length 更稳。"
+          }
         ]
       ]
     },
@@ -138,27 +336,124 @@
       "questionNote": "按层级选方案：父子 props/emit 最主流，跨层 provide/inject 或状态提升。",
       "answer": [
         [
-          { "type": "strong", "value": "父子：" },
-          { "type": "text", "value": "props 向下、" },
-          { "type": "code", "value": "$emit" },
-          { "type": "text", "value": " 向上，单向数据流，最常用。" }
+          {
+            "type": "strong",
+            "value": "父子："
+          },
+          {
+            "type": "text",
+            "value": "props 向下、"
+          },
+          {
+            "type": "code",
+            "value": "$emit"
+          },
+          {
+            "type": "text",
+            "value": " 向上，单向数据流，最常用。"
+          }
         ],
         [
-          { "type": "strong", "value": "多层级：" },
-          { "type": "text", "value": "provide/inject 做依赖注入，适合主题、表单上下文、插件式场景。" }
+          {
+            "type": "strong",
+            "value": "多层级："
+          },
+          {
+            "type": "text",
+            "value": "provide/inject 做依赖注入，适合主题、表单上下文、插件式场景。"
+          }
         ],
         [
-          { "type": "strong", "value": "兄弟/跨层：" },
-          { "type": "text", "value": "事件总线（" },
-          { "type": "code", "value": "new Vue()" },
-          { "type": "text", "value": " 当 bus）能用但难维护；复杂应用用 Vuex 或把状态提升到共同祖先。" }
+          {
+            "type": "strong",
+            "value": "兄弟/跨层："
+          },
+          {
+            "type": "text",
+            "value": "事件总线（"
+          },
+          {
+            "type": "code",
+            "value": "new Vue()"
+          },
+          {
+            "type": "text",
+            "value": " 当 bus）能用但难维护；复杂应用用 Vuex 或把状态提升到共同祖先。"
+          }
         ],
         [
-          { "type": "text", "value": "补充：" },
-          { "type": "code", "value": "$attrs/$listeners" },
-          { "type": "text", "value": " 用于二次封装透传；" },
-          { "type": "code", "value": "$parent/$refs" },
-          { "type": "text", "value": " 强耦合，老项目常见，新代码不推荐。" }
+          {
+            "type": "text",
+            "value": "补充："
+          },
+          {
+            "type": "code",
+            "value": "$attrs/$listeners"
+          },
+          {
+            "type": "text",
+            "value": " 用于二次封装透传；"
+          },
+          {
+            "type": "code",
+            "value": "$parent/$refs"
+          },
+          {
+            "type": "text",
+            "value": " 强耦合，老项目常见，新代码不推荐。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-vue2-vuex",
+      "navLabel": "Vuex",
+      "question": "Vuex 核心概念有哪些？和组件内 data 怎么分工？",
+      "questionNote": "Vue 2 项目常考；Vue 3 新项目优先 Pinia，见 Vue 3 章。",
+      "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "核心："
+          },
+          {
+            "type": "text",
+            "value": "state（单一数据源）、getters（派生状态）、mutations（同步改 state）、actions（异步，再 commit mutation）、modules（分模块）。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "1）组件用 "
+          },
+          {
+            "type": "code",
+            "value": "mapState"
+          },
+          {
+            "type": "text",
+            "value": " / "
+          },
+          {
+            "type": "code",
+            "value": "mapActions"
+          },
+          {
+            "type": "text",
+            "value": " 等辅助函数接入；流程：view dispatch action → commit mutation → state 变 → 视图更新。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2）放 Vuex：多页面共享的用户/权限/购物车等；放组件：仅本组件 UI 状态。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3）mutation 必须同步，异步逻辑写在 action；严格模式开发可检测非法直接改 state。"
+          }
         ]
       ]
     },
@@ -169,24 +464,66 @@
       "questionNote": "Vue 2 默认 prop 是 value、事件是 input；Vue 3 改为 modelValue。",
       "answer": [
         [
-          { "type": "strong", "value": "默认约定：" },
-          { "type": "text", "value": "父组件 " },
-          { "type": "code", "value": "v-model" },
-          { "type": "text", "value": " 等价于传 " },
-          { "type": "code", "value": "value" },
-          { "type": "text", "value": "、监听 " },
-          { "type": "code", "value": "input" },
-          { "type": "text", "value": " 事件。" }
+          {
+            "type": "strong",
+            "value": "默认约定："
+          },
+          {
+            "type": "text",
+            "value": "父组件 "
+          },
+          {
+            "type": "code",
+            "value": "v-model"
+          },
+          {
+            "type": "text",
+            "value": " 等价于传 "
+          },
+          {
+            "type": "code",
+            "value": "value"
+          },
+          {
+            "type": "text",
+            "value": "、监听 "
+          },
+          {
+            "type": "code",
+            "value": "input"
+          },
+          {
+            "type": "text",
+            "value": " 事件。"
+          }
         ],
         [
-          { "type": "text", "value": "子组件通过 " },
-          { "type": "code", "value": "this.$emit('input', newValue)" },
-          { "type": "text", "value": " 回传更新，父级 state 随之变化，形成双向绑定语法糖。" }
+          {
+            "type": "text",
+            "value": "子组件通过 "
+          },
+          {
+            "type": "code",
+            "value": "this.$emit('input', newValue)"
+          },
+          {
+            "type": "text",
+            "value": " 回传更新，父级 state 随之变化，形成双向绑定语法糖。"
+          }
         ],
         [
-          { "type": "text", "value": "自定义 prop/event：组件选项里写 " },
-          { "type": "code", "value": "model: { prop: 'checked', event: 'change' }" },
-          { "type": "text", "value": "，常见于 checkbox、select 等非 value 控件。" }
+          {
+            "type": "text",
+            "value": "自定义 prop/event：组件选项里写 "
+          },
+          {
+            "type": "code",
+            "value": "model: { prop: 'checked', event: 'change' }"
+          },
+          {
+            "type": "text",
+            "value": "，常见于 checkbox、select 等非 value 控件。"
+          }
         ]
       ]
     },
@@ -197,19 +534,46 @@
       "questionNote": "key 帮 diff 识别节点身份；index 在增删时会错位复用。",
       "answer": [
         [
-          { "type": "strong", "value": "作用：" },
-          { "type": "text", "value": "key 在同层 diff 时" },
-          { "type": "strong", "value": "稳定标识节点" },
-          { "type": "text", "value": "，帮助复用/移动已有 DOM 与组件实例，减少错误复用。" }
+          {
+            "type": "strong",
+            "value": "作用："
+          },
+          {
+            "type": "text",
+            "value": "key 在同层 diff 时"
+          },
+          {
+            "type": "strong",
+            "value": "稳定标识节点"
+          },
+          {
+            "type": "text",
+            "value": "，帮助复用/移动已有 DOM 与组件实例，减少错误复用。"
+          }
         ],
         [
-          { "type": "strong", "value": "index 的坑：" },
-          { "type": "text", "value": "列表插入/删除后 index 会变，Vue 可能把 DOM/组件实例复用到错误行。" }
+          {
+            "type": "strong",
+            "value": "index 的坑："
+          },
+          {
+            "type": "text",
+            "value": "列表插入/删除后 index 会变，Vue 可能把 DOM/组件实例复用到错误行。"
+          }
         ],
         [
-          { "type": "text", "value": "典型症状：输入框内容错位、过渡动画异常、组件内部 state 串台。应选业务唯一 id（如 " },
-          { "type": "code", "value": "item.id" },
-          { "type": "text", "value": "）。" }
+          {
+            "type": "text",
+            "value": "典型症状：输入框内容错位、过渡动画异常、组件内部 state 串台。应选业务唯一 id（如 "
+          },
+          {
+            "type": "code",
+            "value": "item.id"
+          },
+          {
+            "type": "text",
+            "value": "）。"
+          }
         ]
       ]
     },
@@ -220,20 +584,50 @@
       "questionNote": "computed 算派生值且有缓存；watch 跑副作用。别用 watch 替代简单计算。",
       "answer": [
         [
-          { "type": "strong", "value": "computed：" },
-          { "type": "text", "value": "适合派生状态，" },
-          { "type": "strong", "value": "有缓存" },
-          { "type": "text", "value": "，依赖不变不重复算；可写 getter/setter。" }
+          {
+            "type": "strong",
+            "value": "computed："
+          },
+          {
+            "type": "text",
+            "value": "适合派生状态，"
+          },
+          {
+            "type": "strong",
+            "value": "有缓存"
+          },
+          {
+            "type": "text",
+            "value": "，依赖不变不重复算；可写 getter/setter。"
+          }
         ],
         [
-          { "type": "strong", "value": "watch：" },
-          { "type": "text", "value": "适合副作用——发请求、写 localStorage、手动同步外部系统；能拿新旧值。" }
+          {
+            "type": "strong",
+            "value": "watch："
+          },
+          {
+            "type": "text",
+            "value": "适合副作用——发请求、写 localStorage、手动同步外部系统；能拿新旧值。"
+          }
         ],
         [
-          { "type": "code", "value": "immediate: true" },
-          { "type": "text", "value": " 让 watch 注册后立刻执行一次；" },
-          { "type": "code", "value": "deep: true" },
-          { "type": "text", "value": " 深度监听对象内部，开销更大，尽量监听具体字段。" }
+          {
+            "type": "code",
+            "value": "immediate: true"
+          },
+          {
+            "type": "text",
+            "value": " 让 watch 注册后立刻执行一次；"
+          },
+          {
+            "type": "code",
+            "value": "deep: true"
+          },
+          {
+            "type": "text",
+            "value": " 深度监听对象内部，开销更大，尽量监听具体字段。"
+          }
         ]
       ]
     },
@@ -244,17 +638,38 @@
       "questionNote": "数据变了 DOM 还没刷完时用；同一事件循环内多次改数据会合并更新。",
       "answer": [
         [
-          { "type": "strong", "value": "原因：" },
-          { "type": "text", "value": "Vue 2 更新 DOM 是" },
-          { "type": "strong", "value": "异步批量" },
-          { "type": "text", "value": "的。同一事件循环内多次改数据会合并刷新，改完立刻读 DOM 可能还是旧的。" }
+          {
+            "type": "strong",
+            "value": "原因："
+          },
+          {
+            "type": "text",
+            "value": "Vue 2 更新 DOM 是"
+          },
+          {
+            "type": "strong",
+            "value": "异步批量"
+          },
+          {
+            "type": "text",
+            "value": "的。同一事件循环内多次改数据会合并刷新，改完立刻读 DOM 可能还是旧的。"
+          }
         ],
         [
-          { "type": "code", "value": "this.$nextTick(() => { /* 读写更新后的 DOM */ })" },
-          { "type": "text", "value": " 把回调排到本轮 DOM 更新完成之后执行。" }
+          {
+            "type": "code",
+            "value": "this.$nextTick(() => { /* 读写更新后的 DOM */ })"
+          },
+          {
+            "type": "text",
+            "value": " 把回调排到本轮 DOM 更新完成之后执行。"
+          }
         ],
         [
-          { "type": "text", "value": "常见场景：滚到某元素、聚焦 input、获取元素尺寸、初始化依赖 DOM 的三方库（图表、编辑器等）。" }
+          {
+            "type": "text",
+            "value": "常见场景：滚到某元素、聚焦 input、获取元素尺寸、初始化依赖 DOM 的三方库（图表、编辑器等）。"
+          }
         ]
       ]
     },
@@ -265,23 +680,62 @@
       "questionNote": "缓存 ≠ 销毁；切走走 activated/deactivated，注意后台定时器与监听。",
       "answer": [
         [
-          { "type": "text", "value": "被 keep-alive 包裹的组件切走时" },
-          { "type": "strong", "value": "不会销毁" },
-          { "type": "text", "value": "，转而触发 " },
-          { "type": "code", "value": "activated/deactivated" },
-          { "type": "text", "value": "；只有从树中真正移除才走 destroy。" }
+          {
+            "type": "text",
+            "value": "被 keep-alive 包裹的组件切走时"
+          },
+          {
+            "type": "strong",
+            "value": "不会销毁"
+          },
+          {
+            "type": "text",
+            "value": "，转而触发 "
+          },
+          {
+            "type": "code",
+            "value": "activated/deactivated"
+          },
+          {
+            "type": "text",
+            "value": "；只有从树中真正移除才走 destroy。"
+          }
         ],
         [
-          { "type": "text", "value": "用 " },
-          { "type": "code", "value": "include/exclude" },
-          { "type": "text", "value": "（组件 name）或 " },
-          { "type": "code", "value": "max" },
-          { "type": "text", "value": " 控制哪些实例被缓存、最多缓存几个。" }
+          {
+            "type": "text",
+            "value": "用 "
+          },
+          {
+            "type": "code",
+            "value": "include/exclude"
+          },
+          {
+            "type": "text",
+            "value": "（组件 name）或 "
+          },
+          {
+            "type": "code",
+            "value": "max"
+          },
+          {
+            "type": "text",
+            "value": " 控制哪些实例被缓存、最多缓存几个。"
+          }
         ],
         [
-          { "type": "text", "value": "注意：缓存组件里的定时器/监听器应在 " },
-          { "type": "code", "value": "deactivated" },
-          { "type": "text", "value": " 暂停，或在销毁时清理，避免后台继续跑占资源。" }
+          {
+            "type": "text",
+            "value": "注意：缓存组件里的定时器/监听器应在 "
+          },
+          {
+            "type": "code",
+            "value": "deactivated"
+          },
+          {
+            "type": "text",
+            "value": " 暂停，或在销毁时清理，避免后台继续跑占资源。"
+          }
         ]
       ]
     },
@@ -292,16 +746,34 @@
       "questionNote": "mixin 与 filters 在 Vue 3 已不推荐/移除；能说清历史包袱与替代方案即可。",
       "answer": [
         [
-          { "type": "code", "value": "mixin" },
-          { "type": "text", "value": "：把选项式逻辑注入多个组件。缺点是命名冲突、来源不透明、调试困难；大型项目更推荐抽 composable 或小组件。" }
+          {
+            "type": "code",
+            "value": "mixin"
+          },
+          {
+            "type": "text",
+            "value": "：把选项式逻辑注入多个组件。缺点是命名冲突、来源不透明、调试困难；大型项目更推荐抽 composable 或小组件。"
+          }
         ],
         [
-          { "type": "code", "value": "Vue.use(plugin)" },
-          { "type": "text", "value": "：安装插件，可注册全局组件/指令、在原型挂方法。注意避免污染全局与重复安装。" }
+          {
+            "type": "code",
+            "value": "Vue.use(plugin)"
+          },
+          {
+            "type": "text",
+            "value": "：安装插件，可注册全局组件/指令、在原型挂方法。注意避免污染全局与重复安装。"
+          }
         ],
         [
-          { "type": "code", "value": "filters" },
-          { "type": "text", "value": "：模板里做日期/金额等格式化，逻辑藏进模板难测；Vue 3 已移除，工程里改用方法、计算属性或独立格式化函数。" }
+          {
+            "type": "code",
+            "value": "filters"
+          },
+          {
+            "type": "text",
+            "value": "：模板里做日期/金额等格式化，逻辑藏进模板难测；Vue 3 已移除，工程里改用方法、计算属性或独立格式化函数。"
+          }
         ]
       ]
     }

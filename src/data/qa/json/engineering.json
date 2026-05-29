@@ -12,36 +12,96 @@
       "questionNote": "CJS 运行时 require；ES 模块（ESM）静态结构利于摇树；互操作知道即可。",
       "answer": [
         [
-          { "type": "strong", "value": "CommonJS（CJS）：" },
-          { "type": "code", "value": "require()" },
-          { "type": "text", "value": " 运行时解析路径；" },
-          { "type": "code", "value": "module.exports" },
-          { "type": "text", "value": " 是对象引用。" }
+          {
+            "type": "strong",
+            "value": "CommonJS（CJS）："
+          },
+          {
+            "type": "code",
+            "value": "require()"
+          },
+          {
+            "type": "text",
+            "value": " 运行时解析路径；"
+          },
+          {
+            "type": "code",
+            "value": "module.exports"
+          },
+          {
+            "type": "text",
+            "value": " 是对象引用。"
+          }
         ],
         [
-          { "type": "text", "value": "1）" },
-          { "type": "code", "value": "exports.foo = 1" },
-          { "type": "text", "value": " 与 " },
-          { "type": "code", "value": "module.exports = {}" },
-          { "type": "text", "value": " 混用会踩坑，面试能举例即可。" }
+          {
+            "type": "text",
+            "value": "1）"
+          },
+          {
+            "type": "code",
+            "value": "exports.foo = 1"
+          },
+          {
+            "type": "text",
+            "value": " 与 "
+          },
+          {
+            "type": "code",
+            "value": "module.exports = {}"
+          },
+          {
+            "type": "text",
+            "value": " 混用会踩坑，面试能举例即可。"
+          }
         ],
         [
-          { "type": "strong", "value": "ES6 Module 语法（ESM）：" },
-          { "type": "code", "value": "import/export" },
-          { "type": "text", "value": " 在编译阶段静态分析；导入导出为动态引用（live binding，阮一峰 Module 一章）。" }
+          {
+            "type": "strong",
+            "value": "ES6 Module 语法（ESM）："
+          },
+          {
+            "type": "code",
+            "value": "import/export"
+          },
+          {
+            "type": "text",
+            "value": " 在编译阶段静态分析；导入导出为动态引用（live binding，阮一峰 Module 一章）。"
+          }
         ],
         [
-          { "type": "text", "value": "利于摇树优化（Tree-shaking）；支持顶层 " },
-          { "type": "code", "value": "await" },
-          { "type": "text", "value": "。" }
+          {
+            "type": "text",
+            "value": "利于摇树优化（Tree-shaking）；支持顶层 "
+          },
+          {
+            "type": "code",
+            "value": "await"
+          },
+          {
+            "type": "text",
+            "value": "。"
+          }
         ],
         [
-          { "type": "text", "value": "浏览器可用 " },
-          { "type": "code", "value": "<script type=\"module\">" },
-          { "type": "text", "value": " 按 ESM 规范加载。" }
+          {
+            "type": "text",
+            "value": "浏览器可用 "
+          },
+          {
+            "type": "code",
+            "value": "<script type=\"module\">"
+          },
+          {
+            "type": "text",
+            "value": " 按 ESM 规范加载。"
+          }
         ],
         [
-          { "type": "text", "value": "互操作：打包器常把 CJS 预构建成 ESM；循环依赖项目里靠拆模块规避，不必背完整规范。" }
+          {
+            "type": "text",
+            "value": "互操作：打包器常把 CJS 预构建成 ESM；循环依赖项目里靠拆模块规避，不必背完整规范。"
+          }
         ]
       ]
     },
@@ -52,19 +112,40 @@
       "questionNote": "开发态 ESM 按需编译 vs 整图打包；生产别绝对化「谁更快」。",
       "answer": [
         [
-          { "type": "strong", "value": "开发态：" },
-          { "type": "text", "value": "Vite 把源码当原生 ES 模块（ESM）提供，浏览器请求哪个模块再让 esbuild 转那个文件，" },
-          { "type": "strong", "value": "冷启动几乎不打包整图" },
-          { "type": "text", "value": "。" }
+          {
+            "type": "strong",
+            "value": "开发态："
+          },
+          {
+            "type": "text",
+            "value": "Vite 把源码当原生 ES 模块（ESM）提供，浏览器请求哪个模块再让 esbuild 转那个文件，"
+          },
+          {
+            "type": "strong",
+            "value": "冷启动几乎不打包整图"
+          },
+          {
+            "type": "text",
+            "value": "。"
+          }
         ],
         [
-          { "type": "text", "value": "1）依赖里的 CJS 包用 esbuild 预构建一次，后续走缓存。" }
+          {
+            "type": "text",
+            "value": "1）依赖里的 CJS 包用 esbuild 预构建一次，后续走缓存。"
+          }
         ],
         [
-          { "type": "text", "value": "2）Webpack 开发常先打出内存 bundle 再热模块替换（HMR），入口一多就慢；但复杂 loader、微前端、Legacy 生态更全。" }
+          {
+            "type": "text",
+            "value": "2）Webpack 开发常先打出内存 bundle 再热模块替换（HMR），入口一多就慢；但复杂 loader、微前端、Legacy 生态更全。"
+          }
         ],
         [
-          { "type": "text", "value": "3）生产环境 Vite 用 Rollup 打摇树后的 bundle，是否更快要看项目体积与配置，别一刀切。" }
+          {
+            "type": "text",
+            "value": "3）生产环境 Vite 用 Rollup 打摇树后的 bundle，是否更快要看项目体积与配置，别一刀切。"
+          }
         ]
       ]
     },
@@ -75,24 +156,66 @@
       "questionNote": "静态 ESM + 无副作用声明；lodash 整包导入是经典反例。",
       "answer": [
         [
-          { "type": "strong", "value": "定义：" },
-          { "type": "text", "value": "静态分析 " },
-          { "type": "code", "value": "import { a } from \"lib\"" },
-          { "type": "text", "value": " 时，把未用到的 export 从最终 bundle 删掉。" }
+          {
+            "type": "strong",
+            "value": "定义："
+          },
+          {
+            "type": "text",
+            "value": "静态分析 "
+          },
+          {
+            "type": "code",
+            "value": "import { a } from \"lib\""
+          },
+          {
+            "type": "text",
+            "value": " 时，把未用到的 export 从最终 bundle 删掉。"
+          }
         ],
         [
-          { "type": "text", "value": "1）前提：ESM 且副作用可分析；" },
-          { "type": "code", "value": "package.json" },
-          { "type": "text", "value": " 里 " },
-          { "type": "code", "value": "\"sideEffects\": false" },
-          { "type": "text", "value": " 或列出有副作用的文件。" }
+          {
+            "type": "text",
+            "value": "1）前提：ESM 且副作用可分析；"
+          },
+          {
+            "type": "code",
+            "value": "package.json"
+          },
+          {
+            "type": "text",
+            "value": " 里 "
+          },
+          {
+            "type": "code",
+            "value": "\"sideEffects\": false"
+          },
+          {
+            "type": "text",
+            "value": " 或列出有副作用的文件。"
+          }
         ],
         [
-          { "type": "text", "value": "2）反例：" },
-          { "type": "code", "value": "import _ from \"lodash\"" },
-          { "type": "text", "value": " 往往整包进来，应改 " },
-          { "type": "code", "value": "lodash-es" },
-          { "type": "text", "value": " 或按路径引入。" }
+          {
+            "type": "text",
+            "value": "2）反例："
+          },
+          {
+            "type": "code",
+            "value": "import _ from \"lodash\""
+          },
+          {
+            "type": "text",
+            "value": " 往往整包进来，应改 "
+          },
+          {
+            "type": "code",
+            "value": "lodash-es"
+          },
+          {
+            "type": "text",
+            "value": " 或按路径引入。"
+          }
         ]
       ]
     },
@@ -103,24 +226,66 @@
       "questionNote": "防止服务端密钥打进浏览器；运行时配置另说。",
       "answer": [
         [
-          { "type": "strong", "value": "安全边界：" },
-          { "type": "text", "value": "只有 " },
-          { "type": "code", "value": "VITE_" },
-          { "type": "text", "value": " 开头的变量会暴露给客户端 bundle，避免数据库密码等误进浏览器。" }
+          {
+            "type": "strong",
+            "value": "安全边界："
+          },
+          {
+            "type": "text",
+            "value": "只有 "
+          },
+          {
+            "type": "code",
+            "value": "VITE_"
+          },
+          {
+            "type": "text",
+            "value": " 开头的变量会暴露给客户端 bundle，避免数据库密码等误进浏览器。"
+          }
         ],
         [
-          { "type": "text", "value": "1）按模式加载 " },
-          { "type": "code", "value": ".env.development" },
-          { "type": "text", "value": " / " },
-          { "type": "code", "value": ".env.production" },
-          { "type": "text", "value": "。" }
+          {
+            "type": "text",
+            "value": "1）按模式加载 "
+          },
+          {
+            "type": "code",
+            "value": ".env.development"
+          },
+          {
+            "type": "text",
+            "value": " / "
+          },
+          {
+            "type": "code",
+            "value": ".env.production"
+          },
+          {
+            "type": "text",
+            "value": "。"
+          }
         ],
         [
-          { "type": "text", "value": "2）运行时不能写死 bundle 时，用 " },
-          { "type": "code", "value": "window.__CONFIG__" },
-          { "type": "text", "value": " 由网关注入，或单独请求 " },
-          { "type": "code", "value": "/config.json" },
-          { "type": "text", "value": "。" }
+          {
+            "type": "text",
+            "value": "2）运行时不能写死 bundle 时，用 "
+          },
+          {
+            "type": "code",
+            "value": "window.__CONFIG__"
+          },
+          {
+            "type": "text",
+            "value": " 由网关注入，或单独请求 "
+          },
+          {
+            "type": "code",
+            "value": "/config.json"
+          },
+          {
+            "type": "text",
+            "value": "。"
+          }
         ]
       ]
     },
@@ -131,20 +296,50 @@
       "questionNote": "map 给排错用，别公开完整源码；hidden-source-map + 鉴权上传常见。",
       "answer": [
         [
-          { "type": "strong", "value": "目标：" },
-          { "type": "text", "value": "线上栈能映射回源码，但不要把完整 .map 公开挂在静态目录。" }
+          {
+            "type": "strong",
+            "value": "目标："
+          },
+          {
+            "type": "text",
+            "value": "线上栈能映射回源码，但不要把完整 .map 公开挂在静态目录。"
+          }
         ],
         [
-          { "type": "text", "value": "1）构建生成 " },
-          { "type": "code", "value": ".map" },
-          { "type": "text", "value": "，用 " },
-          { "type": "code", "value": "hidden-source-map" },
-          { "type": "text", "value": " 只上传到 Sentry 等带鉴权的服务，或 CI 产物内网留存。" }
+          {
+            "type": "text",
+            "value": "1）构建生成 "
+          },
+          {
+            "type": "code",
+            "value": ".map"
+          },
+          {
+            "type": "text",
+            "value": "，用 "
+          },
+          {
+            "type": "code",
+            "value": "hidden-source-map"
+          },
+          {
+            "type": "text",
+            "value": " 只上传到 Sentry 等带鉴权的服务，或 CI 产物内网留存。"
+          }
         ],
         [
-          { "type": "text", "value": "2）浏览器别暴露生产 map URL；Nginx 对 " },
-          { "type": "code", "value": "*.map" },
-          { "type": "text", "value": " 返回 404 或 IP 白名单。" }
+          {
+            "type": "text",
+            "value": "2）浏览器别暴露生产 map URL；Nginx 对 "
+          },
+          {
+            "type": "code",
+            "value": "*.map"
+          },
+          {
+            "type": "text",
+            "value": " 返回 404 或 IP 白名单。"
+          }
         ]
       ]
     },
@@ -155,20 +350,50 @@
       "questionNote": "依赖不打进 bundle，运行时由全局或 import map 提供；要谈失败点与版本对齐。",
       "answer": [
         [
-          { "type": "strong", "value": "含义：" },
-          { "type": "text", "value": "不把依赖打进 bundle，运行时假定全局已有 " },
-          { "type": "code", "value": "window.React" },
-          { "type": "text", "value": " 或由 " },
-          { "type": "code", "value": "importmap" },
-          { "type": "text", "value": " 提供。" }
+          {
+            "type": "strong",
+            "value": "含义："
+          },
+          {
+            "type": "text",
+            "value": "不把依赖打进 bundle，运行时假定全局已有 "
+          },
+          {
+            "type": "code",
+            "value": "window.React"
+          },
+          {
+            "type": "text",
+            "value": " 或由 "
+          },
+          {
+            "type": "code",
+            "value": "importmap"
+          },
+          {
+            "type": "text",
+            "value": " 提供。"
+          }
         ],
         [
-          { "type": "text", "value": "1）好处：减 vendor 体积，借 CDN 缓存与 HTTP/2 多路复用。" }
+          {
+            "type": "text",
+            "value": "1）好处：减 vendor 体积，借 CDN 缓存与 HTTP/2 多路复用。"
+          }
         ],
         [
-          { "type": "text", "value": "2）代价：多一个失败点，版本须与 " },
-          { "type": "code", "value": "package.json" },
-          { "type": "text", "value": " 对齐；内网离线不适用。微前端模块联邦（Module Federation）也类似共享 external。" }
+          {
+            "type": "text",
+            "value": "2）代价：多一个失败点，版本须与 "
+          },
+          {
+            "type": "code",
+            "value": "package.json"
+          },
+          {
+            "type": "text",
+            "value": " 对齐；内网离线不适用。微前端模块联邦（Module Federation）也类似共享 external。"
+          }
         ]
       ]
     },
@@ -179,22 +404,58 @@
       "questionNote": "内容寻址 store + 非扁平 node_modules；幽灵依赖是常考点。",
       "answer": [
         [
-          { "type": "strong", "value": "磁盘：" },
-          { "type": "text", "value": "内容寻址 store + 硬链接挂到各项目 " },
-          { "type": "code", "value": "node_modules" },
-          { "type": "text", "value": "，同版本只存一份。" }
+          {
+            "type": "strong",
+            "value": "磁盘："
+          },
+          {
+            "type": "text",
+            "value": "内容寻址 store + 硬链接挂到各项目 "
+          },
+          {
+            "type": "code",
+            "value": "node_modules"
+          },
+          {
+            "type": "text",
+            "value": "，同版本只存一份。"
+          }
         ],
         [
-          { "type": "text", "value": "1）" },
-          { "type": "strong", "value": "非扁平" },
-          { "type": "text", "value": " 结构，减少没在 " },
-          { "type": "code", "value": "package.json" },
-          { "type": "text", "value": " 声明却能 import 到的「幽灵依赖」。" }
+          {
+            "type": "text",
+            "value": "1）"
+          },
+          {
+            "type": "strong",
+            "value": "非扁平"
+          },
+          {
+            "type": "text",
+            "value": " 结构，减少没在 "
+          },
+          {
+            "type": "code",
+            "value": "package.json"
+          },
+          {
+            "type": "text",
+            "value": " 声明却能 import 到的「幽灵依赖」。"
+          }
         ],
         [
-          { "type": "text", "value": "2）老项目迁移可能遇包假设扁平路径，可用 " },
-          { "type": "code", "value": "public-hoist-pattern" },
-          { "type": "text", "value": " 等配置兜底。" }
+          {
+            "type": "text",
+            "value": "2）老项目迁移可能遇包假设扁平路径，可用 "
+          },
+          {
+            "type": "code",
+            "value": "public-hoist-pattern"
+          },
+          {
+            "type": "text",
+            "value": " 等配置兜底。"
+          }
         ]
       ]
     },
@@ -205,23 +466,56 @@
       "questionNote": "单仓多包 + 任务编排；要说清 CI 增量与发布流成本。",
       "answer": [
         [
-          { "type": "strong", "value": "定义：" },
-          { "type": "text", "value": "多个包/应用放在同一仓库，用 " },
-          { "type": "code", "value": "pnpm workspace" },
-          { "type": "text", "value": " / " },
-          { "type": "code", "value": "Nx" },
-          { "type": "text", "value": " / " },
-          { "type": "code", "value": "Turborepo" },
-          { "type": "text", "value": " 管依赖与任务。" }
+          {
+            "type": "strong",
+            "value": "定义："
+          },
+          {
+            "type": "text",
+            "value": "多个包/应用放在同一仓库，用 "
+          },
+          {
+            "type": "code",
+            "value": "pnpm workspace"
+          },
+          {
+            "type": "text",
+            "value": " / "
+          },
+          {
+            "type": "code",
+            "value": "Nx"
+          },
+          {
+            "type": "text",
+            "value": " / "
+          },
+          {
+            "type": "code",
+            "value": "Turborepo"
+          },
+          {
+            "type": "text",
+            "value": " 管依赖与任务。"
+          }
         ],
         [
-          { "type": "text", "value": "1）共享 ui-kit、eslint 配置、工具函数一处改处处生效。" }
+          {
+            "type": "text",
+            "value": "1）共享 ui-kit、eslint 配置、工具函数一处改处处生效。"
+          }
         ],
         [
-          { "type": "text", "value": "2）原子提交可跨包改需求，版本对齐更容易。" }
+          {
+            "type": "text",
+            "value": "2）原子提交可跨包改需求，版本对齐更容易。"
+          }
         ],
         [
-          { "type": "text", "value": "3）代价：持续集成（CI）要按受影响包增量跑，发布流设计不好会一挂全红。" }
+          {
+            "type": "text",
+            "value": "3）代价：持续集成（CI）要按受影响包增量跑，发布流设计不好会一挂全红。"
+          }
         ]
       ]
     },
@@ -232,19 +526,40 @@
       "questionNote": "任务 DAG 与增量；远程缓存是团队共享构建产物，注意秘文隔离。",
       "answer": [
         [
-          { "type": "strong", "value": "分工：" },
-          { "type": "text", "value": "workspace 管依赖链接；Turborepo/Nx 管任务编排与增量。" }
+          {
+            "type": "strong",
+            "value": "分工："
+          },
+          {
+            "type": "text",
+            "value": "workspace 管依赖链接；Turborepo/Nx 管任务编排与增量。"
+          }
         ],
         [
-          { "type": "text", "value": "1）按包依赖图并行跑 build/test/lint，没改动的包跳过。" }
+          {
+            "type": "text",
+            "value": "1）按包依赖图并行跑 build/test/lint，没改动的包跳过。"
+          }
         ],
         [
-          { "type": "text", "value": "2）" },
-          { "type": "strong", "value": "远程缓存" },
-          { "type": "text", "value": "：任务输出哈希由锁文件、源码、环境输入决定，命中后直接拉产物，main 编过的包在 feature 分支也能秒过。" }
+          {
+            "type": "text",
+            "value": "2）"
+          },
+          {
+            "type": "strong",
+            "value": "远程缓存"
+          },
+          {
+            "type": "text",
+            "value": "：任务输出哈希由锁文件、源码、环境输入决定，命中后直接拉产物，main 编过的包在 feature 分支也能秒过。"
+          }
         ],
         [
-          { "type": "text", "value": "3）注意密钥与缓存隔离，别把带秘文的构建产物进公共缓存。" }
+          {
+            "type": "text",
+            "value": "3）注意密钥与缓存隔离，别把带秘文的构建产物进公共缓存。"
+          }
         ]
       ]
     },
@@ -255,21 +570,54 @@
       "questionNote": "Changesets 变更集 + CI 发布是主流说法；semantic-release 可作补充。",
       "answer": [
         [
-          { "type": "strong", "value": "常见：" },
-          { "type": "code", "value": "Changesets" },
-          { "type": "text", "value": "，PR 里加 " },
-          { "type": "code", "value": ".changeset" },
-          { "type": "text", "value": " 描述语义化版本（semver） bump。" }
+          {
+            "type": "strong",
+            "value": "常见："
+          },
+          {
+            "type": "code",
+            "value": "Changesets"
+          },
+          {
+            "type": "text",
+            "value": "，PR 里加 "
+          },
+          {
+            "type": "code",
+            "value": ".changeset"
+          },
+          {
+            "type": "text",
+            "value": " 描述语义化版本（semver） bump。"
+          }
         ],
         [
-          { "type": "text", "value": "1）合并后 CI 打版、写 CHANGELOG、" },
-          { "type": "code", "value": "npm publish" },
-          { "type": "text", "value": " 多个 workspace 包。" }
+          {
+            "type": "text",
+            "value": "1）合并后 CI 打版、写 CHANGELOG、"
+          },
+          {
+            "type": "code",
+            "value": "npm publish"
+          },
+          {
+            "type": "text",
+            "value": " 多个 workspace 包。"
+          }
         ],
         [
-          { "type": "text", "value": "2）或用 " },
-          { "type": "code", "value": "semantic-release" },
-          { "type": "text", "value": " 从 commit 规范推断版本。面试能说「变更集 + CI 发布」即可。" }
+          {
+            "type": "text",
+            "value": "2）或用 "
+          },
+          {
+            "type": "code",
+            "value": "semantic-release"
+          },
+          {
+            "type": "text",
+            "value": " 从 commit 规范推断版本。面试能说「变更集 + CI 发布」即可。"
+          }
         ]
       ]
     },
@@ -280,21 +628,54 @@
       "questionNote": "只 lint 暂存区提速；hook 可被 --no-verify 跳过，CI 才是准绳。",
       "answer": [
         [
-          { "type": "strong", "value": "做法：" },
-          { "type": "code", "value": "pre-commit" },
-          { "type": "text", "value": " 里跑 " },
-          { "type": "code", "value": "lint-staged" },
-          { "type": "text", "value": "，只对暂存区文件执行 eslint --fix、prettier。" }
+          {
+            "type": "strong",
+            "value": "做法："
+          },
+          {
+            "type": "code",
+            "value": "pre-commit"
+          },
+          {
+            "type": "text",
+            "value": " 里跑 "
+          },
+          {
+            "type": "code",
+            "value": "lint-staged"
+          },
+          {
+            "type": "text",
+            "value": "，只对暂存区文件执行 eslint --fix、prettier。"
+          }
         ],
         [
-          { "type": "text", "value": "1）避免全仓扫描很慢，提交前快速拦住低级问题。" }
+          {
+            "type": "text",
+            "value": "1）避免全仓扫描很慢，提交前快速拦住低级问题。"
+          }
         ],
         [
-          { "type": "text", "value": "2）开发者可用 " },
-          { "type": "code", "value": "git commit --no-verify" },
-          { "type": "text", "value": " 跳过；" },
-          { "type": "strong", "value": "合并不应以本地 hook 代替 CI" },
-          { "type": "text", "value": "。大仓可用 lefthook 等替代。" }
+          {
+            "type": "text",
+            "value": "2）开发者可用 "
+          },
+          {
+            "type": "code",
+            "value": "git commit --no-verify"
+          },
+          {
+            "type": "text",
+            "value": " 跳过；"
+          },
+          {
+            "type": "strong",
+            "value": "合并不应以本地 hook 代替 CI"
+          },
+          {
+            "type": "text",
+            "value": "。大仓可用 lefthook 等替代。"
+          }
         ]
       ]
     },
@@ -305,17 +686,38 @@
       "questionNote": "lint、类型检查、测试、体积预算；本地 hook 与 CI 互补关系要说清。",
       "answer": [
         [
-          { "type": "strong", "value": "典型门禁：" },
-          { "type": "code", "value": "eslint + prettier" },
-          { "type": "text", "value": "（或 biome）、" },
-          { "type": "code", "value": "tsc --noEmit" },
-          { "type": "text", "value": "、单元/组件测试、关键路径端到端（e2e）。" }
+          {
+            "type": "strong",
+            "value": "典型门禁："
+          },
+          {
+            "type": "code",
+            "value": "eslint + prettier"
+          },
+          {
+            "type": "text",
+            "value": "（或 biome）、"
+          },
+          {
+            "type": "code",
+            "value": "tsc --noEmit"
+          },
+          {
+            "type": "text",
+            "value": "、单元/组件测试、关键路径端到端（e2e）。"
+          }
         ],
         [
-          { "type": "text", "value": "1）可对 bundle 设体积 budget，防依赖悄悄变大。" }
+          {
+            "type": "text",
+            "value": "1）可对 bundle 设体积 budget，防依赖悄悄变大。"
+          }
         ],
         [
-          { "type": "text", "value": "2）目的：把低级错误拦在合并前；持续集成（CI）为准，本地 pre-commit 只是提效。" }
+          {
+            "type": "text",
+            "value": "2）目的：把低级错误拦在合并前；持续集成（CI）为准，本地 pre-commit 只是提效。"
+          }
         ]
       ]
     },
@@ -326,23 +728,56 @@
       "questionNote": "子应用独立发布 + 基座统一壳；要能列 iframe/qiankun/模块联邦取舍与痛点。",
       "answer": [
         [
-          { "type": "strong", "value": "一句话：" },
-          { "type": "text", "value": "多团队子应用独立构建发布，基座统一登录、菜单、路由，挂到 " },
-          { "type": "code", "value": "/order/*" },
-          { "type": "text", "value": " 等路径。" }
+          {
+            "type": "strong",
+            "value": "一句话："
+          },
+          {
+            "type": "text",
+            "value": "多团队子应用独立构建发布，基座统一登录、菜单、路由，挂到 "
+          },
+          {
+            "type": "code",
+            "value": "/order/*"
+          },
+          {
+            "type": "text",
+            "value": " 等路径。"
+          }
         ],
         [
-          { "type": "text", "value": "1）" },
-          { "type": "code", "value": "iframe" },
-          { "type": "text", "value": " 隔离最强但体验差；" },
-          { "type": "code", "value": "qiankun / single-spa" },
-          { "type": "text", "value": " JS 沙箱 + 样式隔离。" }
+          {
+            "type": "text",
+            "value": "1）"
+          },
+          {
+            "type": "code",
+            "value": "iframe"
+          },
+          {
+            "type": "text",
+            "value": " 隔离最强但体验差；"
+          },
+          {
+            "type": "code",
+            "value": "qiankun / single-spa"
+          },
+          {
+            "type": "text",
+            "value": " JS 沙箱 + 样式隔离。"
+          }
         ],
         [
-          { "type": "text", "value": "2）Webpack 模块联邦（Module Federation）共享依赖、运行时远程加载。" }
+          {
+            "type": "text",
+            "value": "2）Webpack 模块联邦（Module Federation）共享依赖、运行时远程加载。"
+          }
         ],
         [
-          { "type": "text", "value": "3）痛点：样式泄漏、全局变量污染、路由 history 冲突、公共依赖版本；也要能说何时 monorepo 单体更合适。" }
+          {
+            "type": "text",
+            "value": "3）痛点：样式泄漏、全局变量污染、路由 history 冲突、公共依赖版本；也要能说何时 monorepo 单体更合适。"
+          }
         ]
       ]
     },
@@ -353,27 +788,156 @@
       "questionNote": "语法降级与转换；类型检查仍靠 tsc；摇树在 bundler 阶段。",
       "answer": [
         [
-          { "type": "strong", "value": "共性：" },
-          { "type": "text", "value": "把 JSX、TypeScript、新语法转成目标环境能跑的 JavaScript。" }
+          {
+            "type": "strong",
+            "value": "共性："
+          },
+          {
+            "type": "text",
+            "value": "把 JSX、TypeScript、新语法转成目标环境能跑的 JavaScript。"
+          }
         ],
         [
-          { "type": "text", "value": "1）" },
-          { "type": "code", "value": "Babel" },
-          { "type": "text", "value": " 插件生态最全，定制抽象语法树（AST）方便。" }
+          {
+            "type": "text",
+            "value": "1）"
+          },
+          {
+            "type": "code",
+            "value": "Babel"
+          },
+          {
+            "type": "text",
+            "value": " 插件生态最全，定制抽象语法树（AST）方便。"
+          }
         ],
         [
-          { "type": "text", "value": "2）" },
-          { "type": "code", "value": "SWC" },
-          { "type": "text", "value": " / " },
-          { "type": "code", "value": "esbuild" },
-          { "type": "text", "value": " 用 Rust/Go 实现，编译快，Vite 开发态常用 esbuild 转 TS。" }
+          {
+            "type": "text",
+            "value": "2）"
+          },
+          {
+            "type": "code",
+            "value": "SWC"
+          },
+          {
+            "type": "text",
+            "value": " / "
+          },
+          {
+            "type": "code",
+            "value": "esbuild"
+          },
+          {
+            "type": "text",
+            "value": " 用 Rust/Go 实现，编译快，Vite 开发态常用 esbuild 转 TS。"
+          }
         ],
         [
-          { "type": "text", "value": "3）类型检查仍靠 " },
-          { "type": "code", "value": "tsc" },
-          { "type": "text", "value": " / " },
-          { "type": "code", "value": "vue-tsc" },
-          { "type": "text", "value": "；生产摇树在 bundler，不是 Babel 单独完成。" }
+          {
+            "type": "text",
+            "value": "3）类型检查仍靠 "
+          },
+          {
+            "type": "code",
+            "value": "tsc"
+          },
+          {
+            "type": "text",
+            "value": " / "
+          },
+          {
+            "type": "code",
+            "value": "vue-tsc"
+          },
+          {
+            "type": "text",
+            "value": "；生产摇树在 bundler，不是 Babel 单独完成。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-i18n-engineering",
+      "navLabel": "国际化工程化",
+      "question": "Vue/React 项目里国际化一般怎么落地？",
+      "questionNote": "语言包拆分、懒加载、构建与类型；RTL/SEO 见场景题。",
+      "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "一句话："
+          },
+          {
+            "type": "text",
+            "value": "用 i18n 库管文案 key，按语言拆包，切换 locale 时按需加载。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "1）Vue 用 "
+          },
+          {
+            "type": "code",
+            "value": "vue-i18n"
+          },
+          {
+            "type": "text",
+            "value": "，React 用 "
+          },
+          {
+            "type": "code",
+            "value": "react-i18next"
+          },
+          {
+            "type": "text",
+            "value": "；模板 "
+          },
+          {
+            "type": "code",
+            "value": "$t('key')"
+          },
+          {
+            "type": "text",
+            "value": "，避免硬编码。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2）"
+          },
+          {
+            "type": "code",
+            "value": "locales/zh-CN.json"
+          },
+          {
+            "type": "text",
+            "value": " 按语言拆分，路由级 "
+          },
+          {
+            "type": "code",
+            "value": "import()"
+          },
+          {
+            "type": "text",
+            "value": " 懒加载；CI 可校验缺失 key。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3）复数/插值用 ICU 或库内置；日期货币仍用 "
+          },
+          {
+            "type": "code",
+            "value": "Intl"
+          },
+          {
+            "type": "text",
+            "value": "。RTL、路由前缀见场景题「国际化与 RTL」。"
+          }
         ]
       ]
     }

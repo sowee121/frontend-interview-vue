@@ -2,4 +2,6 @@
 export const SITE_NAME = '前端面试速记'
 
 export const SITE_FOOTER_NOTE =
-  'Vue 3 + Vite + TypeScript + Vue Router + Pinia + Sass + ESLint + Prettier · Deploy to GitHub Pages'
+  'Vue 3 + Vite + TypeScript + Vue Router + Pinia + Sass · Deploy to GitHub Pages'
+
+export const SITE_GITHUB_URL = 'https://github.com/sowee121/frontend-interview-vue'
