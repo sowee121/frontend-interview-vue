@@ -11,7 +11,7 @@ alwaysApply: false
 - **可维护性**：能抽到 `src/composables/` 的逻辑就抽，避免在页面/组件里堆大段滚动监听与 DOM 逻辑。
 - **命名**：
   - 组件/文件：PascalCase（如 `ChapterSidebar.vue`）
-  - 组合式函数：`useXxx`（如 `useChapterScrollSpy`）
+  - 组合式函数：`useXxx`（如 `useChapterFromRoute`）
   - CSS 类：kebab-case + BEM（见样式规则）
 - **模板与可访问性**：外链必须带 `rel="noopener noreferrer"`；交互元素避免纯 `div` 充当按钮（必要时加 `button`/`aria-*`）。
 
