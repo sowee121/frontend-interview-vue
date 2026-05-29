@@ -7,8 +7,10 @@ alwaysApply: false
 # Sass / 构建约定
 
 - **BEM 命名**：块 `{domain}-{name}`、元素 `{block}__{part}`、修饰符 `{block}--{variant}`；统一 kebab-case。
-- **样式组织**：全局入口 `src/assets/main.scss`；partial 放 `src/assets/styles/`（如 `_layout.scss`、`_components.scss`）。
-- **变量注入机制**：Vite 会对“非样式目录内的 scss”自动注入 `@use "variables" as *;`（见 `vite.config.ts`）。
-  - 在 `src/assets/styles/**` 或 `src/assets/main.scss` 内 **不要** 再额外注入/重复 `@use variables`，避免重复 `@use` 报错。
-- **部署 base**：生产构建 `base` 为 `/frontend-interview-vue/`，开发为 `/`；写路由/资源路径时使用 `import.meta.env.BASE_URL` 思维，避免硬编码根路径。
-
+- **块选择器根**：样式以 `.site-footer`、`.qa-block` 等**类名为块根**书写；避免 `footer { &.site-footer { &__line } }`——会编译成 `footer.site-footer__line`，无法命中子元素上的 `site-footer__line`。
+- **样式组织**：全局入口 `src/assets/main.scss`，按序 `@use`：`tokens` → `base` → `layout` → `components`。
+  - `_base.scss`：盒模型、`html`/`body`、链接色；**`:where()` 元素重置**（margin 清零、表单 inherit、媒体 max-width）放在 `#app` 之后，特异性为 0，便于 BEM 覆盖。
+  - `_layout.scss`：顶栏、章节 grid、侧栏 TOC、移动 FAB / sheet、`scroll-top-fab`。
+  - `_components.scss`：文章卡片、题库块、首页章节卡片、页脚。
+- **变量注入**：Vite 对「非 `src/assets/styles/**`」的 scss/vue 自动注入 `@use "variables" as *;`（见 `vite.config.ts`）。在 `src/assets/styles/**` 与 `main.scss` 内 **不要** 重复 `@use variables`。
+- **部署 base**：生产 `base` 为 `/frontend-interview-vue/`，开发为 `/`；资源与路由思维使用 `import.meta.env.BASE_URL`，避免硬编码根路径。

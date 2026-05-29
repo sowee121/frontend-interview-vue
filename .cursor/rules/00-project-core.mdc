@@ -3,12 +3,13 @@ description: 本项目通用约定（结构、语言、改动边界）
 alwaysApply: true
 ---
 
-# frontend-interview-vue：通用规则
+# frontend-interview-vue（前端面试手册）
 
 - **沟通语言**：始终用中文（简体）输出。
+- **站点名称**：展示名为「前端面试手册」，常量 `SITE_NAME` 在 `src/config/site.ts`；勿与旧名「前端面试速记」混用。
 - **项目定位**：纯静态 SPA；构建时把 `src/data/qa/json/*.json` 打包进前端，运行时不依赖后端 API。
-- **改动优先级**：优先改 `src/data/qa/json/` 来维护内容；只有在“渲染能力缺失/交互缺陷”时才改组件与样式。
-- **数据源事实**：章节顺序以 `src/data/constants.ts` 的 `CHAPTER_ORDER` 为准；章节内容注册以 `src/data/qa/registry.ts` 静态 import 为准。
-- **答案渲染约束**：题库答案禁止写 HTML 字符串；使用 `RichSegment[][]`（见 `src/types/qa-content.ts`）。
+- **章节规模**：共 16 章，顺序以 `src/data/constants.ts` 的 `CHAPTER_ORDER` 为准（含 `es6`、`node`、`miniprogram`、`agent` 等）；内容注册以 `src/data/qa/registry.ts` 静态 import 为准。
+- **改动优先级**：优先改 `src/data/qa/json/` 维护内容；仅在渲染能力缺失、交互缺陷或样式结构性问题时改组件与样式。
+- **答案渲染约束**：题库答案禁止写 HTML 字符串；使用 `RichSegment[][]`（见 `src/types/qa-content.ts`）；章节可选 `leadLink` 外链。
 - **工程习惯**：保持改动小而可验证；避免无关重构、避免一次性大范围格式化。
-
+- **文档同步**：增删章节或改 `CHAPTER_ORDER` 时，同步 README「功能特性」与本规则；大批量改题后可运行 `node scripts/lint-qa-copy.mjs`。

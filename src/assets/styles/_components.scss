@@ -213,12 +213,24 @@ footer {
     align-items: center;
     gap: 0.35rem;
 
-    &__note {
+    &__line {
       margin: 0;
+      line-height: $line-height-tight;
     }
 
-    &__github {
+    &__sep {
+      margin: 0 0.35em;
+    }
+
+    &__link {
       font-size: inherit;
+      color: inherit;
+      text-decoration: underline;
+      text-underline-offset: 0.15em;
+
+      &:hover {
+        color: $text;
+      }
     }
   }
 }

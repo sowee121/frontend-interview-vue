@@ -9,6 +9,7 @@ alwaysApply: false
 - **Vue 组件**：统一使用 `<script setup lang="ts">`；`defineProps`/`defineEmits` 使用类型参数声明。
 - **导入与别名**：站内导入优先用 `@/` 别名；类型优先 `import type`。
 - **可维护性**：能抽到 `src/composables/` 的逻辑就抽，避免在页面/组件里堆大段滚动监听与 DOM 逻辑。
+- **站点文案**：顶栏标题等来自 `SITE_NAME`（`src/config/site.ts`），勿在组件里硬编码站点名。
 - **命名**：
   - 组件/文件：PascalCase（如 `ChapterSidebar.vue`）
   - 组合式函数：`useXxx`（如 `useChapterFromRoute`）

@@ -1,18 +1,29 @@
 @use 'variables' as *;
 
+// —— 盒模型 ——
 *,
 *::before,
 *::after {
   box-sizing: border-box;
 }
 
+// —— 文档根 ——
 html {
   scroll-behavior: smooth;
   scroll-padding-top: var(--anchor-scroll-margin, #{$qa-scroll-margin});
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
   // 移动端点击（tap）时的灰色高亮闪层
   -webkit-tap-highlight-color: transparent;
 }
 
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+// —— 正文 ——
 body {
   margin: 0;
   font-family: $font;
@@ -29,6 +40,7 @@ body {
   color: $text;
 }
 
+// —— 链接 ——
 a {
   color: $accent;
   text-decoration: none;
@@ -54,4 +66,57 @@ label {
 
 #app {
   min-height: 100vh;
+}
+
+// —— 以下 :where 重置特异性为 0，BEM 组件规则可覆盖 ——
+
+// 流式排版：清零 UA 默认块间距
+:where(h1, h2, h3, h4, h5, h6, p, figure, blockquote, dl, dd, hr) {
+  margin: 0;
+}
+
+:where(ul, ol) {
+  margin: 0;
+  padding: 0;
+}
+
+:where(li) {
+  margin: 0;
+}
+
+// 媒体
+:where(img, picture, video, canvas, svg) {
+  display: block;
+  max-width: 100%;
+}
+
+:where(img, video) {
+  height: auto;
+}
+
+// 表格
+:where(table) {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+// 表单
+:where(button, input, textarea, select) {
+  font: inherit;
+  color: inherit;
+  letter-spacing: inherit;
+}
+
+:where(button, [type='button'], [type='submit'], [type='reset']) {
+  cursor: pointer;
+}
+
+:where(button:disabled, input:disabled, textarea:disabled, select:disabled) {
+  cursor: not-allowed;
+}
+
+// 键盘焦点兜底
+:where(:focus-visible) {
+  outline: $focus-ring-width solid $accent;
+  outline-offset: $focus-ring-offset;
 }

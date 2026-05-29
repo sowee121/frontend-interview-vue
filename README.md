@@ -1,4 +1,4 @@
-# 前端面试速记
+# 前端面试手册
 
 [![Vue 3](https://img.shields.io/badge/Vue-3.5-42b883?logo=vuedotjs)](https://vuejs.org/)
 [![Vite](https://img.shields.io/badge/Vite-8-646CFF?logo=vite)](https://vite.dev/)
@@ -7,7 +7,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
 [![Live Demo](https://img.shields.io/badge/demo-GitHub%20Pages-2ea44f)](https://sowee121.github.io/frontend-interview-vue/)
 
-面向前端工程师的面试题库静态站点：16 个专题章节、结构化 JSON 答案、章内目录与代码高亮，支持桌面与手机浏览器复习。内容构建时打包进前端，**无需后端**。
+**前端面试手册** — 面向前端工程师的面试题库静态站点：16 个专题章节、结构化 JSON 答案、章内目录与代码高亮，支持桌面与手机浏览器复习。内容构建时打包进前端，**无需后端**。
 
 **在线访问**：https://sowee121.github.io/frontend-interview-vue/
 
@@ -28,9 +28,9 @@
 | 特性 | 说明 |
 |------|------|
 | 16 个专题 | HTML/CSS、JavaScript、ES6、TypeScript、Vue 2、Vue 3、React、Node、小程序、浏览器、网络/安全、工程化、性能、场景题、Agent、编程手写题 |
-| 章内目录 | 桌面端侧栏锚点 + 吸顶，长文快速定位 |
+| 章内目录 | 桌面端侧栏锚点 + sticky，点击跳转 `#question-id` |
 | 顶栏章节导航 | 顶栏可横向滑动的章节 tabs，跨章切换 |
-| 移动端目录 | 窄屏（900px 以下）隐藏侧栏，右下角 FAB 唤起底部章内目录 |
+| 移动端 | ≤900px 隐藏侧栏；**左下** FAB 唤起底部章内目录，**右下** FAB 回到顶部 |
 | 结构化答案 | `src/data/qa/json/*.json` + `RichSegment`，避免手写 HTML |
 | 代码高亮 | 编程题章节使用 highlight.js |
 | History 路由 | `/chapters/:slug`，链接可分享、可刷新 |
@@ -75,6 +75,17 @@ pnpm preview
 | `pnpm preview` | 预览 `dist/` |
 | `pnpm lint` | ESLint + Oxlint |
 | `pnpm format` | Prettier 格式化 `src/` |
+| `node scripts/lint-qa-copy.mjs` | 题库文案可读性扫描（只读，不改 JSON） |
+
+### 内容维护脚本（`scripts/`）
+
+| 脚本 | 说明 |
+|------|------|
+| `reorder-qa-chapters.mjs` | 按配置重排各章 `items` 顺序 |
+| `expand-cross-topic-qa.mjs` | 向现有章追加跨专题题目（埋点、i18n、WebSocket 等） |
+| `seed-agent-chapter.mjs` | 生成/更新 Agent 章 JSON |
+| `split-es6-chapter.mjs` | 从 javascript 章拆出 ES6 章（一次性迁移用） |
+| `lint-qa-copy.mjs` | 答案/题面文案规范扫描 |
 
 ## 项目结构
 
@@ -82,14 +93,16 @@ pnpm preview
 frontend-interview-vue/
 ├── .github/workflows/deploy.yml   # GitHub Pages 自动部署
 ├── src/
-│   ├── assets/styles/           # 全局 Sass（layout / components / variables）
+│   ├── assets/styles/           # tokens / base / layout / components
+│   ├── config/site.ts           # 站点名、页脚链接（SITE_NAME 等）
 │   ├── data/qa/json/            # 各章题目与答案（主要维护入口）
-│   ├── data/qa/registry.ts      # 章节 JSON 注册
-│   ├── data/constants.ts        # 章节顺序 CHAPTER_ORDER
-│   ├── components/              # 答案渲染、侧栏、布局、移动端目录
+│   ├── data/qa/registry.ts      # 章节 JSON 静态注册
+│   ├── data/constants.ts        # CHAPTER_ORDER（16 章顺序）
+│   ├── components/              # 答案渲染、侧栏、FAB、页脚等
+│   ├── composables/             # 路由章节数据等
 │   ├── views/                   # 首页、章节页
 │   └── router/                  # History 路由与锚点滚动
-├── scripts/reorder-qa-chapters.mjs
+├── scripts/                     # 题库维护脚本（见上表）
 └── dist/                        # 构建产物（已 gitignore，勿提交）
 ```
 
@@ -140,9 +153,10 @@ flowchart TB
 | 数据 | 题目内容、章节元信息、顺序 | `src/data/qa/json/`、`registry.ts`、`constants.ts`、`chapters.ts` |
 | 路由 | History 模式、无效 slug 回首页、锚点滚动、document.title | `src/router/index.ts`、`scrollBehavior.ts`、`setupRouterGuards.ts` |
 | 页面 | 首页目录 / 章节阅读壳层 | `HomeView.vue`、`ChapterPageView.vue` |
-| 组件 | 布局、导航、答案渲染 | `ChapterLayout`、`ChapterSidebar`、`ChapterTocMobile`、`HeaderChapterTabs`、`QaSection`、`RichAnswer` |
-| 状态 | 站点名、最近访问章节（可扩展） | `src/stores/app.ts` |
-| 样式 | 全局 BEM + Sass partial | `src/assets/main.scss` → `_layout.scss` / `_components.scss` |
+| 组件 | 布局、导航、答案渲染 | `ChapterLayout`、`ChapterSidebar`、`ChapterTocMobile`、`ScrollToTopFab`、`HeaderChapterTabs`、`QaSection`、`RichAnswer` |
+| 配置 | 站点展示名、页脚外链 | `src/config/site.ts` |
+| 状态 | 站点名、最近访问章节（可扩展） | `src/stores/app.ts`（`siteTitle` 来自 `SITE_NAME`） |
+| 样式 | 全局 BEM + Sass partial | `main.scss` → `_tokens` / `_base`（`:where` 元素重置）/ `_layout` / `_components` |
 
 ### 内容数据流
 
@@ -176,14 +190,16 @@ SiteHeader
     └── layout__content
         ├── 返回链接
         └── ArticleShell → ChapterArticle → QaSection × N
-ChapterTocMobile（窄屏 FAB + 底部目录面板）
+ChapterTocMobile（左下目录 FAB + 底部 sheet）
+ScrollToTopFab（右下，滚动过 1/3 行程后显示）
 SiteFooter
 ```
 
 ### 导航与滚动
 
 - **跨章**：顶栏 `HeaderChapterTabs` 或首页卡片，`RouterLink` 跳转 `/chapters/:slug`。
-- **章内**：TOC 链接带 hash（`#question-id`），`scrollBehavior` 读取 `--anchor-scroll-margin`（由 `SiteHeader` 动态写入顶栏高度）避免标题被遮挡。
+- **章内**：TOC 链接带 hash（`#question-id`），当前项与地址栏 hash 一致时高亮。
+- **锚点偏移**：`scrollBehavior` 读取 `--anchor-scroll-margin`（由 `SiteHeader` 根据顶栏高度写入），避免标题被 sticky 顶栏遮挡。
 - **响应式**：宽度 ≤900px 隐藏桌面侧栏，改用 `ChapterTocMobile`；顶栏 tabs 可横向滑动并带渐隐提示。
 
 ### 构建与部署
@@ -203,15 +219,18 @@ Vite 构建产物为纯静态文件；GitHub Pages 以 `/frontend-interview-vue/
 
 **文案规范**：维护 `answer`、`questionNote` 及章节 `lead`/`description` 时请遵循 [`docs/answer-style-guide.md`](docs/answer-style-guide.md)（面向约 5 年经验、缩写首处带中文释义）。提交前可运行 `node scripts/lint-qa-copy.mjs` 做可读性扫描。
 
-批量重排章节内题目顺序：
-
 ```sh
-node scripts/reorder-qa-chapters.mjs
+node scripts/reorder-qa-chapters.mjs   # 重排题目顺序
+node scripts/lint-qa-copy.mjs          # 文案扫描
 ```
 
-**维护建议**：答案宜「短问短答、可验证」；代码示例优先最小可复现片段。仅改单题文案时无需改 README；增删章节或调整 `CHAPTER_ORDER` 时请同步更新上文「功能特性」与「项目结构」。
+**维护建议**：答案宜「短问短答、可验证」；代码示例优先最小可复现片段。仅改单题文案时无需改 README；**增删章节**或调整 `CHAPTER_ORDER` 时请同步 `registry.ts`、README「功能特性」与 `.cursor/rules/00-project-core.mdc` 中的章节说明。
 
-**样式约定**（改 UI 时参考 [`src/assets/main.scss`](src/assets/main.scss) 顶部注释）：全局样式用 kebab-case + BEM——块 `{domain}-{name}`、元素 `{block}__{part}`、修饰符 `{block}--{variant}`；布局与导航见 `_layout.scss`，内容组件见 `_components.scss`。
+**样式约定**（详见 [`src/assets/main.scss`](src/assets/main.scss) 顶部注释与 [`.cursor/rules/30-scss-and-build.mdc`](.cursor/rules/30-scss-and-build.mdc)）：
+
+- BEM：块 `{domain}-{name}`、元素 `{block}__{part}`、修饰符 `{block}--{variant}`
+- 元素重置在 `_base.scss`（`:where()`，特异性为 0）；布局/导航 `_layout.scss`，内容卡片 `_components.scss`
+- 块样式以 `.site-footer` 这类**类选择器为根**，避免 `footer { &.site-footer { &__line } }` 编译成错误选择器
 
 ## 部署说明
 
