@@ -201,6 +201,8 @@ Vite 构建产物为纯静态文件；GitHub Pages 以 `/frontend-interview-vue/
 
 字段定义见 [`src/types/qa-content.ts`](src/types/qa-content.ts)（`QaItem`、`RichSegment` 等）。
 
+**文案规范**：维护 `answer`、`questionNote` 及章节 `lead`/`description` 时请遵循 [`docs/answer-style-guide.md`](docs/answer-style-guide.md)（面向约 5 年经验、缩写首处带中文释义）。提交前可运行 `node scripts/lint-qa-copy.mjs` 做可读性扫描。
+
 批量重排章节内题目顺序：
 
 ```sh

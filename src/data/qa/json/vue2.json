@@ -2,35 +2,36 @@
   "slug": "vue2",
   "title": "Vue 2",
   "documentTitle": "Vue 2",
-  "description": "Vue 2 高频面试题：选项式 API、defineProperty 响应式、生命周期、组件通信、diff/key、工程常见坑。",
-  "lead": "高频必问：生命周期、响应式、通信与 diff。",
+  "description": "面向 3～5 年实战：选项式 API、defineProperty 响应式、生命周期、组件通信与 diff/key 等 Vue 2 高频题。",
+  "lead": "老项目与对比题仍常考 Vue 2：生命周期时机、响应式边界、通信方式怎么选。",
   "items": [
     {
       "id": "q-vue2-lifecycle",
       "navLabel": "生命周期",
       "question": "Vue 2 生命周期有哪些？每个阶段适合做什么？",
+      "questionNote": "重点答「何时有 DOM、何时适合请求/绑事件/清理」，比背钩子名单更重要。",
       "answer": [
         [
-          { "type": "strong", "value": "主线" },
-          { "type": "text", "value": "：create（无 DOM）→ mount（有 DOM）→ update（数据驱动重渲染）→ destroy（清理）。常考点是“什么时候能拿到 DOM、什么时候适合发请求/绑事件/清理资源”。" }
+          { "type": "strong", "value": "主线：" },
+          { "type": "text", "value": "create（无 DOM）→ mount（有 DOM）→ update（数据驱动重渲染）→ destroy（清理）。" }
         ],
         [
           { "type": "code", "value": "beforeCreate/created" },
           { "type": "text", "value": "：实例初始化，" },
           { "type": "strong", "value": "还拿不到真实 DOM" },
-          { "type": "text", "value": "；可做数据初始化、发请求（不依赖 DOM）。" }
+          { "type": "text", "value": "。可做数据初始化、发不依赖 DOM 的请求。" }
         ],
         [
           { "type": "code", "value": "beforeMount/mounted" },
-          { "type": "text", "value": "：挂载前后，" },
+          { "type": "text", "value": "：挂载前后。" },
           { "type": "code", "value": "mounted" },
-          { "type": "text", "value": " 后可安全读写 DOM、接三方库、测量尺寸；事件监听也常在这里绑定。" }
+          { "type": "text", "value": " 后可安全读写 DOM、接三方库、测量尺寸、绑事件。" }
         ],
         [
           { "type": "code", "value": "beforeUpdate/updated" },
-          { "type": "text", "value": "：更新前后；不要在 " },
+          { "type": "text", "value": "：更新前后。别在 " },
           { "type": "code", "value": "updated" },
-          { "type": "text", "value": " 里无条件改数据避免循环；针对具体数据优先用 " },
+          { "type": "text", "value": " 里无条件改数据，易循环；针对具体字段优先 " },
           { "type": "code", "value": "watch" },
           { "type": "text", "value": "。" }
         ],
@@ -44,22 +45,27 @@
       "id": "q-vue2-reactivity-core",
       "navLabel": "响应式原理",
       "question": "Vue 2 响应式原理怎么说？Dep/Watcher 大概在干什么？",
+      "questionNote": "Dep 管依赖集合，Watcher 管「谁要重新跑」；组件 render 本质是一个 watcher。",
       "answer": [
         [
           { "type": "text", "value": "Vue 2 用 " },
           { "type": "code", "value": "Object.defineProperty" },
-          { "type": "text", "value": " 把 data 上的每个 key 转成 getter/setter。" },
+          { "type": "text", "value": " 把 data 每个 key 转成 getter/setter。" }
+        ],
+        [
           { "type": "strong", "value": "读" },
-          { "type": "text", "value": "时在 getter 里做依赖收集（" },
+          { "type": "text", "value": "时在 getter 做依赖收集：" },
           { "type": "code", "value": "Dep" },
           { "type": "text", "value": " 记住当前正在执行的 " },
           { "type": "code", "value": "Watcher" },
-          { "type": "text", "value": "），" },
+          { "type": "text", "value": "。" },
           { "type": "strong", "value": "写" },
-          { "type": "text", "value": "时在 setter 里通知依赖（dep.notify），最终触发组件 render watcher 重新渲染。" }
+          { "type": "text", "value": "时在 setter 调 " },
+          { "type": "code", "value": "dep.notify()" },
+          { "type": "text", "value": "，通知 watcher 重新执行。" }
         ],
         [
-          { "type": "text", "value": "面试补一句即可：组件渲染本质是一个 watcher，渲染时访问到的响应式属性会被收集；属性变更后 watcher 入队，异步批量更新。"} 
+          { "type": "text", "value": "组件渲染是一个 render watcher：渲染时访问到的响应式属性被收集；属性变更后 watcher 入队，异步批量更新 DOM。" }
         ]
       ]
     },
@@ -67,24 +73,29 @@
       "id": "q-vue2-set-delete",
       "navLabel": "Vue.set / 删除属性",
       "question": "Vue 2 为啥新增/删除对象属性不响应？怎么解决？",
+      "questionNote": "根因是初始化只遍历已有 key；Vue 3 用 Proxy 后此题变成对比考点。",
       "answer": [
         [
-          { "type": "text", "value": "因为 Vue 2 在初始化时遍历已有 key 做 defineProperty，" },
+          { "type": "strong", "value": "原因：" },
+          { "type": "text", "value": "初始化时只遍历已有 key 做 defineProperty，" },
           { "type": "strong", "value": "后加的 key 没有 getter/setter" },
-          { "type": "text", "value": "，所以不会触发依赖更新；删除属性同理。" }
+          { "type": "text", "value": "，不会触发依赖更新；删除属性同理。" }
         ],
         [
-          { "type": "text", "value": "解决：用 " },
+          { "type": "text", "value": "1）新增：用 " },
           { "type": "code", "value": "Vue.set(obj, key, val)" },
-          { "type": "text", "value": " / " },
+          { "type": "text", "value": " 或 " },
           { "type": "code", "value": "this.$set" },
-          { "type": "text", "value": " 添加响应式属性；删除用 " },
+          { "type": "text", "value": " 让新 key 也变成响应式。" }
+        ],
+        [
+          { "type": "text", "value": "2）删除：用 " },
           { "type": "code", "value": "Vue.delete" },
           { "type": "text", "value": " / " },
           { "type": "code", "value": "this.$delete" },
-          { "type": "text", "value": "；或者用新对象替换（确保引用变更）：" },
+          { "type": "text", "value": "；或整体替换对象 " },
           { "type": "code", "value": "this.obj = { ...this.obj, a: 1 }" },
-          { "type": "text", "value": "。" }
+          { "type": "text", "value": " 触发引用变更。" }
         ]
       ]
     },
@@ -92,22 +103,31 @@
       "id": "q-vue2-array-reactive",
       "navLabel": "数组响应式",
       "question": "Vue 2 数组为什么能响应？哪些写法不会触发更新？",
+      "questionNote": "数组下标和 length 拦截不了，靠重写变更方法补丁；这是 Vue 2 经典坑。",
       "answer": [
         [
-          { "type": "text", "value": "Vue 2 不能拦截数组下标赋值与 length 变化，于是通过" },
+          { "type": "text", "value": "Vue 2 无法拦截数组下标赋值与 " },
+          { "type": "code", "value": "length" },
+          { "type": "text", "value": " 变化，于是" },
           { "type": "strong", "value": "重写变更方法" },
-          { "type": "text", "value": "（push/pop/shift/unshift/splice/sort/reverse）在方法内部手动触发依赖更新。" }
+          { "type": "text", "value": "（push/pop/splice 等），在方法内部手动触发依赖更新。" }
         ],
         [
-          { "type": "text", "value": "不会触发的典型坑：直接改下标 " },
+          { "type": "strong", "value": "不触发更新的坑：" },
+          { "type": "text", "value": "直接改下标 " },
           { "type": "code", "value": "arr[1] = x" },
-          { "type": "text", "value": " 或改长度 " },
+          { "type": "text", "value": "，或改长度 " },
           { "type": "code", "value": "arr.length = 0" },
-          { "type": "text", "value": "。解决：用 " },
-          { "type": "code", "value": "splice" },
-          { "type": "text", "value": " 或 " },
-          { "type": "code", "value": "Vue.set(arr, index, val)" },
           { "type": "text", "value": "。" }
+        ],
+        [
+          { "type": "text", "value": "解决：用 " },
+          { "type": "code", "value": "splice" },
+          { "type": "text", "value": " 替换元素，或 " },
+          { "type": "code", "value": "Vue.set(arr, index, val)" },
+          { "type": "text", "value": "；需要清空时 " },
+          { "type": "code", "value": "arr.splice(0)" },
+          { "type": "text", "value": " 比改 length 更稳。" }
         ]
       ]
     },
@@ -115,25 +135,30 @@
       "id": "q-vue2-communication",
       "navLabel": "组件通信",
       "question": "Vue 2 常见组件通信方式有哪些？各自适用场景？",
+      "questionNote": "按层级选方案：父子 props/emit 最主流，跨层 provide/inject 或状态提升。",
       "answer": [
         [
-          { "type": "strong", "value": "父子" },
-          { "type": "text", "value": "：props 向下、$emit 向上（最主流）。" }
+          { "type": "strong", "value": "父子：" },
+          { "type": "text", "value": "props 向下、" },
+          { "type": "code", "value": "$emit" },
+          { "type": "text", "value": " 向上，单向数据流，最常用。" }
         ],
         [
-          { "type": "strong", "value": "多层级" },
-          { "type": "text", "value": "：provide/inject（依赖注入，适合表单/主题/插件式上下文）。" }
+          { "type": "strong", "value": "多层级：" },
+          { "type": "text", "value": "provide/inject 做依赖注入，适合主题、表单上下文、插件式场景。" }
         ],
         [
-          { "type": "strong", "value": "兄弟/跨层" },
-          { "type": "text", "value": "：事件总线（new Vue() 当 bus）能用但难维护，复杂应用用 Vuex 或把状态提升到共同祖先。" }
+          { "type": "strong", "value": "兄弟/跨层：" },
+          { "type": "text", "value": "事件总线（" },
+          { "type": "code", "value": "new Vue()" },
+          { "type": "text", "value": " 当 bus）能用但难维护；复杂应用用 Vuex 或把状态提升到共同祖先。" }
         ],
         [
-          { "type": "text", "value": "补充面试点：" },
+          { "type": "text", "value": "补充：" },
           { "type": "code", "value": "$attrs/$listeners" },
-          { "type": "text", "value": " 用于二次封装组件时透传属性与事件；" },
-          { "type": "code", "value": "$parent/$children/$refs" },
-          { "type": "text", "value": " 属于强耦合手段，能说清“不推荐但常见于老项目”即可。" }
+          { "type": "text", "value": " 用于二次封装透传；" },
+          { "type": "code", "value": "$parent/$refs" },
+          { "type": "text", "value": " 强耦合，老项目常见，新代码不推荐。" }
         ]
       ]
     },
@@ -141,22 +166,27 @@
       "id": "q-vue2-vmodel",
       "navLabel": "v-model（Vue2）",
       "question": "Vue 2 的 v-model 在自定义组件上怎么工作的？如何自定义？",
+      "questionNote": "Vue 2 默认 prop 是 value、事件是 input；Vue 3 改为 modelValue。",
       "answer": [
         [
-          { "type": "text", "value": "默认约定：父组件写 " },
+          { "type": "strong", "value": "默认约定：" },
+          { "type": "text", "value": "父组件 " },
           { "type": "code", "value": "v-model" },
-          { "type": "text", "value": " 等价于给子组件传 " },
+          { "type": "text", "value": " 等价于传 " },
           { "type": "code", "value": "value" },
-          { "type": "text", "value": "，并监听 " },
+          { "type": "text", "value": "、监听 " },
           { "type": "code", "value": "input" },
-          { "type": "text", "value": " 事件：子组件通过 " },
-          { "type": "code", "value": "this.$emit('input', newValue)" },
-          { "type": "text", "value": " 回传更新。" }
+          { "type": "text", "value": " 事件。" }
         ],
         [
-          { "type": "text", "value": "自定义：在组件选项里用 " },
+          { "type": "text", "value": "子组件通过 " },
+          { "type": "code", "value": "this.$emit('input', newValue)" },
+          { "type": "text", "value": " 回传更新，父级 state 随之变化，形成双向绑定语法糖。" }
+        ],
+        [
+          { "type": "text", "value": "自定义 prop/event：组件选项里写 " },
           { "type": "code", "value": "model: { prop: 'checked', event: 'change' }" },
-          { "type": "text", "value": " 改默认 prop/event（面试常问）。" }
+          { "type": "text", "value": "，常见于 checkbox、select 等非 value 控件。" }
         ]
       ]
     },
@@ -164,14 +194,22 @@
       "id": "q-vue2-key-diff",
       "navLabel": "key 与 diff",
       "question": "Vue 2 里 key 有什么作用？为什么列表渲染不推荐用 index 当 key？",
+      "questionNote": "key 帮 diff 识别节点身份；index 在增删时会错位复用。",
       "answer": [
         [
-          { "type": "text", "value": "key 用于在同层 diff 时" },
+          { "type": "strong", "value": "作用：" },
+          { "type": "text", "value": "key 在同层 diff 时" },
           { "type": "strong", "value": "稳定标识节点" },
           { "type": "text", "value": "，帮助复用/移动已有 DOM 与组件实例，减少错误复用。" }
         ],
         [
-          { "type": "text", "value": "用 index 当 key 的坑：列表插入/删除会导致 key 变化，Vue 可能复用到错误的 DOM/组件实例，引发输入框错位、动画异常、组件状态串台。应选业务唯一 id（如 item.id）。" }
+          { "type": "strong", "value": "index 的坑：" },
+          { "type": "text", "value": "列表插入/删除后 index 会变，Vue 可能把 DOM/组件实例复用到错误行。" }
+        ],
+        [
+          { "type": "text", "value": "典型症状：输入框内容错位、过渡动画异常、组件内部 state 串台。应选业务唯一 id（如 " },
+          { "type": "code", "value": "item.id" },
+          { "type": "text", "value": "）。" }
         ]
       ]
     },
@@ -179,22 +217,23 @@
       "id": "q-vue2-computed-watch",
       "navLabel": "computed vs watch",
       "question": "computed 和 watch 区别？watch 的 deep / immediate 有啥用？",
+      "questionNote": "computed 算派生值且有缓存；watch 跑副作用。别用 watch 替代简单计算。",
       "answer": [
         [
-          { "type": "strong", "value": "computed" },
-          { "type": "text", "value": "：适合派生状态，" },
+          { "type": "strong", "value": "computed：" },
+          { "type": "text", "value": "适合派生状态，" },
           { "type": "strong", "value": "有缓存" },
-          { "type": "text", "value": "，依赖不变不会重复计算；支持 getter/setter。" }
+          { "type": "text", "value": "，依赖不变不重复算；可写 getter/setter。" }
         ],
         [
-          { "type": "strong", "value": "watch" },
-          { "type": "text", "value": "：适合副作用（请求、写 localStorage、手动同步），可拿新旧值。" }
+          { "type": "strong", "value": "watch：" },
+          { "type": "text", "value": "适合副作用——发请求、写 localStorage、手动同步外部系统；能拿新旧值。" }
         ],
         [
-          { "type": "code", "value": "immediate" },
-          { "type": "text", "value": " 让 watch 立刻执行一次；" },
-          { "type": "code", "value": "deep" },
-          { "type": "text", "value": " 深度监听对象内部变化（代价是开销更大，尽量监听具体字段或用计算属性返回需要的值）。" }
+          { "type": "code", "value": "immediate: true" },
+          { "type": "text", "value": " 让 watch 注册后立刻执行一次；" },
+          { "type": "code", "value": "deep: true" },
+          { "type": "text", "value": " 深度监听对象内部，开销更大，尽量监听具体字段。" }
         ]
       ]
     },
@@ -202,15 +241,20 @@
       "id": "q-vue2-nexttick",
       "navLabel": "nextTick（Vue2）",
       "question": "Vue 2 的 nextTick 是做什么的？常见使用场景？",
+      "questionNote": "数据变了 DOM 还没刷完时用；同一事件循环内多次改数据会合并更新。",
       "answer": [
         [
+          { "type": "strong", "value": "原因：" },
           { "type": "text", "value": "Vue 2 更新 DOM 是" },
           { "type": "strong", "value": "异步批量" },
-          { "type": "text", "value": "的：同一事件循环内多次 setState 会合并刷新。你改完数据立刻读 DOM 可能还是旧的。" }
+          { "type": "text", "value": "的。同一事件循环内多次改数据会合并刷新，改完立刻读 DOM 可能还是旧的。" }
         ],
         [
           { "type": "code", "value": "this.$nextTick(() => { /* 读写更新后的 DOM */ })" },
-          { "type": "text", "value": "：把回调排到本轮 DOM 更新完成之后。常见：滚到某个元素、聚焦 input、获取元素尺寸、初始化依赖 DOM 的三方库。" }
+          { "type": "text", "value": " 把回调排到本轮 DOM 更新完成之后执行。" }
+        ],
+        [
+          { "type": "text", "value": "常见场景：滚到某元素、聚焦 input、获取元素尺寸、初始化依赖 DOM 的三方库（图表、编辑器等）。" }
         ]
       ]
     },
@@ -218,18 +262,26 @@
       "id": "q-vue2-keepalive",
       "navLabel": "keep-alive",
       "question": "Vue 2 keep-alive 会带来哪些生命周期变化？怎么控制缓存？",
+      "questionNote": "缓存 ≠ 销毁；切走走 activated/deactivated，注意后台定时器与监听。",
       "answer": [
         [
-          { "type": "text", "value": "被 keep-alive 缓存的组件切走时不会销毁，转而触发 " },
+          { "type": "text", "value": "被 keep-alive 包裹的组件切走时" },
+          { "type": "strong", "value": "不会销毁" },
+          { "type": "text", "value": "，转而触发 " },
           { "type": "code", "value": "activated/deactivated" },
-          { "type": "text", "value": "；只有真正从树移除才走 destroy 流程。" }
+          { "type": "text", "value": "；只有从树中真正移除才走 destroy。" }
         ],
         [
-          { "type": "text", "value": "可用 " },
+          { "type": "text", "value": "用 " },
           { "type": "code", "value": "include/exclude" },
-          { "type": "text", "value": " 按组件名控制哪些被缓存。注意：缓存组件里的定时器/监听器应在 " },
+          { "type": "text", "value": "（组件 name）或 " },
+          { "type": "code", "value": "max" },
+          { "type": "text", "value": " 控制哪些实例被缓存、最多缓存几个。" }
+        ],
+        [
+          { "type": "text", "value": "注意：缓存组件里的定时器/监听器应在 " },
           { "type": "code", "value": "deactivated" },
-          { "type": "text", "value": " 暂停或在销毁时清理，避免后台继续跑。" }
+          { "type": "text", "value": " 暂停，或在销毁时清理，避免后台继续跑占资源。" }
         ]
       ]
     },
@@ -237,18 +289,19 @@
       "id": "q-vue2-mixin-plugin-filter",
       "navLabel": "mixin/插件/过滤器",
       "question": "Vue 2 的 mixin、插件（Vue.use）和过滤器 filters 怎么理解？常见坑？",
+      "questionNote": "mixin 与 filters 在 Vue 3 已不推荐/移除；能说清历史包袱与替代方案即可。",
       "answer": [
         [
           { "type": "code", "value": "mixin" },
-          { "type": "text", "value": "：把选项式逻辑注入多个组件，缺点是命名冲突、来源不透明、调试困难；大型项目更推荐显式抽函数/组件化。"} 
+          { "type": "text", "value": "：把选项式逻辑注入多个组件。缺点是命名冲突、来源不透明、调试困难；大型项目更推荐抽 composable 或小组件。" }
         ],
         [
           { "type": "code", "value": "Vue.use(plugin)" },
-          { "type": "text", "value": "：安装插件（注册全局组件/指令、在原型上挂方法等），注意避免污染全局与重复安装。"} 
+          { "type": "text", "value": "：安装插件，可注册全局组件/指令、在原型挂方法。注意避免污染全局与重复安装。" }
         ],
         [
           { "type": "code", "value": "filters" },
-          { "type": "text", "value": "：模板格式化的语法糖（如日期/金额），但会把逻辑藏进模板；并且在 Vue 3 中已移除，实际工程更常用方法/计算属性或专门的格式化函数。" }
+          { "type": "text", "value": "：模板里做日期/金额等格式化，逻辑藏进模板难测；Vue 3 已移除，工程里改用方法、计算属性或独立格式化函数。" }
         ]
       ]
     }

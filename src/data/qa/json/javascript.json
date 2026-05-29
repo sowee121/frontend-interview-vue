@@ -2,8 +2,8 @@
   "slug": "javascript",
   "title": "JavaScript",
   "documentTitle": "JavaScript",
-  "description": "把 JS 面试最常问的核心概念一次讲清：类型、this、原型链、闭包、Promise、事件循环等。",
-  "lead": "只挑最常考的 JS 题，少讲冷门细节。",
+  "description": "面向有 3～5 年实战的前端：ES6 语法与机制（let/const、Promise、Iterator、Class、Module 等）及原型、异步等高频考点；专有名词对齐阮一峰《ES6 入门》。",
+  "lead": "按 ES6 教程常见章节组织：块级作用域、数据结构、异步、模块与 Proxy 等，便于和 https://es6.ruanyifeng.com 对照复习。",
   "items": [
     {
       "id": "q-null-undefined",
@@ -13,7 +13,7 @@
         [
           {
             "type": "strong",
-            "value": "一句话："
+            "value": "语义："
           },
           {
             "type": "code",
@@ -21,23 +21,17 @@
           },
           {
             "type": "text",
-            "value": " 多半是「还没赋值、缺省」——例如声明了 "
-          },
-          {
-            "type": "code",
-            "value": "let a"
-          },
-          {
-            "type": "text",
-            "value": " 没赋值、对象缺 key、函数少传参；"
-          },
+            "value": " 表示「缺省、尚未赋值」——声明未初始化、对象缺 key、函数少传参等。"
+          }
+        ],
+        [
           {
             "type": "code",
             "value": "null"
           },
           {
             "type": "text",
-            "value": " 是程序员故意写的「这里就是空」，常用来释放对象引用。"
+            "value": " 是开发者主动写的「此处为空」，常用于释放引用、对接后端空值字段。"
           },
           {
             "type": "code",
@@ -45,7 +39,7 @@
           },
           {
             "type": "text",
-            "value": "，而 "
+            "value": "；"
           },
           {
             "type": "code",
@@ -53,7 +47,13 @@
           },
           {
             "type": "text",
-            "value": " 是早期实现遗留，判断 null 一律用 "
+            "value": " 是早期实现把空对象标签误用在 null 上，属于历史包袱。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "判断 null 一律用 "
           },
           {
             "type": "code",
@@ -61,13 +61,7 @@
           },
           {
             "type": "text",
-            "value": "。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "想同时判断「null 或 undefined」可写 "
+            "value": "。需要同时覆盖 null 与 undefined 时，"
           },
           {
             "type": "code",
@@ -75,7 +69,7 @@
           },
           {
             "type": "text",
-            "value": "（仅此场景 "
+            "value": " 是少数可接受的 "
           },
           {
             "type": "code",
@@ -83,7 +77,7 @@
           },
           {
             "type": "text",
-            "value": " 有意为之）；其余比较用 "
+            "value": " 用法；其余比较用 "
           },
           {
             "type": "code",
@@ -108,7 +102,7 @@
           },
           {
             "type": "text",
-            "value": "：不做类型转换，类型不同直接 "
+            "value": "（严格相等）：类型不同直接 "
           },
           {
             "type": "code",
@@ -116,23 +110,31 @@
           },
           {
             "type": "text",
-            "value": "，日常业务默认用它。"
-          },
+            "value": "，不做隐式转换。业务代码默认用它，可读性最好。"
+          }
+        ],
+        [
           {
             "type": "code",
             "value": "=="
           },
           {
             "type": "text",
-            "value": "：会按规范做"
+            "value": "（宽松相等）：按规范走"
           },
           {
             "type": "strong",
-            "value": "抽象相等比较"
+            "value": "抽象相等比较（Abstract Equality Comparison）"
           },
           {
             "type": "text",
-            "value": "（ToPrimitive、数字与字符串互转等），典型坑 "
+            "value": "——ToPrimitive、数字与字符串互转等。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "典型坑："
           },
           {
             "type": "code",
@@ -148,13 +150,7 @@
           },
           {
             "type": "text",
-            "value": " 为真。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "面试能说清「"
+            "value": " 为真。面试能说清「"
           },
           {
             "type": "code",
@@ -162,7 +158,13 @@
           },
           {
             "type": "text",
-            "value": " 判空是刻意用法」即可，不必背完整比较表；库代码里尽量 "
+            "value": " 判空是刻意用法」即可，不必背完整比较表。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "库与业务里更推荐 "
           },
           {
             "type": "code",
@@ -186,7 +188,7 @@
           },
           {
             "type": "text",
-            "value": " 转换。"
+            "value": "，避免隐式转换带来的维护成本。"
           }
         ]
       ]
@@ -203,7 +205,7 @@
           },
           {
             "type": "text",
-            "value": "：函数作用域，声明会提升且初始化为 "
+            "value": "：函数作用域，声明提升且初始化为 "
           },
           {
             "type": "code",
@@ -211,31 +213,41 @@
           },
           {
             "type": "text",
-            "value": "，同一作用域可重复声明，容易踩坑。"
+            "value": "，同作用域可重复声明，易与循环、闭包组合出隐蔽 bug。"
+          }
+        ],
+        [
+          {
+            "type": "code",
+            "value": "let"
+          },
+          {
+            "type": "text",
+            "value": " / "
           },
           {
             "type": "code",
-            "value": "let/const"
+            "value": "const"
           },
           {
             "type": "text",
-            "value": "：块级作用域，"
+            "value": "：块级作用域；在块内形成"
           },
           {
             "type": "strong",
-            "value": "不存在变量提升成可用值"
+            "value": "封闭作用域"
           },
           {
             "type": "text",
-            "value": "——从块开头到声明语句之间叫 "
+            "value": "。存在声明提升，但处于"
           },
           {
             "type": "strong",
-            "value": "暂时性死区（TDZ）"
+            "value": "暂时性死区（temporal dead zone，简称 TDZ）"
           },
           {
             "type": "text",
-            "value": "，访问会 "
+            "value": "——在声明语句之前访问会抛 "
           },
           {
             "type": "code",
@@ -244,14 +256,16 @@
           {
             "type": "text",
             "value": "。"
-          },
+          }
+        ],
+        [
           {
             "type": "code",
             "value": "const"
           },
           {
             "type": "text",
-            "value": " 绑定不可重新赋值，对象属性仍可改（除非 "
+            "value": " 声明常量，绑定不可重新赋值（阮一峰：const 保证的是「指向不变」）；对象/数组内容仍可改，深不可变需 "
           },
           {
             "type": "code",
@@ -259,13 +273,21 @@
           },
           {
             "type": "text",
-            "value": "）。"
+            "value": " 或不可变数据结构。"
           }
         ],
         [
           {
             "type": "text",
-            "value": "for 循环里闭包用 "
+            "value": "经典题："
+          },
+          {
+            "type": "code",
+            "value": "for"
+          },
+          {
+            "type": "text",
+            "value": " 循环闭包里 "
           },
           {
             "type": "code",
@@ -273,7 +295,7 @@
           },
           {
             "type": "text",
-            "value": " 会共享一个 "
+            "value": " 共享同一个 "
           },
           {
             "type": "code",
@@ -281,7 +303,7 @@
           },
           {
             "type": "text",
-            "value": "，用 "
+            "value": "，"
           },
           {
             "type": "code",
@@ -289,7 +311,15 @@
           },
           {
             "type": "text",
-            "value": " 每次迭代一块新绑定，是经典面试题。"
+            "value": " 每次循环产生新的绑定，闭包里 "
+          },
+          {
+            "type": "code",
+            "value": "i"
+          },
+          {
+            "type": "text",
+            "value": " 指向当前轮次（阮一峰 for 循环经典示例）。"
           }
         ]
       ]
@@ -306,7 +336,7 @@
           },
           {
             "type": "text",
-            "value": "：左侧是 "
+            "value": "（可选链）：左侧为 "
           },
           {
             "type": "code",
@@ -322,7 +352,7 @@
           },
           {
             "type": "text",
-            "value": " 时整条短路为 "
+            "value": " 时短路为 "
           },
           {
             "type": "code",
@@ -330,7 +360,7 @@
           },
           {
             "type": "text",
-            "value": "，不报错；可连写方法调用 "
+            "value": "，不抛错。支持 "
           },
           {
             "type": "code",
@@ -338,7 +368,7 @@
           },
           {
             "type": "text",
-            "value": "、数组下标 "
+            "value": "、"
           },
           {
             "type": "code",
@@ -346,7 +376,7 @@
           },
           {
             "type": "text",
-            "value": "。"
+            "value": "，适合接口字段不稳定时的防御式访问。"
           }
         ],
         [
@@ -356,7 +386,7 @@
           },
           {
             "type": "text",
-            "value": "：仅当 "
+            "value": "（空值合并）：仅当 "
           },
           {
             "type": "code",
@@ -388,7 +418,7 @@
           },
           {
             "type": "text",
-            "value": "；"
+            "value": "。"
           },
           {
             "type": "code",
@@ -412,15 +442,17 @@
           },
           {
             "type": "text",
-            "value": " 都会保留，不像 "
-          },
+            "value": " 会原样保留。"
+          }
+        ],
+        [
           {
             "type": "code",
             "value": "a || b"
           },
           {
             "type": "text",
-            "value": " 会把「假值」全换成 "
+            "value": " 会把所有假值都换成 "
           },
           {
             "type": "code",
@@ -428,7 +460,7 @@
           },
           {
             "type": "text",
-            "value": "。表单默认 "
+            "value": "。例如 "
           },
           {
             "type": "code",
@@ -436,7 +468,15 @@
           },
           {
             "type": "text",
-            "value": " 比 "
+            "value": " 能保留 "
+          },
+          {
+            "type": "code",
+            "value": "0"
+          },
+          {
+            "type": "text",
+            "value": "，而 "
           },
           {
             "type": "code",
@@ -444,7 +484,7 @@
           },
           {
             "type": "text",
-            "value": " 更安全。"
+            "value": " 会把 0 误当成「未设置」。"
           }
         ]
       ]
@@ -461,7 +501,19 @@
           },
           {
             "type": "text",
-            "value": "：只复制第一层键，嵌套对象仍是引用——"
+            "value": "：只复制第一层键/元素，嵌套对象仍共享引用。"
+          },
+          {
+            "type": "text",
+            "value": "常用 "
+          },
+          {
+            "type": "strong",
+            "value": "扩展运算符"
+          },
+          {
+            "type": "text",
+            "value": " "
           },
           {
             "type": "code",
@@ -481,27 +533,21 @@
           },
           {
             "type": "code",
-            "value": "[].concat(arr)"
-          },
-          {
-            "type": "text",
-            "value": "、"
-          },
-          {
-            "type": "code",
             "value": "arr.slice()"
           },
           {
             "type": "text",
-            "value": "。"
-          },
+            "value": " 等够用且性能好，状态更新里最常见。"
+          }
+        ],
+        [
           {
             "type": "strong",
             "value": "深拷贝"
           },
           {
             "type": "text",
-            "value": "：递归遍历或序列化——简单结构可用 "
+            "value": "：递归复制整棵结构，或走序列化。"
           },
           {
             "type": "code",
@@ -509,7 +555,7 @@
           },
           {
             "type": "text",
-            "value": "，会丢 "
+            "value": " 会丢 "
           },
           {
             "type": "code",
@@ -525,7 +571,21 @@
           },
           {
             "type": "text",
-            "value": "、循环引用；生产里常用 "
+            "value": "、"
+          },
+          {
+            "type": "code",
+            "value": "Map"
+          },
+          {
+            "type": "text",
+            "value": "，且无法处理循环引用。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "生产环境优先 "
           },
           {
             "type": "code",
@@ -533,7 +593,7 @@
           },
           {
             "type": "text",
-            "value": "（现代浏览器）或 lodash "
+            "value": "（现代浏览器/Node），或 lodash "
           },
           {
             "type": "code",
@@ -541,13 +601,7 @@
           },
           {
             "type": "text",
-            "value": "。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "Vue/React 里更常谈「不可变更新」：只改需要变的分支，配合框架 diff，而不是每次全量深拷贝整棵状态树。"
+            "value": "。Vue/React 更常做「不可变更新」：只改变化分支，配合 diff，而非每次深拷贝整棵状态树。"
           }
         ]
       ]
@@ -568,11 +622,11 @@
           },
           {
             "type": "strong",
-            "value": "可枚举属性键"
+            "value": "对象的可枚举属性"
           },
           {
             "type": "text",
-            "value": "（字符串键），包括原型链上的；数组会得到索引字符串如 "
+            "value": "（键名），含继承自原型链的属性。数组会得到 "
           },
           {
             "type": "code",
@@ -588,7 +642,7 @@
           },
           {
             "type": "text",
-            "value": "，还可能混进 "
+            "value": " 等字符串索引，还可能带上 "
           },
           {
             "type": "code",
@@ -596,7 +650,13 @@
           },
           {
             "type": "text",
-            "value": "。一般用 "
+            "value": "。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "遍历自有属性用 "
           },
           {
             "type": "code",
@@ -604,25 +664,63 @@
           },
           {
             "type": "text",
-            "value": " 过滤原型。"
+            "value": " 或 "
+          },
+          {
+            "type": "code",
+            "value": "Object.keys(obj)"
+          },
+          {
+            "type": "text",
+            "value": " 过滤原型，避免误改继承字段。"
           }
         ],
         [
           {
             "type": "code",
-            "value": "for (const x of iterable)"
+            "value": "for...of"
           },
           {
             "type": "text",
-            "value": "：走"
+            "value": "（如 "
+          },
+          {
+            "type": "code",
+            "value": "for (const x of arr)"
+          },
+          {
+            "type": "text",
+            "value": "）：走"
           },
           {
             "type": "strong",
-            "value": "迭代器协议"
+            "value": "Iterator（遍历器）接口"
           },
           {
             "type": "text",
-            "value": "，适合数组、Map、Set、字符串；普通 "
+            "value": "，由 "
+          },
+          {
+            "type": "code",
+            "value": "for...of"
+          },
+          {
+            "type": "text",
+            "value": " 循环消费；适合部署了该接口的 "
+          },
+          {
+            "type": "strong",
+            "value": "可遍历（iterable）结构"
+          },
+          {
+            "type": "text",
+            "value": "：数组、字符串、Map、Set 等。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "普通对象 "
           },
           {
             "type": "code",
@@ -630,15 +728,31 @@
           },
           {
             "type": "text",
-            "value": " 默认不可 for-of，除非自己实现 "
+            "value": " 默认未部署 Iterator 接口，不可 "
           },
           {
             "type": "code",
-            "value": "Symbol.iterator"
+            "value": "for...of"
           },
           {
             "type": "text",
-            "value": "。"
+            "value": "，需自行实现 "
+          },
+          {
+            "type": "code",
+            "value": "[Symbol.iterator]()"
+          },
+          {
+            "type": "text",
+            "value": "。数组遍历优先 "
+          },
+          {
+            "type": "code",
+            "value": "for-of"
+          },
+          {
+            "type": "text",
+            "value": " 或高阶方法，少用 for-in。"
           }
         ]
       ]
@@ -651,23 +765,25 @@
         [
           {
             "type": "text",
-            "value": "都用来"
+            "value": "三者都用于"
           },
           {
             "type": "strong",
-            "value": "指定函数里的 this"
+            "value": "显式指定函数执行时的 this"
           },
           {
             "type": "text",
-            "value": "并立刻或延后调用。"
-          },
+            "value": "，区别在调用时机与传参方式。"
+          }
+        ],
+        [
           {
             "type": "code",
             "value": "fn.call(obj, a, b)"
           },
           {
             "type": "text",
-            "value": " 参数一个个传；"
+            "value": "：立即执行，参数逐个传入。"
           },
           {
             "type": "code",
@@ -675,15 +791,25 @@
           },
           {
             "type": "text",
-            "value": " 第二个是数组/类数组，适合参数个数不定。"
+            "value": "：立即执行，第二参为数组/类数组，适合参数个数不定（如 "
           },
+          {
+            "type": "code",
+            "value": "Math.max.apply"
+          },
+          {
+            "type": "text",
+            "value": " 的替代写法）。"
+          }
+        ],
+        [
           {
             "type": "code",
             "value": "fn.bind(obj, a)"
           },
           {
             "type": "text",
-            "value": " 返回"
+            "value": "：返回"
           },
           {
             "type": "strong",
@@ -691,7 +817,7 @@
           },
           {
             "type": "text",
-            "value": "，this 和部分参数被固定，常用于事件回调、"
+            "value": "，this 与部分参数被固化，常用于事件回调、"
           },
           {
             "type": "code",
@@ -699,21 +825,21 @@
           },
           {
             "type": "text",
-            "value": "。"
+            "value": "、类方法作为 prop 传递。"
           }
         ],
         [
           {
             "type": "text",
-            "value": "手写题常考："
+            "value": "手写 "
           },
           {
             "type": "code",
-            "value": "Function.prototype.myCall"
+            "value": "myCall"
           },
           {
             "type": "text",
-            "value": " 里把 "
+            "value": "：把 "
           },
           {
             "type": "code",
@@ -729,7 +855,15 @@
           },
           {
             "type": "text",
-            "value": " 的临时属性上再调用，最后删掉临时属性。"
+            "value": " 的临时属性上调用，执行后删除，用 "
+          },
+          {
+            "type": "code",
+            "value": "Symbol"
+          },
+          {
+            "type": "text",
+            "value": " 可避免键名冲突。"
           }
         ]
       ]
@@ -742,11 +876,11 @@
         [
           {
             "type": "strong",
-            "value": "记口诀："
+            "value": "普通函数："
           },
           {
             "type": "text",
-            "value": "普通函数里「谁调用指向谁」——"
+            "value": "由调用方式决定——"
           },
           {
             "type": "code",
@@ -754,7 +888,7 @@
           },
           {
             "type": "text",
-            "value": " 里 "
+            "value": " 中 "
           },
           {
             "type": "code",
@@ -762,7 +896,7 @@
           },
           {
             "type": "text",
-            "value": " 是 "
+            "value": " 为 "
           },
           {
             "type": "code",
@@ -770,7 +904,13 @@
           },
           {
             "type": "text",
-            "value": "；把方法拆出来 "
+            "value": "（隐式绑定）。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "方法赋值后单独调用 "
           },
           {
             "type": "code",
@@ -778,7 +918,23 @@
           },
           {
             "type": "text",
-            "value": " 在非严格模式往往变全局对象，严格模式是 "
+            "value": " 会丢失绑定：非严格模式 "
+          },
+          {
+            "type": "code",
+            "value": "this"
+          },
+          {
+            "type": "text",
+            "value": " 常为全局对象（浏览器为 "
+          },
+          {
+            "type": "code",
+            "value": "window"
+          },
+          {
+            "type": "text",
+            "value": "），严格模式为 "
           },
           {
             "type": "code",
@@ -791,8 +947,12 @@
         ],
         [
           {
+            "type": "strong",
+            "value": "箭头函数"
+          },
+          {
             "type": "text",
-            "value": "箭头函数没有自己的 "
+            "value": "：没有自己的 "
           },
           {
             "type": "code",
@@ -800,7 +960,47 @@
           },
           {
             "type": "text",
-            "value": "，跟定义处外层词法作用域走，.call 也改不了。需要固定 this 时用 "
+            "value": "、"
+          },
+          {
+            "type": "code",
+            "value": "arguments"
+          },
+          {
+            "type": "text",
+            "value": "、"
+          },
+          {
+            "type": "code",
+            "value": "super"
+          },
+          {
+            "type": "text",
+            "value": "、"
+          },
+          {
+            "type": "code",
+            "value": "new.target"
+          },
+          {
+            "type": "text",
+            "value": "（阮一峰原文），"
+          },
+          {
+            "type": "code",
+            "value": "this"
+          },
+          {
+            "type": "text",
+            "value": " 继承定义处外层词法绑定；"
+          },
+          {
+            "type": "code",
+            "value": "call/apply/bind"
+          },
+          {
+            "type": "text",
+            "value": " 改不了。需固定 this 用 "
           },
           {
             "type": "code",
@@ -808,15 +1008,13 @@
           },
           {
             "type": "text",
-            "value": " 或包一层 "
-          },
-          {
-            "type": "code",
-            "value": "() => obj.method()"
-          },
+            "value": " 或包一层箭头函数。"
+          }
+        ],
+        [
           {
             "type": "text",
-            "value": "。"
+            "value": "经典坑："
           },
           {
             "type": "code",
@@ -824,7 +1022,15 @@
           },
           {
             "type": "text",
-            "value": " 丢 this 是经典坑。"
+            "value": "、React 类组件把方法当 prop 传递导致 "
+          },
+          {
+            "type": "code",
+            "value": "this"
+          },
+          {
+            "type": "text",
+            "value": " 丢失——优先类字段箭头函数或 bind。"
           }
         ]
       ]
@@ -835,33 +1041,20 @@
       "question": "new 一个构造函数时发生了什么？",
       "answer": [
         [
+          { "type": "text", "value": "1）创建空对象，其 " },
+          { "type": "code", "value": "[[Prototype]]" },
+          { "type": "text", "value": " 指向构造函数的 " },
+          { "type": "code", "value": "prototype" }
+        ],
+        [
+          { "type": "text", "value": "2）以该对象为 " },
+          { "type": "code", "value": "this" },
+          { "type": "text", "value": " 执行构造函数体" }
+        ],
+        [
           {
             "type": "text",
-            "value": "1）新建空对象，其 "
-          },
-          {
-            "type": "code",
-            "value": "[[Prototype]]"
-          },
-          {
-            "type": "text",
-            "value": " 指向构造函数的 "
-          },
-          {
-            "type": "code",
-            "value": "prototype"
-          },
-          {
-            "type": "text",
-            "value": "；2）把 "
-          },
-          {
-            "type": "code",
-            "value": "this"
-          },
-          {
-            "type": "text",
-            "value": " 绑到这个对象上执行构造函数体；3）若构造函数返回对象，则用它；否则返回步骤 1 的实例。"
+            "value": "3）若构造函数返回对象类型，则用它作为结果；否则返回步骤 1 的实例。"
           }
         ],
         [
@@ -871,7 +1064,7 @@
           },
           {
             "type": "text",
-            "value": " 语法下 "
+            "value": " 构造器必须用 "
           },
           {
             "type": "code",
@@ -879,15 +1072,15 @@
           },
           {
             "type": "text",
-            "value": " 会校验必须用 "
+            "value": " 调用，否则抛 "
           },
           {
             "type": "code",
-            "value": "new"
+            "value": "TypeError"
           },
           {
             "type": "text",
-            "value": " 调用（否则抛错），本质仍是 prototype 链那套。"
+            "value": "；本质仍是原型链 + 上述三步，只是加了语法层约束。"
           }
         ]
       ]
@@ -900,7 +1093,7 @@
         [
           {
             "type": "text",
-            "value": "读 "
+            "value": "访问 "
           },
           {
             "type": "code",
@@ -908,15 +1101,15 @@
           },
           {
             "type": "text",
-            "value": "：先看 "
+            "value": "：先查自有属性，没有则沿 "
           },
           {
             "type": "code",
-            "value": "obj"
+            "value": "[[Prototype]]"
           },
           {
             "type": "text",
-            "value": " 自有属性，没有就沿 "
+            "value": "（调试时常写 "
           },
           {
             "type": "code",
@@ -924,15 +1117,7 @@
           },
           {
             "type": "text",
-            "value": "（规范称 "
-          },
-          {
-            "type": "code",
-            "value": "[[Prototype]]"
-          },
-          {
-            "type": "text",
-            "value": "）指向的原型对象继续找，直到 "
+            "value": "）向上查找，直到 "
           },
           {
             "type": "code",
@@ -940,7 +1125,13 @@
           },
           {
             "type": "text",
-            "value": "。构造函数上的 "
+            "value": " 结束，形成原型链。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "构造函数的 "
           },
           {
             "type": "code",
@@ -948,7 +1139,7 @@
           },
           {
             "type": "text",
-            "value": " 就是实例链的起点，"
+            "value": " 是实例链的起点；"
           },
           {
             "type": "code",
@@ -956,7 +1147,7 @@
           },
           {
             "type": "text",
-            "value": " 时把实例的 "
+            "value": " 会把实例的 "
           },
           {
             "type": "code",
@@ -964,13 +1155,21 @@
           },
           {
             "type": "text",
-            "value": " 指过去。"
+            "value": " 连到该 "
+          },
+          {
+            "type": "code",
+            "value": "prototype"
+          },
+          {
+            "type": "text",
+            "value": "。方法共享、节省内存，是继承的基础机制。"
           }
         ],
         [
           {
             "type": "text",
-            "value": "日常别改 "
+            "value": "生产代码避免直接改 "
           },
           {
             "type": "code",
@@ -982,7 +1181,15 @@
           },
           {
             "type": "code",
-            "value": "Object.getPrototypeOf / setPrototypeOf"
+            "value": "Object.getPrototypeOf"
+          },
+          {
+            "type": "text",
+            "value": " / "
+          },
+          {
+            "type": "code",
+            "value": "Object.setPrototypeOf"
           },
           {
             "type": "text",
@@ -994,7 +1201,13 @@
           },
           {
             "type": "text",
-            "value": " 是语法糖，方法仍在 prototype 上。别和作用域链混：作用域链找标识符，原型链找属性。"
+            "value": " 是语法糖，实例方法仍在 prototype 上。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "别与作用域链混淆：作用域链解析标识符（词法环境），原型链解析对象属性。"
           }
         ]
       ]
@@ -1007,21 +1220,17 @@
         [
           {
             "type": "text",
-            "value": "内层函数引用外层函数的变量，外层函数执行完栈帧销毁了，但变量仍被内层函数闭包引用着，所以还能访问——这就是闭包。"
+            "value": "内层函数引用外层词法环境中的变量；外层执行完毕后，只要内层仍被持有，该环境就不会被回收——这就是闭包。"
           }
         ],
         [
           {
-            "type": "text",
-            "value": "用处举例："
-          },
-          {
             "type": "strong",
-            "value": "私有计数器"
+            "value": "典型用途："
           },
           {
             "type": "text",
-            "value": "（外面调不到 "
+            "value": "模块级私有状态（外部无法直接访问 "
           },
           {
             "type": "code",
@@ -1029,23 +1238,17 @@
           },
           {
             "type": "text",
-            "value": "）、"
-          },
+            "value": "）、防抖/节流工厂（闭包保存 timer）、柯里化与偏函数。"
+          }
+        ],
+        [
           {
-            "type": "strong",
-            "value": "防抖节流工厂"
+            "type": "text",
+            "value": "代价是延长引用链：大对象、DOM 节点、接口返回数据若一直被闭包引用，会推迟垃圾回收（对象无法被释放）。"
           },
           {
             "type": "text",
-            "value": "（闭包里存 timer）、"
-          },
-          {
-            "type": "strong",
-            "value": "柯里化"
-          },
-          {
-            "type": "text",
-            "value": "。代价是引用链上的对象晚回收，记得在组件卸载时清定时器、解绑事件，避免闭包抓着大 DOM 或请求结果不放。"
+            "value": "组件卸载时清定时器、解绑监听、置空引用，是单页应用（SPA）里防内存泄漏的基本功。"
           }
         ]
       ]
@@ -1058,19 +1261,25 @@
         [
           {
             "type": "strong",
-            "value": "防抖"
+            "value": "防抖（debounce）"
           },
           {
             "type": "text",
-            "value": "："
+            "value": "：连续触发只认"
           },
           {
             "type": "strong",
-            "value": "最后一次触发后等一段时间"
+            "value": "最后一次停下来的那一刻"
           },
           {
             "type": "text",
-            "value": "才真正执行——例如搜索框 "
+            "value": "再执行。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "场景：搜索框 "
           },
           {
             "type": "code",
@@ -1078,7 +1287,7 @@
           },
           {
             "type": "text",
-            "value": "，用户连敲只发停手后的那次请求；"
+            "value": " 减少无效请求；"
           },
           {
             "type": "code",
@@ -1086,25 +1295,35 @@
           },
           {
             "type": "text",
-            "value": " 结束再量布局。"
+            "value": " 结束后再量布局、重算图表。leading 选项可在首次立即触发，看产品需求。"
           }
         ],
         [
           {
             "type": "strong",
-            "value": "节流"
+            "value": "节流（throttle）"
           },
           {
             "type": "text",
-            "value": "："
+            "value": "：在固定时间窗口内"
           },
           {
             "type": "strong",
-            "value": "固定时间窗口内最多执行一次"
+            "value": "最多执行一次"
           },
           {
             "type": "text",
-            "value": "——滚动监听里每 100～200ms 算一次吸顶状态；跟帧率对齐可用 "
+            "value": "，保证高频事件下仍有稳定回调频率。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "场景：滚动吸顶、拖拽跟手、按钮防连点。"
+          },
+          {
+            "type": "text",
+            "value": "与渲染帧对齐可用 "
           },
           {
             "type": "code",
@@ -1112,7 +1331,7 @@
           },
           {
             "type": "text",
-            "value": " 天然约 60fps。两者都能手写或用 lodash。"
+            "value": " 做 rAF 节流。可手写或用 lodash，注意取消防抖/节流里残留的 timer。"
           }
         ]
       ]
@@ -1125,23 +1344,37 @@
         [
           {
             "type": "text",
-            "value": "一轮里："
+            "value": "浏览器"
           },
           {
             "type": "strong",
-            "value": "先跑完当前宏任务里的同步代码"
+            "value": "事件循环（Event Loop）"
           },
           {
             "type": "text",
-            "value": "，然后"
+            "value": "每一轮：先执行当前"
           },
           {
             "type": "strong",
-            "value": "清空微任务队列"
+            "value": "宏任务（Macro Task）"
           },
           {
             "type": "text",
-            "value": "（"
+            "value": "中的同步代码，再"
+          },
+          {
+            "type": "strong",
+            "value": "清空微任务（Micro Task）队列"
+          },
+          {
+            "type": "text",
+            "value": "，然后取下一个宏任务。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "微任务包括 "
           },
           {
             "type": "code",
@@ -1165,7 +1398,13 @@
           },
           {
             "type": "text",
-            "value": " 等），微任务里又产生的微任务继续清完，再取下一个宏任务（"
+            "value": " 等；执行过程中新入队的微任务会在本轮继续清完。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "宏任务包括整段 script、"
           },
           {
             "type": "code",
@@ -1189,7 +1428,15 @@
           },
           {
             "type": "text",
-            "value": "、整段 script 等）。所以经典输出里 "
+            "value": "、"
+          },
+          {
+            "type": "code",
+            "value": "message"
+          },
+          {
+            "type": "text",
+            "value": " 等。因此 "
           },
           {
             "type": "code",
@@ -1197,7 +1444,7 @@
           },
           {
             "type": "text",
-            "value": " 常比 "
+            "value": " 回调常早于 "
           },
           {
             "type": "code",
@@ -1205,13 +1452,13 @@
           },
           {
             "type": "text",
-            "value": " 先执行。"
+            "value": "。"
           }
         ],
         [
           {
             "type": "text",
-            "value": "Node 里 "
+            "value": "Node 中 "
           },
           {
             "type": "code",
@@ -1219,7 +1466,7 @@
           },
           {
             "type": "text",
-            "value": " 优先级高于 Promise 微任务；浏览器没有 nextTick。"
+            "value": " 优先于 Promise 微任务；浏览器无 nextTick。写异步题时先画「同步 → 微任务 → 宏任务」顺序即可。"
           }
         ]
       ]
@@ -1231,20 +1478,64 @@
       "answer": [
         [
           {
+            "type": "text",
+            "value": "Promise 对象有三种状态："
+          },
+          {
+            "type": "code",
+            "value": "pending"
+          },
+          {
+            "type": "text",
+            "value": "（进行中）、"
+          },
+          {
+            "type": "code",
+            "value": "fulfilled"
+          },
+          {
+            "type": "text",
+            "value": "（已成功）、"
+          },
+          {
+            "type": "code",
+            "value": "rejected"
+          },
+          {
+            "type": "text",
+            "value": "（已失败）；状态一旦落定（resolved）就不会再变。组合方法建立在 "
+          },
+          {
+            "type": "code",
+            "value": "then"
+          },
+          {
+            "type": "text",
+            "value": " 之上。"
+          }
+        ],
+        [
+          {
             "type": "code",
             "value": "Promise.all([a,b])"
           },
           {
             "type": "text",
-            "value": "："
+            "value": "：全部 "
           },
           {
             "type": "strong",
-            "value": "全部 fulfilled"
+            "value": "全部 fulfilled（成功）"
           },
           {
             "type": "text",
-            "value": " 才 resolve，任一 reject 立刻 reject，适合「多个依赖都必须成功」。"
+            "value": " 才 resolve；任一项变成 rejected（失败）就立刻 reject。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "适合多接口强依赖、缺一不可的场景（如详情页需同时拉用户与权限）。注意：一个失败整批失败，要有降级或重试策略。"
           }
         ],
         [
@@ -1258,11 +1549,11 @@
           },
           {
             "type": "strong",
-            "value": "谁先 settled 用谁"
+            "value": "谁先 settled（落定）"
           },
           {
             "type": "text",
-            "value": "，典型是超时封装 "
+            "value": " 就用谁（fulfilled 或 rejected 都算）。典型：超时封装 "
           },
           {
             "type": "code",
@@ -1280,15 +1571,23 @@
           },
           {
             "type": "text",
-            "value": "：全部结束（不管成败）都返回各自 "
+            "value": "：等全部 settled 才返回，每项是 "
           },
           {
             "type": "code",
-            "value": "status/value/reason"
+            "value": "{ status: 'fulfilled', value }"
           },
           {
             "type": "text",
-            "value": "，适合「批量请求做汇总、失败也要展示部分结果」。"
+            "value": " 或 "
+          },
+          {
+            "type": "code",
+            "value": "{ status: 'rejected', reason }"
+          },
+          {
+            "type": "text",
+            "value": "。适合批量上报、多源拉取——单项 rejected 也不拖垮整体。"
           }
         ],
         [
@@ -1302,11 +1601,11 @@
           },
           {
             "type": "strong",
-            "value": "第一个成功即成功"
+            "value": "第一个 fulfilled 即成功"
           },
           {
             "type": "text",
-            "value": "；全失败会抛 "
+            "value": "；全部 rejected 才抛 "
           },
           {
             "type": "code",
@@ -1314,7 +1613,7 @@
           },
           {
             "type": "text",
-            "value": "，适合多源兜底（CDN A/B/C 任意一个可用即可）。"
+            "value": "。适合多 CDN/多镜像任意一个可用即可的兜底。"
           }
         ]
       ]
@@ -1326,22 +1625,76 @@
       "answer": [
         [
           {
+            "type": "strong",
+            "value": "链式根源："
+          },
+          {
+            "type": "code",
+            "value": "then"
+          },
+          {
             "type": "text",
-            "value": "关键点："
+            "value": " 始终返回"
           },
           {
             "type": "strong",
-            "value": "then 会返回一个新的 Promise"
+            "value": "新的 Promise 实例"
           },
           {
             "type": "text",
-            "value": "。回调返回普通值会变成 resolve(值)；返回 Promise/thenable 会被“展开”等它结束；回调里抛异常等价于 reject(异常)。"
+            "value": "，后续 "
+          },
+          {
+            "type": "code",
+            "value": "then"
+          },
+          {
+            "type": "text",
+            "value": " 挂在这个新实例上，形成链。"
           }
         ],
         [
           {
             "type": "text",
-            "value": "所以链上只要前面有一步 reject 或 throw，后续的 success 回调会跳过，直到遇到最近的 "
+            "value": "阮一峰："
+          },
+          {
+            "type": "code",
+            "value": "then"
+          },
+          {
+            "type": "text",
+            "value": " 可传两个回调，分别对应 "
+          },
+          {
+            "type": "code",
+            "value": "resolved"
+          },
+          {
+            "type": "text",
+            "value": "（本章多指 fulfilled）与 "
+          },
+          {
+            "type": "code",
+            "value": "rejected"
+          },
+          {
+            "type": "text",
+            "value": " 状态。返回普通值 → 下一环 fulfilled；返回 Promise/thenable → 展开并等其 settled；"
+          },
+          {
+            "type": "code",
+            "value": "throw"
+          },
+          {
+            "type": "text",
+            "value": " → rejected。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "错误冒泡：某步进入 rejected 后，中间的 fulfilled 回调被跳过，沿链传到最近的 "
           },
           {
             "type": "code",
@@ -1349,7 +1702,15 @@
           },
           {
             "type": "text",
-            "value": "（或 then 的第二个参数）处理；"
+            "value": "（或 "
+          },
+          {
+            "type": "code",
+            "value": "then"
+          },
+          {
+            "type": "text",
+            "value": " 第二参数）。"
           },
           {
             "type": "code",
@@ -1357,7 +1718,21 @@
           },
           {
             "type": "text",
-            "value": " 不改变链上值，只做收尾。面试能把“返回新 Promise + 返回值/异常如何影响状态”讲清即可。"
+            "value": " 不改变传递值，只做收尾（关 loading 等）。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "面试把「返回新 Promise + 返回值/异常如何改状态」讲清即可；线上记得链尾 "
+          },
+          {
+            "type": "code",
+            "value": ".catch"
+          },
+          {
+            "type": "text",
+            "value": "，避免未处理的 Promise 失败（unhandled rejection）。"
           }
         ]
       ]
@@ -1374,31 +1749,29 @@
           },
           {
             "type": "text",
-            "value": " 函数"
+            "value": " 函数本质是 "
           },
           {
             "type": "strong",
-            "value": "一定返回 Promise"
+            "value": "Generator 函数的语法糖"
           },
           {
             "type": "text",
-            "value": "；函数里 "
+            "value": "（阮一峰 async 一章）。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "对应关系："
           },
           {
             "type": "code",
-            "value": "return 1"
+            "value": "function*"
           },
           {
             "type": "text",
-            "value": " 会变成 resolve(1)。"
-          },
-          {
-            "type": "code",
-            "value": "await expr"
-          },
-          {
-            "type": "text",
-            "value": " 会暂停当前 "
+            "value": " → "
           },
           {
             "type": "code",
@@ -1406,15 +1779,87 @@
           },
           {
             "type": "text",
-            "value": " 函数，把后续代码放进微任务，等 "
+            "value": "，"
           },
           {
             "type": "code",
-            "value": "expr"
+            "value": "yield"
           },
           {
             "type": "text",
-            "value": " 的 Promise settled 再继续。"
+            "value": " → "
+          },
+          {
+            "type": "code",
+            "value": "await"
+          },
+          {
+            "type": "text",
+            "value": "。"
+          }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "一定返回 Promise 对象"
+          },
+          {
+            "type": "text",
+            "value": "；"
+          },
+          {
+            "type": "code",
+            "value": "return 1"
+          },
+          {
+            "type": "text",
+            "value": " 等价于 "
+          },
+          {
+            "type": "code",
+            "value": "Promise.resolve(1)"
+          },
+          {
+            "type": "text",
+            "value": "（resolve → fulfilled）；"
+          },
+          {
+            "type": "code",
+            "value": "throw"
+          },
+          {
+            "type": "text",
+            "value": " 等价于 reject（→ rejected）。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "写 "
+          },
+          {
+            "type": "code",
+            "value": "await"
+          },
+          {
+            "type": "text",
+            "value": " 加在 Promise 前（如 "
+          },
+          {
+            "type": "code",
+            "value": "await fetch(url)"
+          },
+          {
+            "type": "text",
+            "value": "）：暂停当前 "
+          },
+          {
+            "type": "code",
+            "value": "async"
+          },
+          {
+            "type": "text",
+            "value": " 函数，后续代码进微任务；等该 Promise settled（fulfilled 得值，rejected 抛错）后再继续——本质是 Promise 语法糖。"
           }
         ],
         [
@@ -1436,7 +1881,7 @@
           },
           {
             "type": "text",
-            "value": "，等价于 "
+            "value": "，等价于链式 "
           },
           {
             "type": "code",
@@ -1444,7 +1889,11 @@
           },
           {
             "type": "text",
-            "value": "；并行请求写 "
+            "value": " 接 rejected"
+          },
+          {
+            "type": "text",
+            "value": "。并行用 "
           },
           {
             "type": "code",
@@ -1452,7 +1901,7 @@
           },
           {
             "type": "text",
-            "value": "，别在循环里无脑串行 "
+            "value": "，避免循环里无脑串行 "
           },
           {
             "type": "code",
@@ -1460,20 +1909,28 @@
           },
           {
             "type": "text",
-            "value": " 除非业务必须顺序。"
+            "value": " 拖慢总耗时（除非业务必须顺序）。"
           }
         ]
       ]
     },
     {
       "id": "q-iterator",
-      "navLabel": "迭代器协议",
+      "navLabel": "Iterator 与 for-of",
       "question": "可迭代对象是什么？for-of 背后做了啥？",
       "answer": [
         [
           {
             "type": "text",
-            "value": "对象若有 "
+            "value": "部署了 "
+          },
+          {
+            "type": "strong",
+            "value": "Iterator（遍历器）接口"
+          },
+          {
+            "type": "text",
+            "value": " 的数据结构称为可遍历结构；默认键为 "
           },
           {
             "type": "code",
@@ -1481,7 +1938,15 @@
           },
           {
             "type": "text",
-            "value": " 返回带 "
+            "value": "，返回"
+          },
+          {
+            "type": "strong",
+            "value": "遍历器对象（指针对象）"
+          },
+          {
+            "type": "text",
+            "value": "，反复调用 "
           },
           {
             "type": "code",
@@ -1489,19 +1954,29 @@
           },
           {
             "type": "text",
-            "value": " 的迭代器，就是可迭代的；"
+            "value": " 得到 "
           },
           {
             "type": "code",
-            "value": "for-of"
+            "value": "{ value, done }"
           },
           {
             "type": "text",
-            "value": " 等价于反复取 "
+            "value": "（阮一峰 Iterator 一章）。"
+          }
+        ],
+        [
+          {
+            "type": "code",
+            "value": "for...of"
+          },
+          {
+            "type": "text",
+            "value": " 循环等价于：取遍历器后反复 "
           },
           {
             "type": "code",
-            "value": "iterator.next()"
+            "value": "next()"
           },
           {
             "type": "text",
@@ -1509,11 +1984,19 @@
           },
           {
             "type": "code",
-            "value": "done: true"
+            "value": "done === true"
           },
           {
             "type": "text",
-            "value": "。"
+            "value": "；若迭代器抛错且未处理，会走 "
+          },
+          {
+            "type": "code",
+            "value": "iterator.return()"
+          },
+          {
+            "type": "text",
+            "value": " 做清理（若存在）。"
           }
         ],
         [
@@ -1523,7 +2006,7 @@
           },
           {
             "type": "text",
-            "value": "、展开运算符 "
+            "value": "、"
           },
           {
             "type": "code",
@@ -1539,7 +2022,45 @@
           },
           {
             "type": "text",
-            "value": " 都可消费可迭代对象；手写题常考「实现一个 range 迭代器」。"
+            "value": "、"
+          },
+          {
+            "type": "strong",
+            "value": "解构赋值"
+          },
+          {
+            "type": "text",
+            "value": "、"
+          },
+          {
+            "type": "code",
+            "value": "Promise.all"
+          },
+          {
+            "type": "text",
+            "value": " 等都要求右侧具备 Iterator 接口。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "手写题常考自定义遍历器；"
+          },
+          {
+            "type": "strong",
+            "value": "Generator 函数"
+          },
+          {
+            "type": "text",
+            "value": " "
+          },
+          {
+            "type": "code",
+            "value": "function*"
+          },
+          {
+            "type": "text",
+            "value": " 是生成遍历器的简便写法，原生带 Iterator 接口。"
           }
         ]
       ]
@@ -1551,12 +2072,26 @@
       "answer": [
         [
           {
+            "type": "text",
+            "value": "ES6 新增 "
+          },
+          {
+            "type": "strong",
+            "value": "Set 和 Map 数据结构"
+          },
+          {
+            "type": "text",
+            "value": "；Weak 系列与之配套。"
+          }
+        ],
+        [
+          {
             "type": "code",
             "value": "Map"
           },
           {
             "type": "text",
-            "value": "：任意类型键，可遍历 "
+            "value": "：键可为任意类型，可遍历、有 "
           },
           {
             "type": "code",
@@ -1564,8 +2099,10 @@
           },
           {
             "type": "text",
-            "value": "，键被强引用。"
-          },
+            "value": "；键被强引用，只要还留在 Map 里，对应对象就不会被垃圾回收。"
+          }
+        ],
+        [
           {
             "type": "code",
             "value": "WeakMap"
@@ -1580,23 +2117,21 @@
           },
           {
             "type": "text",
-            "value": "，"
+            "value": "，对键是"
           },
           {
             "type": "strong",
-            "value": "弱引用键"
+            "value": "弱引用（Weak Reference）"
           },
           {
             "type": "text",
-            "value": "——对象被 GC 掉后对应条目自动消失；"
-          },
-          {
-            "type": "strong",
-            "value": "不可枚举"
-          },
+            "value": "——键对象无其他引用时可被回收，对应条目自动消失。"
+          }
+        ],
+        [
           {
             "type": "text",
-            "value": "，没有 "
+            "value": "不可枚举，无 "
           },
           {
             "type": "code",
@@ -1604,13 +2139,21 @@
           },
           {
             "type": "text",
-            "value": " 之类 API。"
+            "value": " / "
+          },
+          {
+            "type": "code",
+            "value": "size"
+          },
+          {
+            "type": "text",
+            "value": "，无法得知存活键列表。适合「跟对象生命周期绑定的私有元数据」。"
           }
         ],
         [
           {
             "type": "text",
-            "value": "典型用途：把元数据挂在 DOM 节点或第三方实例上而不阻止其回收；Vue 3 里用 WeakMap 关联 "
+            "value": "典型：DOM 节点挂扩展数据、第三方实例缓存；Vue 3 用 WeakMap 关联 "
           },
           {
             "type": "code",
@@ -1618,7 +2161,7 @@
           },
           {
             "type": "text",
-            "value": " 代理与原始对象。面试提「弱引用 + 不可遍历」即可。"
+            "value": " 代理与原始对象，避免内存泄漏。"
           }
         ]
       ]
@@ -1643,7 +2186,7 @@
           },
           {
             "type": "text",
-            "value": "，resolve 后是模块的 namespace 对象（含 "
+            "value": "，resolve 后为模块命名空间对象（"
           },
           {
             "type": "code",
@@ -1651,7 +2194,7 @@
           },
           {
             "type": "text",
-            "value": " 与各具名导出）。路径可以是变量（在 bundler 里有限制），适合按条件、按路由懒加载。"
+            "value": " + 具名导出）。路径可为变量，适合按路由、权限、功能开关懒加载。"
           }
         ],
         [
@@ -1665,7 +2208,15 @@
           },
           {
             "type": "text",
-            "value": " 提升、依赖图在编译期确定，利于 tree-shaking；动态 "
+            "value": " 在编译期确定依赖图，利于"
+          },
+          {
+            "type": "strong",
+            "value": "摇树优化（Tree Shaking）"
+          },
+          {
+            "type": "text",
+            "value": "；动态 "
           },
           {
             "type": "code",
@@ -1673,7 +2224,13 @@
           },
           {
             "type": "text",
-            "value": " 会单独分包。失败要 "
+            "value": " 通常单独分包，首屏更小。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Bundler 对动态路径往往只打包匹配到的模块集合；加载失败需 "
           },
           {
             "type": "code",
@@ -1681,7 +2238,7 @@
           },
           {
             "type": "text",
-            "value": " 给用户降级或重试。"
+            "value": " 做重试或降级 UI，避免白屏。"
           }
         ]
       ]
@@ -1702,7 +2259,37 @@
           },
           {
             "type": "text",
-            "value": "）是运行时加载，导出对象可变；ESM（"
+            "value": "）："
+          },
+          {
+            "type": "strong",
+            "value": "运行时加载"
+          },
+          {
+            "type": "text",
+            "value": "，导出的是值的拷贝，"
+          },
+          {
+            "type": "code",
+            "value": "module.exports"
+          },
+          {
+            "type": "text",
+            "value": " 可被运行时改写（阮一峰 Module 一章）。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "ES6 "
+          },
+          {
+            "type": "strong",
+            "value": "Module 语法"
+          },
+          {
+            "type": "text",
+            "value": "（"
           },
           {
             "type": "code",
@@ -1710,13 +2297,35 @@
           },
           {
             "type": "text",
-            "value": "）是编译期可静态分析的依赖图，导出是“live binding”（绑定而非拷贝）。"
+            "value": "）："
+          },
+          {
+            "type": "strong",
+            "value": "编译阶段"
+          },
+          {
+            "type": "text",
+            "value": " 静态分析依赖；导出与导入是"
+          },
+          {
+            "type": "strong",
+            "value": "动态引用"
+          },
+          {
+            "type": "text",
+            "value": "（live binding），导入方读到的是同一绑定上的最新值。"
           }
         ],
         [
           {
             "type": "text",
-            "value": "tree-shaking 依赖静态分析：构建工具能在编译期判断“哪些导出没被用”，从而安全删除未使用代码；CJS 的 "
+            "value": "Tree-shaking 依赖静态分析：构建工具能在编译期判断哪些导出未被引用，安全删除死代码。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "CJS 的 "
           },
           {
             "type": "code",
@@ -1724,7 +2333,7 @@
           },
           {
             "type": "text",
-            "value": " 可能是动态路径、导出对象也可能被随时改写，更难做可靠裁剪。"
+            "value": " 可能是动态路径，导出也可被改写，难以可靠裁剪。现代库与 Vite/Webpack 默认 ESM 为主。"
           }
         ]
       ]
@@ -1737,15 +2346,39 @@
         [
           {
             "type": "code",
-            "value": "new Proxy(target, { get, set, has, deleteProperty, apply, ... })"
+            "value": "Proxy"
           },
           {
             "type": "text",
-            "value": "：在读写属性、"
+            "value": " 即"
+          },
+          {
+            "type": "strong",
+            "value": "代理器"
+          },
+          {
+            "type": "text",
+            "value": "："
           },
           {
             "type": "code",
-            "value": "in"
+            "value": "new Proxy(target, handler)"
+          },
+          {
+            "type": "text",
+            "value": "，在目标对象前架设拦截；"
+          },
+          {
+            "type": "strong",
+            "value": "handler"
+          },
+          {
+            "type": "text",
+            "value": " 为配置对象，"
+          },
+          {
+            "type": "code",
+            "value": "get"
           },
           {
             "type": "text",
@@ -1753,37 +2386,51 @@
           },
           {
             "type": "code",
-            "value": "delete"
+            "value": "set"
           },
           {
             "type": "text",
-            "value": "、函数调用等路径上插逻辑；Vue 3 响应式、immer 类库都基于此。"
+            "value": " 等定制拦截行为（阮一峰 Proxy 一章）。"
           }
         ],
         [
+          {
+            "type": "text",
+            "value": "须操作 "
+          },
+          {
+            "type": "strong",
+            "value": "Proxy 实例"
+          },
+          {
+            "type": "text",
+            "value": " 而非原对象。Vue 3、immer 等用于响应式；属"
+          },
+          {
+            "type": "strong",
+            "value": "元编程"
+          },
+          {
+            "type": "text",
+            "value": "，在语言层面改写默认行为。"
+          }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "Reflect 对象"
+          },
+          {
+            "type": "text",
+            "value": " 方法与默认操作一一对应（如 "
+          },
           {
             "type": "code",
             "value": "Reflect.get/set"
           },
           {
             "type": "text",
-            "value": " 等提供与默认对象操作"
-          },
-          {
-            "type": "strong",
-            "value": "一一对应且返回布尔/结果"
-          },
-          {
-            "type": "text",
-            "value": "，在 Proxy 的 trap 里调用 "
-          },
-          {
-            "type": "code",
-            "value": "Reflect"
-          },
-          {
-            "type": "text",
-            "value": " 可正确转发到 "
+            "value": "）；trap 内用其转发可传递 "
           },
           {
             "type": "code",
@@ -1791,7 +2438,7 @@
           },
           {
             "type": "text",
-            "value": "，避免 "
+            "value": "，保证 "
           },
           {
             "type": "code",
@@ -1799,42 +2446,56 @@
           },
           {
             "type": "text",
-            "value": " 指向错误。面试不用枚举每个 trap 名。"
+            "value": " 绑定正确。"
           }
         ]
       ]
     },
     {
       "id": "q-memory-leak",
-      "navLabel": "内存泄漏排查",
-      "question": "前端常见内存泄漏有哪些？怎么定位？",
+      "navLabel": "常见内存泄漏",
+      "question": "前端常见内存泄漏有哪些？",
       "answer": [
         [
           {
+            "type": "strong",
+            "value": "常见来源："
+          },
+          {
             "type": "text",
-            "value": "常见来源：未清理的定时器/轮询、未解绑的事件监听、长生命周期单例里缓存了大对象（Map/数组只增不减）、闭包引用了大 DOM 或大数据、DOM 引用残留（从文档移除但仍被 JS 引用）。"
+            "value": "未清理的 "
+          },
+          {
+            "type": "code",
+            "value": "setInterval"
+          },
+          {
+            "type": "text",
+            "value": " / 轮询；未解绑的事件监听；全局单例 Map/数组只增不减。"
           }
         ],
         [
           {
             "type": "text",
-            "value": "定位思路：用 DevTools Memory 做 "
-          },
+            "value": "闭包长期引用大段 DOM、接口返回的大数据；页面已移除的节点仍被 JS 变量持有；第三方图表/编辑器实例未销毁。"
+          }
+        ],
+        [
           {
-            "type": "code",
-            "value": "Heap snapshot"
-          },
-          {
-            "type": "text",
-            "value": " 对比（或 "
-          },
-          {
-            "type": "code",
-            "value": "Allocation instrumentation on timeline"
+            "type": "strong",
+            "value": "预防："
           },
           {
             "type": "text",
-            "value": "），观察对象数量是否随操作持续增长；配合 Performance/录制，看是否有持续创建且不可回收的对象；必要时用 Retainers 链找“是谁还在引用它”。WeakMap/WeakSet 适合作为“跟对象生命周期绑定的缓存”。"
+            "value": "卸载时清 timer、解绑、"
+          },
+          {
+            "type": "code",
+            "value": "abort"
+          },
+          {
+            "type": "text",
+            "value": " 请求；跟对象绑定的缓存用 WeakMap/WeakSet，键无其它引用时可被垃圾回收，不会一直占内存。"
           }
         ]
       ]

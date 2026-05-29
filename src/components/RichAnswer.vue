@@ -1,7 +1,12 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import type { RichSegment, SyntaxHighlightMode } from '@/types/qa-content'
 
 import FunctionCodeBlock from '@/components/FunctionCodeBlock.vue'
+import {
+  isNumberedStepParagraph,
+  splitNumberedParagraphs,
+} from '@/utils/splitNumberedParagraphs'
 
 const props = withDefaults(
   defineProps<{
@@ -9,6 +14,10 @@ const props = withDefaults(
     syntaxHighlightMode?: SyntaxHighlightMode
   }>(),
   { syntaxHighlightMode: 'off' },
+)
+
+const displayParagraphs = computed(() =>
+  splitNumberedParagraphs(props.paragraphs),
 )
 
 function shouldRenderFunctionBlock(segments: RichSegment[]): boolean {
@@ -24,12 +33,15 @@ function shouldRenderFunctionBlock(segments: RichSegment[]): boolean {
 
 <template>
   <div class="qa-block__answer">
-    <template v-for="(segments, pi) in paragraphs" :key="pi">
+    <template v-for="(segments, pi) in displayParagraphs" :key="pi">
       <FunctionCodeBlock
         v-if="shouldRenderFunctionBlock(segments)"
         :raw-code="(segments[0] as Extract<RichSegment, { type: 'code' }>).value"
       />
-      <p v-else>
+      <p
+        v-else
+        :class="{ 'qa-block__answer-step': isNumberedStepParagraph(segments) }"
+      >
         <template v-for="(seg, si) in segments" :key="`${pi}-${si}`">
           <strong v-if="seg.type === 'strong'">{{ seg.value }}</strong>
           <code v-else-if="seg.type === 'code'">{{ seg.value }}</code>

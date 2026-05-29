@@ -43,9 +43,9 @@
   }
 
   &__q {
-    font-size: 1.12rem;
+    font-size: 1rem;
     font-weight: 600;
-    line-height: 1.6rem;
+    line-height: 1.4rem;
     margin: 0 0 0.35rem;
     color: $qa-heading;
     display: flex;
@@ -55,11 +55,11 @@
     &::before {
       content: 'Q';
       flex-shrink: 0;
-      width: 1.6rem;
-      height: 1.6rem;
-      line-height: 1.6rem;
+      width: 1.35rem;
+      height: 1.35rem;
+      line-height: 1.35rem;
       text-align: center;
-      font-size: 0.72rem;
+      font-size: 0.65rem;
       font-weight: 700;
       background: $accent-soft;
       color: $accent;
@@ -75,7 +75,7 @@
   &__q-note {
     margin: 0;
     padding-left: 2.1rem; /* 与 Q 角标 + gap 对齐正文起点 */
-    font-size: $font-size-sm;
+    font-size: $font-size-xs;
     line-height: $line-height-tight;
     font-weight: 400;
     color: $text-subtle;
@@ -83,9 +83,12 @@
 
   &__answer {
     margin: 0;
-    padding-left: 2.1rem;
+    padding-left: 1.6rem;
+    font-size: 0.875rem;
     color: $text;
-    line-height: $line-height-body;
+    line-height: 1.6;
+    word-break: normal;
+    overflow-wrap: normal;
 
     strong {
       color: $qa-heading;
@@ -93,20 +96,54 @@
     }
 
     p {
-      margin: 0 0 0.65rem;
+      margin: 0 0 0.5rem;
+      text-wrap: pretty;
+      word-break: normal;
+      overflow-wrap: normal;
 
       &:last-child {
         margin-bottom: 0;
       }
     }
 
+    p.qa-block__answer-step {
+      margin-bottom: 0.35rem;
+    }
+
     code {
       font-family: $mono;
       font-size: 0.88em;
-      background: $code-bg;
-      padding: 0.12em 0.45em;
+      font-weight: 500;
+      color: $code-inline-color;
+      background: $code-inline-bg;
+      padding: 0.15em 0.35em;
       border-radius: $radius-code;
-      border: 1px solid $border;
+      white-space: normal;
+      overflow-wrap: anywhere;
+      word-break: normal;
+    }
+  }
+
+  @media (max-width: $bp-article-tight) {
+    &__q {
+      font-size: 0.9375rem;
+      line-height: 1.35rem;
+
+      &::before {
+        width: 1.25rem;
+        height: 1.25rem;
+        line-height: 1.25rem;
+        font-size: 0.62rem;
+      }
+    }
+
+    &__q-note {
+      font-size: 0.75rem;
+    }
+
+    &__answer {
+      font-size: 0.8125rem;
+      line-height: 1.55;
     }
   }
 }

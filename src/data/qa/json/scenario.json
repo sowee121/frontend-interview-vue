@@ -2,77 +2,36 @@
   "slug": "scenario",
   "title": "场景题",
   "documentTitle": "场景题",
-  "description": "用真实项目场景来答：防抖节流、鉴权、无限滚动、多标签同步和上报。",
-  "lead": "更偏落地：怎么做、怎么取舍、怎么排坑。",
+  "description": "用搜索、鉴权、上传、实时通道等真实业务场景，讲清做法、取舍与常见坑。",
+  "lead": "偏落地：先讲方案，再讲边界，最后点一句怎么验。",
   "items": [
     {
       "id": "q-debounce-search",
       "navLabel": "搜索防抖",
       "question": "搜索框请求很频繁，你怎么处理？",
+      "questionNote": "防抖 + 最小长度 + 取消上一次请求，是搜索框标准三板斧。",
       "answer": [
         [
-          {
-            "type": "strong",
-            "value": "防抖"
-          },
-          {
-            "type": "text",
-            "value": "：例如用 lodash 的 "
-          },
-          {
-            "type": "code",
-            "value": "debounce(fn, 300)"
-          },
-          {
-            "type": "text",
-            "value": "，用户连续敲字时只在停手约 300ms 后触发一次搜索；也可以自己用 "
-          },
-          {
-            "type": "code",
-            "value": "setTimeout"
-          },
-          {
-            "type": "text",
-            "value": " 实现同样思路。"
-          }
+          { "type": "strong", "value": "防抖：" },
+          { "type": "text", "value": "连续输入时只在停手约 300ms 后触发一次，如 " },
+          { "type": "code", "value": "debounce(fn, 300)" },
+          { "type": "text", "value": " 或 " },
+          { "type": "code", "value": "setTimeout" },
+          { "type": "text", "value": " 自实现。" }
         ],
         [
-          {
-            "type": "text",
-            "value": "再配合 "
-          },
-          {
-            "type": "strong",
-            "value": "最小长度"
-          },
-          {
-            "type": "text",
-            "value": "（如少于 2 个字不请求）、"
-          },
-          {
-            "type": "strong",
-            "value": "取消上一次请求"
-          },
-          {
-            "type": "text",
-            "value": "：每次发请求带上新的 "
-          },
-          {
-            "type": "code",
-            "value": "AbortController"
-          },
-          {
-            "type": "text",
-            "value": "，下次输入时 "
-          },
-          {
-            "type": "code",
-            "value": "abort()"
-          },
-          {
-            "type": "text",
-            "value": "，避免「先发出的慢请求后返回」把新关键词的结果盖住。"
-          }
+          { "type": "text", "value": "1）" },
+          { "type": "strong", "value": "最小长度" },
+          { "type": "text", "value": "：少于 2 字不请求，减无效调用。" }
+        ],
+        [
+          { "type": "text", "value": "2）" },
+          { "type": "strong", "value": "取消上一次" },
+          { "type": "text", "value": "：每次带新 " },
+          { "type": "code", "value": "AbortController" },
+          { "type": "text", "value": "，下次输入 " },
+          { "type": "code", "value": "abort()" },
+          { "type": "text", "value": "，避免慢请求覆盖新关键词结果。" }
         ]
       ]
     },
@@ -80,82 +39,32 @@
       "id": "q-infinite",
       "navLabel": "无限滚动",
       "question": "无限滚动列表怎么实现？",
+      "questionNote": "IntersectionObserver 哨兵 + 防重复加载；上千条换虚拟列表。",
       "answer": [
         [
-          {
-            "type": "text",
-            "value": "列表根部包一层可滚动容器，在列表最底部放一个 1px 高的「哨兵」节点，用 "
-          },
-          {
-            "type": "code",
-            "value": "IntersectionObserver"
-          },
-          {
-            "type": "text",
-            "value": " 监听它进入视口（可设 "
-          },
-          {
-            "type": "code",
-            "value": "rootMargin: '200px'"
-          },
-          {
-            "type": "text",
-            "value": " 提前加载）。触发后 "
-          },
-          {
-            "type": "strong",
-            "value": "页码 +1"
-          },
-          {
-            "type": "text",
-            "value": " 或带 "
-          },
-          {
-            "type": "code",
-            "value": "nextCursor"
-          },
-          {
-            "type": "text",
-            "value": " 请求下一页，把返回数组 append 到现有列表。"
-          }
+          { "type": "strong", "value": "核心：" },
+          { "type": "text", "value": "列表底部放 1px 哨兵，用 " },
+          { "type": "code", "value": "IntersectionObserver" },
+          { "type": "text", "value": " 监听进入视口（可设 " },
+          { "type": "code", "value": "rootMargin: '200px'" },
+          { "type": "text", "value": " 提前加载）。" }
         ],
         [
-          {
-            "type": "text",
-            "value": "边界：请求飞行中设 "
-          },
-          {
-            "type": "code",
-            "value": "loading"
-          },
-          {
-            "type": "text",
-            "value": " 防重复触发；"
-          },
-          {
-            "type": "code",
-            "value": "hasMore === false"
-          },
-          {
-            "type": "text",
-            "value": " 时 disconnect 观察器；失败给重试或 toast。列表上千条仍卡就换 "
-          },
-          {
-            "type": "strong",
-            "value": "虚拟列表"
-          },
-          {
-            "type": "text",
-            "value": "（只渲染可视区 + 缓冲行），滚动监听里对计算滚动距离用 "
-          },
-          {
-            "type": "code",
-            "value": "requestAnimationFrame"
-          },
-          {
-            "type": "text",
-            "value": " 或简单节流，避免一帧内算很多次。"
-          }
+          { "type": "text", "value": "1）触发后页码 +1 或带 " },
+          { "type": "code", "value": "nextCursor" },
+          { "type": "text", "value": " 请求，结果 append 到列表。" }
+        ],
+        [
+          { "type": "text", "value": "2）飞行中设 " },
+          { "type": "code", "value": "loading" },
+          { "type": "text", "value": " 防重复；" },
+          { "type": "code", "value": "hasMore === false" },
+          { "type": "text", "value": " 时 disconnect；失败给重试。" }
+        ],
+        [
+          { "type": "text", "value": "3）上千条仍卡就换虚拟列表；滚动计算用 " },
+          { "type": "code", "value": "requestAnimationFrame" },
+          { "type": "text", "value": " 或节流，避免一帧算多次。" }
         ]
       ]
     },
@@ -163,70 +72,25 @@
       "id": "q-error",
       "navLabel": "错误上报",
       "question": "线上错误怎么收集？",
+      "questionNote": "全局 error/unhandledrejection + 框架钩子；上报体字段与 map 安全要提到。",
       "answer": [
         [
-          {
-            "type": "code",
-            "value": "window.addEventListener('error', ...)"
-          },
-          {
-            "type": "text",
-            "value": " 抓同步运行时错误；"
-          },
-          {
-            "type": "code",
-            "value": "unhandledrejection"
-          },
-          {
-            "type": "text",
-            "value": " 抓未处理的 Promise reject。Vue 3 可在创建应用后设 "
-          },
-          {
-            "type": "code",
-            "value": "app.config.errorHandler"
-          },
-          {
-            "type": "text",
-            "value": "，组件树里再用 "
-          },
-          {
-            "type": "code",
-            "value": "onErrorCaptured"
-          },
-          {
-            "type": "text",
-            "value": "；React 用 Error Boundary 包住路由或整棵子树，兜住渲染期异常。"
-          }
+          { "type": "code", "value": "window.addEventListener('error', ...)" },
+          { "type": "text", "value": " 抓同步错误；" },
+          { "type": "code", "value": "unhandledrejection" },
+          { "type": "text", "value": " 抓未处理的 rejected（unhandledrejection）。" }
         ],
         [
-          {
-            "type": "text",
-            "value": "上报体里尽量带齐："
-          },
-          {
-            "type": "strong",
-            "value": "message、stack、当前路由、release/git SHA、用户 id（脱敏）、设备与浏览器 UA"
-          },
-          {
-            "type": "text",
-            "value": "，必要时附带最近几次接口路径方便关联。source map 上传到 Sentry/自建服务只在构建产物里保留 "
-          },
-          {
-            "type": "code",
-            "value": "//# sourceMappingURL"
-          },
-          {
-            "type": "text",
-            "value": " 指向需鉴权的地址，不要把完整 "
-          },
-          {
-            "type": "code",
-            "value": ".map"
-          },
-          {
-            "type": "text",
-            "value": " 文件公开挂在静态目录。"
-          }
+          { "type": "text", "value": "1）Vue 3 设 " },
+          { "type": "code", "value": "app.config.errorHandler" },
+          { "type": "text", "value": "、" },
+          { "type": "code", "value": "onErrorCaptured" },
+          { "type": "text", "value": "；React 用 Error Boundary 包住路由子树。" }
+        ],
+        [
+          { "type": "text", "value": "2）上报带 message、stack、路由、release/git SHA、脱敏用户 id、UA；source map 上传鉴权服务，别把完整 " },
+          { "type": "code", "value": ".map" },
+          { "type": "text", "value": " 公开挂静态目录。" }
         ]
       ]
     },
@@ -234,72 +98,33 @@
       "id": "q-fcp",
       "navLabel": "首屏优化怎么说",
       "question": "首屏慢，你会从哪几方面说？",
+      "questionNote": "资源、请求、体验三块；指标用 FCP/LCP + RUM 验证。",
       "answer": [
         [
-          {
-            "type": "text",
-            "value": "资源侧：用打包分析（如 "
-          },
-          {
-            "type": "code",
-            "value": "rollup-plugin-visualizer"
-          },
-          {
-            "type": "text",
-            "value": "）找最大 chunk，把首屏用不到的库改成 "
-          },
-          {
-            "type": "code",
-            "value": "import()"
-          },
-          {
-            "type": "text",
-            "value": " 懒加载；大图走 WebP/AVIF、合适尺寸与懒加载；全局 CSS 内联关键几行、其余异步。静态资源走 CDN 并开长期缓存。"
-          }
+          { "type": "strong", "value": "资源侧：" },
+          { "type": "text", "value": "打包分析找最大 chunk，首屏用不到的库改 " },
+          { "type": "code", "value": "import()" },
+          { "type": "text", "value": " 懒加载；大图 WebP/AVIF、合适尺寸；关键 CSS 内联，其余异步；静态走 CDN 长期缓存。" }
         ],
         [
-          {
-            "type": "text",
-            "value": "请求侧：首屏需要的 2～3 个接口用 "
-          },
-          {
-            "type": "code",
-            "value": "Promise.all"
-          },
-          {
-            "type": "text",
-            "value": " 并行；能读缓存的用 HTTP 缓存或 SWR；若 TTFB 高再评估 SSR/SSG 是否划算（别把重逻辑全堆在服务端）。"
-          }
+          { "type": "text", "value": "1）" },
+          { "type": "strong", "value": "请求侧" },
+          { "type": "text", "value": "：首屏 2～3 个接口 " },
+          { "type": "code", "value": "Promise.all" },
+          { "type": "text", "value": " 并行；能缓存的用 HTTP 缓存或 SWR。" }
         ],
         [
-          {
-            "type": "text",
-            "value": "体验侧：骨架屏区块高度尽量接近真实内容，减少 "
-          },
-          {
-            "type": "strong",
-            "value": "CLS"
-          },
-          {
-            "type": "text",
-            "value": "；字体用 "
-          },
-          {
-            "type": "code",
-            "value": "font-display: swap"
-          },
-          {
-            "type": "text",
-            "value": " 或子集化。验证：本地看 Performance 里 "
-          },
-          {
-            "type": "strong",
-            "value": "LCP/FCP"
-          },
-          {
-            "type": "text",
-            "value": " 与主线程长任务；线上用 RUM（如 web-vitals）按版本、地区对比，避免只凭感觉。"
-          }
+          { "type": "text", "value": "2）首字节时间（TTFB）高再评估服务端渲染（SSR）/静态站点生成（SSG），别把重逻辑全堆服务端。" }
+        ],
+        [
+          { "type": "text", "value": "3）" },
+          { "type": "strong", "value": "体验侧" },
+          { "type": "text", "value": "：骨架高度贴近真实内容减累积布局偏移（CLS）；字体 " },
+          { "type": "code", "value": "font-display: swap" },
+          { "type": "text", "value": " 或子集化。" }
+        ],
+        [
+          { "type": "text", "value": "4）验证：本地看首次内容绘制（FCP）、最大内容绘制（LCP）与长任务；线上用真实用户监控（RUM）按版本、地区对比。" }
         ]
       ]
     },
@@ -307,88 +132,30 @@
       "id": "q-auth",
       "navLabel": "登录态",
       "question": "前端怎么做登录态？token 放哪？",
+      "questionNote": "HttpOnly Cookie vs 内存 access + refresh；401 单飞刷新队列是加分项。",
       "answer": [
         [
-          {
-            "type": "text",
-            "value": "常见："
-          },
-          {
-            "type": "strong",
-            "value": "HttpOnly + Secure + SameSite 的 Cookie"
-          },
-          {
-            "type": "text",
-            "value": " 由登录接口 "
-          },
-          {
-            "type": "code",
-            "value": "Set-Cookie"
-          },
-          {
-            "type": "text",
-            "value": " 种下，前端 JS 读不到，能挡一大类 XSS 偷会话；后续请求浏览器自动带 Cookie，省掉手写 Authorization。"
-          }
+          { "type": "strong", "value": "推荐：" },
+          { "type": "text", "value": "HttpOnly + Secure + SameSite 的 Cookie 由 " },
+          { "type": "code", "value": "Set-Cookie" },
+          { "type": "text", "value": " 种下，JS 读不到，能挡一大类跨站脚本（XSS）偷会话。" }
         ],
         [
-          {
-            "type": "text",
-            "value": "另一种是 "
-          },
-          {
-            "type": "strong",
-            "value": "access token 放内存"
-          },
-          {
-            "type": "text",
-            "value": "（闭包 / 单例 store），"
-          },
-          {
-            "type": "strong",
-            "value": "refresh token"
-          },
-          {
-            "type": "text",
-            "value": " 仍放 HttpOnly Cookie；access 过期后用 refresh 换新。若必须放 "
-          },
-          {
-            "type": "code",
-            "value": "localStorage"
-          },
-          {
-            "type": "text",
-            "value": "，要说清配合 CSP、输入转义、依赖库漏洞治理，并接受 XSS 时 token 可能一锅端。"
-          }
+          { "type": "text", "value": "1）" },
+          { "type": "strong", "value": "双 token" },
+          { "type": "text", "value": "：access 放内存，refresh 仍 HttpOnly；过期用 refresh 换新。" }
         ],
         [
-          {
-            "type": "text",
-            "value": "请求层：在 axios/fetch 封装里统一处理 "
-          },
-          {
-            "type": "code",
-            "value": "401"
-          },
-          {
-            "type": "text",
-            "value": "——例如只让一个 "
-          },
-          {
-            "type": "code",
-            "value": "refresh"
-          },
-          {
-            "type": "text",
-            "value": " 在飞，其它请求进队列，刷新成功再重放，失败则清状态并跳转登录。路由上 "
-          },
-          {
-            "type": "code",
-            "value": "beforeEach"
-          },
-          {
-            "type": "text",
-            "value": " 拦没有登录态的页面。"
-          }
+          { "type": "text", "value": "2）若必须 " },
+          { "type": "code", "value": "localStorage" },
+          { "type": "text", "value": "，要说清配合内容安全策略（CSP）、转义与依赖治理，并接受 XSS 时可能一锅端。" }
+        ],
+        [
+          { "type": "text", "value": "3）封装层统一处理 " },
+          { "type": "code", "value": "401" },
+          { "type": "text", "value": "：只让一个 refresh 在飞，其它进队列，成功重放、失败跳登录；路由 " },
+          { "type": "code", "value": "beforeEach" },
+          { "type": "text", "value": " 拦未登录页。" }
         ]
       ]
     },
@@ -396,38 +163,18 @@
       "id": "q-route-guard",
       "navLabel": "路由权限",
       "question": "前端路由权限怎么做？只靠前端够吗？",
+      "questionNote": "meta + beforeEach 是 UX；接口鉴权才是安全边界。",
       "answer": [
         [
-          {
-            "type": "text",
-            "value": "路由表给 meta "
-          },
-          {
-            "type": "code",
-            "value": "roles: ['admin']"
-          },
-          {
-            "type": "text",
-            "value": "，"
-          },
-          {
-            "type": "code",
-            "value": "beforeEach"
-          },
-          {
-            "type": "text",
-            "value": " 里读 store 的 token/用户角色，不匹配则重定向登录或 403 页；菜单同样按权限过滤，避免用户点到无权的空路由。"
-          }
+          { "type": "text", "value": "1）路由 meta " },
+          { "type": "code", "value": "roles: ['admin']" },
+          { "type": "text", "value": "，" },
+          { "type": "code", "value": "beforeEach" },
+          { "type": "text", "value": " 读 token/角色，不匹配重定向登录或 403；菜单同步过滤。" }
         ],
         [
-          {
-            "type": "strong",
-            "value": "前端权限只是 UX"
-          },
-          {
-            "type": "text",
-            "value": "，接口必须在服务端鉴权，否则改 URL 或直调 API 仍能越权；敏感按钮可配合后端返回的权限位做细粒度展示。"
-          }
+          { "type": "strong", "value": "边界：" },
+          { "type": "text", "value": "前端权限只是体验，接口必须服务端鉴权，否则改 URL 或直调 API 仍能越权。" }
         ]
       ]
     },
@@ -435,50 +182,23 @@
       "id": "q-token-race",
       "navLabel": "刷新 token 竞态",
       "question": "多个请求同时 401，怎么避免刷新 token 打多次？",
+      "questionNote": "响应拦截器里 refresh 单飞 + 请求队列是标准答法。",
       "answer": [
         [
-          {
-            "type": "text",
-            "value": "在 axios 响应拦截器里设「单飞」锁：第一次 401 触发 "
-          },
-          {
-            "type": "code",
-            "value": "refreshToken()"
-          },
-          {
-            "type": "text",
-            "value": "，其它并发请求进"
-          },
-          {
-            "type": "strong",
-            "value": "队列"
-          },
-          {
-            "type": "text",
-            "value": " 等刷新 Promise resolve 后统一重放原请求；刷新失败则清登录态并 reject 队列。"
-          }
+          { "type": "strong", "value": "单飞锁：" },
+          { "type": "text", "value": "第一次 401 触发 " },
+          { "type": "code", "value": "refreshToken()" },
+          { "type": "text", "value": "，其它并发请求进队列，等 refresh 的 Promise fulfilled（resolve）后统一重放。" }
         ],
         [
-          {
-            "type": "text",
-            "value": "比每个请求各自 refresh 更稳；若用 "
-          },
-          {
-            "type": "code",
-            "value": "fetch"
-          },
-          {
-            "type": "text",
-            "value": " 可封装成共享 "
-          },
-          {
-            "type": "code",
-            "value": "getAccessToken()"
-          },
-          {
-            "type": "text",
-            "value": " 带 memo 的刷新逻辑。"
-          }
+          { "type": "text", "value": "1）刷新失败就清登录态并让排队请求全部失败，比每个请求各自去刷新 token 更稳。" }
+        ],
+        [
+          { "type": "text", "value": "2）" },
+          { "type": "code", "value": "fetch" },
+          { "type": "text", "value": " 可封装带 memo 的 " },
+          { "type": "code", "value": "getAccessToken()" },
+          { "type": "text", "value": " 共享刷新逻辑。" }
         ]
       ]
     },
@@ -486,42 +206,22 @@
       "id": "q-idempotent-submit",
       "navLabel": "防重复提交",
       "question": "表单提交怎么防止用户连点发两次请求？",
+      "questionNote": "前端 disabled + 后端幂等；支付场景别用防抖丢意图。",
       "answer": [
         [
-          {
-            "type": "text",
-            "value": "点击后立即 "
-          },
-          {
-            "type": "code",
-            "value": "disabled"
-          },
-          {
-            "type": "text",
-            "value": " 按钮并转 loading；请求返回或失败再恢复。"
-          },
-          {
-            "type": "strong",
-            "value": "幂等"
-          },
-          {
-            "type": "text",
-            "value": "：服务端用 "
-          },
-          {
-            "type": "code",
-            "value": "Idempotency-Key"
-          },
-          {
-            "type": "text",
-            "value": " 或业务订单号去重，防网络重试双扣款。"
-          }
+          { "type": "text", "value": "1）点击后立刻 " },
+          { "type": "code", "value": "disabled" },
+          { "type": "text", "value": " 并 loading，返回或失败再恢复。" }
         ],
         [
-          {
-            "type": "text",
-            "value": "防抖不适合「必须点一次就提交」的支付场景，会丢用户意图；用锁 + 后端幂等更稳。"
-          }
+          { "type": "text", "value": "2）" },
+          { "type": "strong", "value": "幂等" },
+          { "type": "text", "value": "：服务端用 " },
+          { "type": "code", "value": "Idempotency-Key" },
+          { "type": "text", "value": " 或业务订单号去重，防重试双扣款。" }
+        ],
+        [
+          { "type": "text", "value": "防抖不适合「必须点一次就提交」的支付；锁 + 后端幂等更稳。" }
         ]
       ]
     },
@@ -529,42 +229,18 @@
       "id": "q-upload-big",
       "navLabel": "大文件上传",
       "question": "大文件上传怎么做断点续传思路？",
+      "questionNote": "分片 + 并发窗口 + 秒传 hash；进度与幂等重试要说。",
       "answer": [
         [
-          {
-            "type": "text",
-            "value": "前端用 "
-          },
-          {
-            "type": "code",
-            "value": "File.slice(start, end)"
-          },
-          {
-            "type": "text",
-            "value": " 切成多片，每片带 "
-          },
-          {
-            "type": "code",
-            "value": "index/total/hash"
-          },
-          {
-            "type": "text",
-            "value": " 调上传接口；并发窗口控制（如同时 3 片）避免占满带宽。"
-          }
+          { "type": "text", "value": "1）" },
+          { "type": "code", "value": "File.slice(start, end)" },
+          { "type": "text", "value": " 分片，带 index/total/hash 上传；并发窗口（如 3 片）避免占满带宽。" }
         ],
         [
-          {
-            "type": "text",
-            "value": "服务端合并或直传对象存储分片 API；秒传先做文件 "
-          },
-          {
-            "type": "code",
-            "value": "hash"
-          },
-          {
-            "type": "text",
-            "value": " 查是否已存在。失败重试要幂等，进度条用已确认字节数/总大小。"
-          }
+          { "type": "text", "value": "2）服务端合并或对象存储分片 API；秒传先算文件 hash 查是否已存在。" }
+        ],
+        [
+          { "type": "text", "value": "3）失败重试要幂等；进度条用已确认字节/总大小。" }
         ]
       ]
     },
@@ -572,38 +248,21 @@
       "id": "q-ws-reconnect",
       "navLabel": "WebSocket 重连",
       "question": "WebSocket 断线怎么自动重连？",
+      "questionNote": "指数退避 + 心跳判死连；回到前台可主动 ping。",
       "answer": [
         [
-          {
-            "type": "code",
-            "value": "onclose/onerror"
-          },
-          {
-            "type": "text",
-            "value": " 里若业务仍需要连接，"
-          },
-          {
-            "type": "strong",
-            "value": "指数退避"
-          },
-          {
-            "type": "text",
-            "value": " 重连：1s、2s、4s… 封顶 30s，避免服务端抖动时被客户端打爆。"
-          },
-          {
-            "type": "code",
-            "value": "visibilitychange"
-          },
-          {
-            "type": "text",
-            "value": " 回到前台可主动 ping 一次。"
-          }
+          { "type": "code", "value": "onclose/onerror" },
+          { "type": "text", "value": " 里若仍需要连接，" },
+          { "type": "strong", "value": "指数退避" },
+          { "type": "text", "value": "：1s、2s、4s… 封顶 30s，避免抖动时打爆服务端。" }
         ],
         [
-          {
-            "type": "text",
-            "value": "心跳：定时发 ping frame 或应用层 ping，超时未 pong 认为死连接主动 close 再走重连；服务端要处理重复会话 id。"
-          }
+          { "type": "text", "value": "1）" },
+          { "type": "code", "value": "visibilitychange" },
+          { "type": "text", "value": " 回前台可主动 ping 一次。" }
+        ],
+        [
+          { "type": "text", "value": "2）定时心跳，超时未 pong 主动 close 再重连；服务端处理重复会话 id。" }
         ]
       ]
     },
@@ -611,30 +270,18 @@
       "id": "q-sse-ws",
       "navLabel": "SSE 与 WebSocket",
       "question": "Server-Sent Events 和 WebSocket 怎么选？",
+      "questionNote": "SSE 单向 HTTP 推流；WebSocket 全双工；只读实时常选 SSE。",
       "answer": [
         [
-          {
-            "type": "strong",
-            "value": "SSE"
-          },
-          {
-            "type": "text",
-            "value": "：单向服务器推流，基于 HTTP，自动重连、走标准缓存与鉴权；适合日志流、进度条、通知。"
-          },
-          {
-            "type": "strong",
-            "value": "WebSocket"
-          },
-          {
-            "type": "text",
-            "value": "：全双工低延迟，适合聊天室、协同编辑；要自己处理心跳与鉴权。"
-          }
+          { "type": "strong", "value": "服务端发送事件（SSE）：" },
+          { "type": "text", "value": "单向服务器推流，走 HTTP，自动重连，适合日志、进度、通知。" }
         ],
         [
-          {
-            "type": "text",
-            "value": "HTTP/2 下 SSE 多路复用行为与代理兼容性要测；只读实时用 SSE 往往更省事。"
-          }
+          { "type": "strong", "value": "WebSocket：" },
+          { "type": "text", "value": "全双工低延迟，适合聊天、协同编辑；需自管心跳与鉴权。" }
+        ],
+        [
+          { "type": "text", "value": "HTTP/2 下 SSE 与代理兼容性要实测；只读实时用 SSE 往往更省事。" }
         ]
       ]
     },
@@ -642,96 +289,21 @@
       "id": "q-multi-tab-sync",
       "navLabel": "多标签页同步",
       "question": "同一用户开多个标签，登录态或购物车怎么同步？",
+      "questionNote": "storage 事件或 BroadcastChannel；鉴权仍以服务端为准。",
       "answer": [
         [
-          {
-            "type": "code",
-            "value": "localStorage"
-          },
-          {
-            "type": "text",
-            "value": " + "
-          },
-          {
-            "type": "code",
-            "value": "storage"
-          },
-          {
-            "type": "text",
-            "value": " 事件（"
-          },
-          {
-            "type": "code",
-            "value": "addEventListener('storage', ...)"
-          },
-          {
-            "type": "text",
-            "value": "）：另一标签写入同源 "
-          },
-          {
-            "type": "code",
-            "value": "localStorage"
-          },
-          {
-            "type": "text",
-            "value": " 时本页收到回调，适合简单广播（注意只监 "
-          },
-          {
-            "type": "code",
-            "value": "localStorage"
-          },
-          {
-            "type": "text",
-            "value": "，"
-          },
-          {
-            "type": "code",
-            "value": "sessionStorage"
-          },
-          {
-            "type": "text",
-            "value": " 不同标签不共享）。"
-          }
+          { "type": "code", "value": "localStorage" },
+          { "type": "text", "value": " + " },
+          { "type": "code", "value": "storage" },
+          { "type": "text", "value": " 事件：另一标签写入时本页收到（只监 localStorage，sessionStorage 不跨标签）。" }
         ],
         [
-          {
-            "type": "code",
-            "value": "BroadcastChannel"
-          },
-          {
-            "type": "text",
-            "value": "：同源多标签双向消息通道，比轮询 "
-          },
-          {
-            "type": "code",
-            "value": "localStorage"
-          },
-          {
-            "type": "text",
-            "value": " hack 干净；登出、主题切换、购物车合并都常用。需要 "
-          },
-          {
-            "type": "code",
-            "value": "SharedWorker"
-          },
-          {
-            "type": "text",
-            "value": " 的复杂共享状态较少见。"
-          }
+          { "type": "text", "value": "1）" },
+          { "type": "code", "value": "BroadcastChannel" },
+          { "type": "text", "value": " 同源多标签双向消息，登出、主题、购物车合并更干净。" }
         ],
         [
-          {
-            "type": "text",
-            "value": "服务端为准：收到 "
-          },
-          {
-            "type": "code",
-            "value": "401"
-          },
-          {
-            "type": "text",
-            "value": " 或 WebSocket 踢人时各标签统一清 token；前端广播只是体验优化，鉴权仍以 cookie/token 校验为准。"
-          }
+          { "type": "text", "value": "2）收到 401 或 WebSocket 踢人时各标签统一清 token；前端广播只是体验，鉴权仍以 cookie/token 校验为准。" }
         ]
       ]
     },
@@ -739,54 +311,20 @@
       "id": "q-rich-text-xss",
       "navLabel": "富文本 XSS",
       "question": "富文本编辑器内容展示怎么防 XSS？",
+      "questionNote": "白名单清洗 + 少 v-html；CSP 作纵深防御。",
       "answer": [
         [
-          {
-            "type": "text",
-            "value": "入库前或渲染前"
-          },
-          {
-            "type": "strong",
-            "value": "白名单清洗"
-          },
-          {
-            "type": "text",
-            "value": "（DOMPurify、sanitize-html），去掉 "
-          },
-          {
-            "type": "code",
-            "value": "script/onerror"
-          },
-          {
-            "type": "text",
-            "value": " 等；尽量 Markdown 渲染而不是直接 "
-          },
-          {
-            "type": "code",
-            "value": "v-html"
-          },
-          {
-            "type": "text",
-            "value": " / "
-          },
-          {
-            "type": "code",
-            "value": "dangerouslySetInnerHTML"
-          },
-          {
-            "type": "text",
-            "value": "。"
-          }
+          { "type": "strong", "value": "入库或渲染前" },
+          { "type": "text", "value": "白名单清洗（DOMPurify 等），去掉 " },
+          { "type": "code", "value": "script/onerror" },
+          { "type": "text", "value": "；优先 Markdown 渲染，少直接 " },
+          { "type": "code", "value": "v-html" },
+          { "type": "text", "value": " / " },
+          { "type": "code", "value": "dangerouslySetInnerHTML" },
+          { "type": "text", "value": "。" }
         ],
         [
-          {
-            "type": "code",
-            "value": "CSP"
-          },
-          {
-            "type": "text",
-            "value": " 限制内联脚本；服务端存原文、多端展示统一走同一套 sanitizer。"
-          }
+          { "type": "text", "value": "1）内容安全策略（CSP）限制内联脚本；多端展示走同一套 sanitizer。" }
         ]
       ]
     },
@@ -794,38 +332,21 @@
       "id": "q-telemetry",
       "navLabel": "埋点与采样",
       "question": "前端埋点量太大怎么降本？",
+      "questionNote": "采样 + 合并上报；关键漏斗全量、噪声事件采样。",
       "answer": [
         [
-          {
-            "type": "strong",
-            "value": "采样"
-          },
-          {
-            "type": "text",
-            "value": "：例如只上报 5% 会话或随机 "
-          },
-          {
-            "type": "code",
-            "value": "hash(userId) % 100 < 5"
-          },
-          {
-            "type": "text",
-            "value": "；关键转化漏斗全量、噪声事件采样。"
-          },
-          {
-            "type": "code",
-            "value": "sendBeacon"
-          },
-          {
-            "type": "text",
-            "value": " 合并批量、页面关闭 flush。"
-          }
+          { "type": "strong", "value": "采样：" },
+          { "type": "text", "value": "如只上报 5% 会话，或 " },
+          { "type": "code", "value": "hash(userId) % 100 < 5" },
+          { "type": "text", "value": "；关键转化全量、噪声事件采样。" }
         ],
         [
-          {
-            "type": "text",
-            "value": "聚合：先在客户端打桶（页面停留时长区间），少发原始高频心跳；与数据团队对齐指标定义。"
-          }
+          { "type": "text", "value": "1）" },
+          { "type": "code", "value": "sendBeacon" },
+          { "type": "text", "value": " 合并批量，关页 flush。" }
+        ],
+        [
+          { "type": "text", "value": "2）客户端先打桶聚合，少发高频心跳；与数据团队对齐指标定义。" }
         ]
       ]
     },
@@ -833,66 +354,26 @@
       "id": "q-i18n-rtl",
       "navLabel": "国际化与 RTL",
       "question": "前端国际化除了文案还要考虑啥？",
+      "questionNote": "Intl API、RTL 逻辑属性、语言包懒加载与 SEO 前缀。",
       "answer": [
         [
-          {
-            "type": "text",
-            "value": "日期数字货币格式用 "
-          },
-          {
-            "type": "code",
-            "value": "Intl.DateTimeFormat"
-          },
-          {
-            "type": "text",
-            "value": " / "
-          },
-          {
-            "type": "code",
-            "value": "Intl.NumberFormat"
-          },
-          {
-            "type": "text",
-            "value": "；阿拉伯语等 "
-          },
-          {
-            "type": "code",
-            "value": "dir=\"rtl\""
-          },
-          {
-            "type": "text",
-            "value": " 布局镜像，逻辑属性 "
-          },
-          {
-            "type": "code",
-            "value": "margin-inline-start"
-          },
-          {
-            "type": "text",
-            "value": " 比纯 "
-          },
-          {
-            "type": "code",
-            "value": "left"
-          },
-          {
-            "type": "text",
-            "value": " 更好维护。"
-          }
+          { "type": "text", "value": "1）日期货币用 " },
+          { "type": "code", "value": "Intl.DateTimeFormat" },
+          { "type": "text", "value": " / " },
+          { "type": "code", "value": "Intl.NumberFormat" },
+          { "type": "text", "value": "。" }
         ],
         [
-          {
-            "type": "text",
-            "value": "路由按语言前缀 "
-          },
-          {
-            "type": "code",
-            "value": "/en/"
-          },
-          {
-            "type": "text",
-            "value": " 利于 SEO；懒加载语言包减首包。"
-          }
+          { "type": "text", "value": "2）阿拉伯语等 " },
+          { "type": "code", "value": "dir=\"rtl\"" },
+          { "type": "text", "value": " 布局镜像；用 " },
+          { "type": "code", "value": "margin-inline-start" },
+          { "type": "text", "value": " 等逻辑属性比纯 left/right 好维护。" }
+        ],
+        [
+          { "type": "text", "value": "3）路由 " },
+          { "type": "code", "value": "/en/" },
+          { "type": "text", "value": " 前缀利 SEO；语言包懒加载减首包。" }
         ]
       ]
     },
@@ -900,46 +381,22 @@
       "id": "q-ssr-ssg",
       "navLabel": "SSR / SSG / CSR",
       "question": "SSR、SSG、纯 CSR 各适合啥场景？",
+      "questionNote": "客户端渲染（CSR）/静态站点生成（SSG）/服务端渲染（SSR）各一句场景 + 混合方案。",
       "answer": [
         [
-          {
-            "type": "strong",
-            "value": "CSR"
-          },
-          {
-            "type": "text",
-            "value": "：SPA，交互强、后台系统；首屏与 SEO 弱。"
-          },
-          {
-            "type": "strong",
-            "value": "SSG"
-          },
-          {
-            "type": "text",
-            "value": "：构建时生成 HTML，文档站、营销页、博客最快。"
-          },
-          {
-            "type": "strong",
-            "value": "SSR"
-          },
-          {
-            "type": "text",
-            "value": "：每请求拼 HTML，个性化首屏、强 SEO；服务器成本与缓存策略要考虑。"
-          }
+          { "type": "strong", "value": "客户端渲染（CSR）：" },
+          { "type": "text", "value": "单页应用（SPA），后台交互强；首屏与 SEO 弱。" }
         ],
         [
-          {
-            "type": "text",
-            "value": "混合：ISR（增量静态再生成）、"
-          },
-          {
-            "type": "code",
-            "value": "streaming SSR"
-          },
-          {
-            "type": "text",
-            "value": " 先吐壳再流式填内容，改善 TTFB 感知。"
-          }
+          { "type": "strong", "value": "静态站点生成（SSG）：" },
+          { "type": "text", "value": "构建时出 HTML，文档站、营销页、博客最快。" }
+        ],
+        [
+          { "type": "strong", "value": "服务端渲染（SSR）：" },
+          { "type": "text", "value": "每请求拼 HTML，个性化首屏、强 SEO；要考虑服务器成本与缓存。" }
+        ],
+        [
+          { "type": "text", "value": "混合：增量静态再生成（ISR）、流式 SSR 先吐壳再填内容，改善首字节时间（TTFB）感知。" }
         ]
       ]
     },
@@ -947,46 +404,20 @@
       "id": "q-permission-route",
       "navLabel": "按钮级权限",
       "question": "前端按钮级权限一般怎么实现？",
+      "questionNote": "权限码列表 + v-if/封装组件；强调接口鉴权与数据权限分层。",
       "answer": [
         [
-          {
-            "type": "text",
-            "value": "登录后接口返回权限码列表（如 "
-          },
-          {
-            "type": "code",
-            "value": "['order:export', 'user:edit']"
-          },
-          {
-            "type": "text",
-            "value": "），存 Pinia/Context；路由 meta 控制菜单，组件内 "
-          },
-          {
-            "type": "code",
-            "value": "v-if=\"hasPerm('order:export')\""
-          },
-          {
-            "type": "text",
-            "value": " 或封装 "
-          },
-          {
-            "type": "code",
-            "value": "<AuthButton code=\"order:export\" />"
-          },
-          {
-            "type": "text",
-            "value": "。"
-          }
+          { "type": "text", "value": "1）登录后接口返回权限码如 " },
+          { "type": "code", "value": "['order:export']" },
+          { "type": "text", "value": "，存 Pinia/Context；路由控菜单，组件 " },
+          { "type": "code", "value": "v-if=\"hasPerm('order:export')\"" },
+          { "type": "text", "value": " 或 " },
+          { "type": "code", "value": "<AuthButton />" },
+          { "type": "text", "value": "。" }
         ],
         [
-          {
-            "type": "strong",
-            "value": "前端隐藏不等于安全"
-          },
-          {
-            "type": "text",
-            "value": "，接口必须鉴权；权限变更要刷新或 WS 推送；超级管理员与数据权限（只能看本部门）可分层设计。"
-          }
+          { "type": "strong", "value": "边界：" },
+          { "type": "text", "value": "前端隐藏不等于安全，接口必须鉴权；权限变更要刷新或推送；数据权限（本部门）可另层设计。" }
         ]
       ]
     }
