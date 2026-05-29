@@ -10,7 +10,7 @@ const props = defineProps<{
 
 const route = useRoute()
 
-/** 同章节下仅当地址 hash 与该项一致时为「当前锚点」（避免整章 TOC 都被 router-link-active 点亮） */
+/** 同章节下仅当地址 hash 与该项一致时为「当前锚点」 */
 function isCurrentAnchor(id: string) {
   if (route.name !== 'chapter') return false
   if (String(route.params.slug ?? '') !== props.slug) return false
