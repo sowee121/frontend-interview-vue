@@ -20,7 +20,10 @@ coverage
 .idea
 
 # Cursor IDE
-.cursor/
+.cursor/*
+!.cursor/
+!.cursor/rules/
+!.cursor/rules/**
 *.suo
 *.ntvs*
 *.njsproj
