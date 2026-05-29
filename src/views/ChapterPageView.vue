@@ -6,6 +6,7 @@ import ChapterArticle from '@/components/ChapterArticle.vue'
 import ChapterLayout from '@/components/ChapterLayout.vue'
 import ChapterSidebar from '@/components/ChapterSidebar.vue'
 import ChapterTocMobile from '@/components/ChapterTocMobile.vue'
+import ScrollToTopFab from '@/components/ScrollToTopFab.vue'
 import SiteFooter from '@/components/SiteFooter.vue'
 import SiteHeader from '@/components/SiteHeader.vue'
 import { useChapterFromRoute } from '@/composables/useChapterFromRoute'
@@ -39,6 +40,7 @@ watch(
     </ChapterLayout>
 
     <ChapterTocMobile :slug="chapter.slug" :toc="chapter.toc" />
+    <ScrollToTopFab />
 
     <SiteFooter />
   </template>

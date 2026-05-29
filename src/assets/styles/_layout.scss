@@ -247,7 +247,105 @@
   }
 }
 
-// —— 小屏：悬浮目录（挂于章节页根级，右下角 FAB + 底部面板） ——
+// —— 章节页悬浮按钮（左下目录 FAB / 右下回到顶部） ——
+@mixin page-fab {
+  position: fixed;
+  z-index: $z-toc-fab;
+  bottom: $pad-page;
+  width: $toc-fab-size;
+  height: $toc-fab-size;
+  padding: 0;
+  border: 1px solid $border;
+  border-radius: 50%;
+  background: $paper;
+  color: $text;
+  box-shadow: $shadow-fab;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    background $transition-base,
+    border-color $transition-base,
+    box-shadow $transition-base;
+
+  &:hover {
+    border-color: $accent-border-strong;
+    box-shadow: $shadow-fab-hover;
+  }
+
+  &:focus-visible {
+    outline: $focus-ring-width solid $accent;
+    outline-offset: $focus-ring-offset;
+  }
+}
+
+.scroll-top-fab {
+  @include page-fab;
+  right: $pad-page;
+
+  $arrow-stem-bottom: 0.125rem;
+  $arrow-stem-height: 1rem;
+  $arrow-icon-height: 1.625rem;
+  $arrow-stem-top: $arrow-icon-height - $arrow-stem-bottom - $arrow-stem-height;
+
+  &__icon {
+    position: relative;
+    display: block;
+    width: 1.25rem;
+    height: $arrow-icon-height;
+    transform: translateY(-0.125rem);
+  }
+
+  &__bar {
+    position: absolute;
+    border-radius: 1px;
+    background: currentColor;
+  }
+
+  &__bar--stem {
+    left: 50%;
+    bottom: $arrow-stem-bottom;
+    width: 2px;
+    height: $arrow-stem-height;
+    transform: translateX(-50%);
+  }
+
+  &__bar--left,
+  &__bar--right {
+    top: $arrow-stem-top;
+    width: 0.625rem;
+    height: 2px;
+    margin-top: -1px;
+  }
+
+  &__bar--left {
+    left: 52%;
+    transform-origin: right center;
+    transform: translateX(-100%) rotate(-45deg);
+  }
+
+  &__bar--right {
+    left: 48%;
+    transform-origin: left center;
+    transform: rotate(45deg);
+  }
+}
+
+.scroll-top-fab-enter-active,
+.scroll-top-fab-leave-active {
+  transition:
+    opacity $transition-base,
+    transform $transition-base;
+}
+
+.scroll-top-fab-enter-from,
+.scroll-top-fab-leave-to {
+  opacity: 0;
+  transform: translateY(0.35rem);
+}
+
+// —— 小屏：悬浮目录（挂于章节页根级，左下角 FAB + 底部面板） ——
 .toc-mobile {
   display: none;
 
@@ -256,36 +354,8 @@
   }
 
   .toc-fab {
-    position: fixed;
-    z-index: $z-toc-fab;
-    right: $pad-page;
-    bottom: $pad-page;
-    width: $toc-fab-size;
-    height: $toc-fab-size;
-    padding: 0;
-    border: 1px solid $border;
-    border-radius: 50%;
-    background: $paper;
-    color: $text;
-    box-shadow: $shadow-fab;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition:
-      background $transition-base,
-      border-color $transition-base,
-      box-shadow $transition-base;
-
-    &:hover {
-      border-color: $accent-border-strong;
-      box-shadow: $shadow-fab-hover;
-    }
-
-    &:focus-visible {
-      outline: $focus-ring-width solid $accent;
-      outline-offset: $focus-ring-offset;
-    }
+    @include page-fab;
+    left: $pad-page;
 
     &__icon {
       position: relative;
