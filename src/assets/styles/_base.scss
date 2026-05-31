@@ -66,6 +66,7 @@ label {
 
 #app {
   min-height: 100vh;
+  min-width: $layout-min-width;
 }
 
 // —— 以下 :where 重置特异性为 0，BEM 组件规则可覆盖 ——

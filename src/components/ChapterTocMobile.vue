@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref, watch } from 'vue'
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import { RouterLink, useRoute } from 'vue-router'
 
 import type { TocItem } from '@/data/chapters'
@@ -7,16 +7,17 @@ import type { TocItem } from '@/data/chapters'
 const props = defineProps<{
   slug: string
   toc: TocItem[]
+  highlightId?: string | null
 }>()
 
 const route = useRoute()
 const isOpen = ref(false)
 
-function isCurrentAnchor(id: string) {
-  if (route.name !== 'chapter') return false
-  if (String(route.params.slug ?? '') !== props.slug) return false
-  return route.hash === `#${id}`
-}
+const activeId = computed(() => {
+  if (route.name !== 'chapter') return null
+  if (String(route.params.slug ?? '') !== props.slug) return null
+  return props.highlightId ?? null
+})
 
 function closeSheet() {
   isOpen.value = false
@@ -97,8 +98,8 @@ onUnmounted(() => {
               <a
                 :href="href"
                 class="toc-link"
-                :class="{ 'toc-link--current': isCurrentAnchor(item.id) }"
-                :aria-current="isCurrentAnchor(item.id) ? 'location' : undefined"
+                :class="{ 'toc-link--current': activeId === item.id }"
+                :aria-current="activeId === item.id ? 'location' : undefined"
                 @click="onTocNavigate(navigate)"
               >
                 {{ item.label }}

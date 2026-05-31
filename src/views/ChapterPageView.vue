@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { watch } from 'vue'
+import { computed, watch } from 'vue'
 
 import ArticleShell from '@/components/ArticleShell.vue'
 import ChapterArticle from '@/components/ChapterArticle.vue'
@@ -10,10 +10,14 @@ import ScrollToTopFab from '@/components/ScrollToTopFab.vue'
 import SiteFooter from '@/components/SiteFooter.vue'
 import SiteHeader from '@/components/SiteHeader.vue'
 import { useChapterFromRoute } from '@/composables/useChapterFromRoute'
+import { useChapterTocScroll } from '@/composables/useChapterTocScroll'
 import { useAppStore } from '@/stores/app'
 
 const { chapter, payload } = useChapterFromRoute()
 const app = useAppStore()
+
+const tocSectionIds = computed(() => chapter.value?.toc.map((i) => i.id) ?? [])
+const { highlightId } = useChapterTocScroll(() => tocSectionIds.value)
 
 watch(
   () => chapter.value?.slug,
@@ -30,16 +34,24 @@ watch(
 
     <ChapterLayout>
       <template #sidebar>
-        <ChapterSidebar :slug="chapter.slug" :toc="chapter.toc" />
+        <ChapterSidebar
+          :slug="chapter.slug"
+          :toc="chapter.toc"
+          :highlight-id="highlightId"
+        />
       </template>
 
       <RouterLink class="layout__back-link" :to="{ name: 'home' }">← 返回目录</RouterLink>
       <ArticleShell>
-        <ChapterArticle :payload="payload" />
+        <ChapterArticle :key="chapter.slug" :payload="payload" />
       </ArticleShell>
     </ChapterLayout>
 
-    <ChapterTocMobile :slug="chapter.slug" :toc="chapter.toc" />
+    <ChapterTocMobile
+      :slug="chapter.slug"
+      :toc="chapter.toc"
+      :highlight-id="highlightId"
+    />
     <ScrollToTopFab />
 
     <SiteFooter />

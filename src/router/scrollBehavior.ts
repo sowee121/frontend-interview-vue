@@ -1,6 +1,8 @@
 import { nextTick } from 'vue'
 import type { RouterScrollBehavior } from 'vue-router'
 
+import { readAnchorScrollMarginPx } from '@/utils/anchorOffset'
+
 /** 等布局稳定后再滚动，避免切换章节或首屏渲染时找不到节点 / 位置偏上 */
 function afterLayoutPaint(): Promise<void> {
   return new Promise((resolve) => {
@@ -19,18 +21,7 @@ function elementByHash(hash: string): HTMLElement | null {
 
 /** 与 CSS --anchor-scroll-margin 一致：吸顶头高度 + 少量空隙（像素） */
 function anchorScrollOffsetPx(): number {
-  const raw = getComputedStyle(document.documentElement)
-    .getPropertyValue('--anchor-scroll-margin')
-    .trim()
-  if (raw.endsWith('px')) {
-    const n = Number.parseFloat(raw)
-    if (!Number.isNaN(n)) return n
-  }
-  const header = document.querySelector('.site-header')
-  if (header instanceof HTMLElement) {
-    return Math.ceil(header.getBoundingClientRect().height) + 12
-  }
-  return 96
+  return readAnchorScrollMarginPx()
 }
 
 export const scrollBehavior: RouterScrollBehavior = async (to, _from, savedPosition) => {
@@ -50,5 +41,5 @@ export const scrollBehavior: RouterScrollBehavior = async (to, _from, savedPosit
       behavior: 'smooth',
     }
   }
-  return { top: 0 }
+  return { top: 0, left: 0, behavior: 'instant' }
 }

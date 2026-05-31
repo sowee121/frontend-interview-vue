@@ -20,7 +20,7 @@
     flex-wrap: wrap;
     gap: $spacing-sm;
 
-    @media (max-width: $bp-header-tabs-stack) {
+    @media (max-width: $bp-mobile) {
       align-items: stretch;
 
       .site-header__right {
@@ -64,7 +64,7 @@
   max-width: 100%;
   min-width: 0;
 
-  @media (max-width: $bp-header-tabs-stack) {
+  @media (max-width: $bp-mobile) {
     width: 100%;
   }
   padding: 0.35rem;
@@ -81,7 +81,7 @@
     top: 0;
     bottom: 0;
     width: 1.5rem;
-    z-index: 0;
+    z-index: $z-fade;
     pointer-events: none;
     opacity: 0;
     transition: opacity $transition-base;
@@ -109,7 +109,7 @@
 
   &__track {
     position: relative;
-    z-index: 1;
+    z-index: $z-header-tabs;
     display: flex;
     flex-wrap: nowrap;
     align-items: center;
@@ -169,7 +169,7 @@
   gap: $pad-page;
   align-items: start;
 
-  @media (max-width: $bp-stack-sidebar) {
+  @media (max-width: $bp-mobile) {
     grid-template-columns: 1fr;
     gap: 0;
   }
@@ -237,7 +237,6 @@
 
     &.toc-link--current {
       color: $accent-hover;
-      font-weight: 600;
       border-left-color: $accent;
       background: $accent-soft;
     }
@@ -279,6 +278,7 @@
 
 .scroll-top-fab {
   @include page-fab;
+  z-index: $z-scroll-top-fab;
   right: $pad-page;
 
   $arrow-stem-bottom: 0.125rem;
@@ -346,7 +346,7 @@
 .toc-mobile {
   display: none;
 
-  @media (max-width: $bp-stack-sidebar) {
+  @media (max-width: $bp-mobile) {
     display: block;
   }
 
@@ -408,7 +408,7 @@
   }
 }
 
-@media (max-width: $bp-stack-sidebar) {
+@media (max-width: $bp-mobile) {
   .sidebar--desktop {
     display: none;
   }
@@ -480,7 +480,6 @@
 
     &.toc-link--current {
       color: $accent-hover;
-      font-weight: 600;
       border-left-color: $accent;
       background: $accent-soft;
     }
@@ -544,7 +543,7 @@ main.layout-home__content {
     font-size: 1.68rem;
     font-weight: 600;
     margin: 0 0 0.5rem;
-    line-height: 1.35;
+    line-height: 1.2;
     color: $qa-heading;
   }
 

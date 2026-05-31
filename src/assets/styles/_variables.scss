@@ -72,10 +72,9 @@ $pad-article: 1.75rem;
 $pad-article-tight: 1.15rem;
 $pad-card: 1.2rem 1.35rem;
 
-// —— 断点 ——
-$bp-stack-sidebar: 900px;
-$bp-header-tabs-stack: 720px;
-$bp-article-tight: 600px;
+// —— 断点（≤900px 移动布局：侧栏/FAB、顶栏 tabs、正文紧凑） ——
+$bp-mobile: 900px;
+$layout-min-width: 375px;
 
 // —— 组件 ——
 $qa-heading: #213547;
@@ -84,10 +83,14 @@ $code-inline-color: $vue-green-dark;
 $code-inline-bg: $accent-soft;
 $chapter-card-hover-border: rgba(66, 184, 131, 0.35);
 $chapter-card-hover-shadow: 0 4px 14px rgba(66, 184, 131, 0.1);
-$sticky-header-z: 20;
-$z-toc-backdrop: 33;
-$z-toc-sheet: 34;
-$z-toc-fab: 40;
+// —— 层级：1 → 5 → 10 → 20 → 30 → 40 …（20 起步长 10） ——
+$z-fade: 1;
+$z-header-tabs: 5;
+$sticky-header-z: 10;
+$z-scroll-top-fab: 20;
+$z-toc-backdrop: 30;
+$z-toc-sheet: 40;
+$z-toc-fab: 50;
 $sticky-sidebar-top: 5rem;
 $sidebar-sticky-gap: 1.1rem; // 吸顶时顶栏与目录标题间距
 // 锚点滚动预留：吸顶 SiteHeader + 章节条换行时仍不遮挡标题

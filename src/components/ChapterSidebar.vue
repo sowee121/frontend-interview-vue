@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import { RouterLink, useRoute } from 'vue-router'
 
 import type { TocItem } from '@/data/chapters'
@@ -6,16 +7,16 @@ import type { TocItem } from '@/data/chapters'
 const props = defineProps<{
   slug: string
   toc: TocItem[]
+  highlightId?: string | null
 }>()
 
 const route = useRoute()
 
-/** 同章节下仅当地址 hash 与该项一致时为「当前锚点」 */
-function isCurrentAnchor(id: string) {
-  if (route.name !== 'chapter') return false
-  if (String(route.params.slug ?? '') !== props.slug) return false
-  return route.hash === `#${id}`
-}
+const activeId = computed(() => {
+  if (route.name !== 'chapter') return null
+  if (String(route.params.slug ?? '') !== props.slug) return null
+  return props.highlightId ?? null
+})
 </script>
 
 <template>
@@ -35,8 +36,8 @@ function isCurrentAnchor(id: string) {
           <a
             :href="href"
             class="toc-link"
-            :class="{ 'toc-link--current': isCurrentAnchor(item.id) }"
-            :aria-current="isCurrentAnchor(item.id) ? 'location' : undefined"
+            :class="{ 'toc-link--current': activeId === item.id }"
+            :aria-current="activeId === item.id ? 'location' : undefined"
             @click="navigate"
           >
             {{ item.label }}
