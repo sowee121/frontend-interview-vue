@@ -220,7 +220,7 @@ const CHAPTERS = {
           [
             { type: 'text', value: '滥用 preload 会抢带宽；' },
             { type: 'code', value: 'as' },
-            { type: 'text', value: ' 类型必须与真实请求一致。与 network 章的 DNS/TLS 优化可一起答。' },
+            { type: 'text', value: ' 类型必须与真实请求一致。与网络安全章的 DNS/TLS 优化可一起答。' },
           ],
         ],
       },

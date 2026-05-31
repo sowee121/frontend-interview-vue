@@ -34,7 +34,6 @@
   &__title {
     font-size: 1.0625rem;
     font-weight: 600;
-    letter-spacing: -0.01em;
     color: $text;
 
     a {
@@ -167,7 +166,7 @@
   padding: $pad-page;
   display: grid;
   grid-template-columns: $sidebar-col 1fr;
-  gap: $gap-layout;
+  gap: $pad-page;
   align-items: start;
 
   @media (max-width: $bp-stack-sidebar) {
@@ -177,7 +176,7 @@
 
   &__back-link {
     display: inline-block;
-    margin-bottom: $pad-page;
+    margin-bottom: 0.75rem;
     font-size: $font-size-sm;
     font-weight: 500;
     color: $muted;
@@ -196,15 +195,13 @@
   );
   font-size: $font-size-sm;
   line-height: $line-height-tight;
-  padding-right: 0.5rem;
+  padding-right: 0.25rem;
 
   &__title {
-    font-size: $font-size-xs;
-    font-weight: 700;
+    font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.08em;
     color: $muted;
-    margin: 0 0 0.75rem;
+    margin: 0 0 0.5rem;
   }
 
   ul {
@@ -221,7 +218,7 @@
   a.toc-link {
     color: $muted;
     display: block;
-    padding: 0.38rem 0.65rem 0.38rem 0.85rem;
+    padding: 0.3rem 0.5rem 0.3rem 0.75rem;
     margin-left: -1px;
     border-left: 2px solid transparent;
     border-radius: $radius-toc-link;
@@ -431,7 +428,8 @@
   right: 0;
   bottom: 0;
   max-height: 100vh;
-  padding: 1rem 1.25rem 1.25rem;
+  padding: 1rem 1.1rem 1.1rem;
+  padding-bottom: calc(1.1rem + #{$toc-fab-size} + 0.75rem + env(safe-area-inset-bottom, 0px));
   border-radius: $radius-sheet $radius-sheet 0 0;
   background: $paper;
   box-shadow: $shadow-sheet;
@@ -439,22 +437,62 @@
   -webkit-overflow-scrolling: touch;
 
   &__title {
-    margin: 0 0 0.75rem;
-    font-size: $font-size-xs;
-    font-weight: 700;
+    margin: 0 0 0.5rem;
+    font-size: $font-size-sm;
+    font-weight: 600;
+    line-height: $line-height-tight;
     text-transform: uppercase;
-    letter-spacing: 0.08em;
     color: $muted;
   }
 
   .toc-list--sheet {
+    list-style: none;
+    margin: 0;
+    padding: 0;
     border-left: 1px solid $border;
+    font-size: $font-size-sm;
+    line-height: $line-height-tight;
+
+    li {
+      margin: 0;
+    }
+  }
+
+  a.toc-link {
+    color: $muted;
+    display: block;
+    padding: 0.3rem 0.5rem 0.3rem 0.75rem;
+    margin-left: -1px;
+    border-left: 2px solid transparent;
+    border-radius: $radius-toc-link;
+    text-decoration: none;
+    transition:
+      color $transition-fast,
+      background $transition-fast,
+      border-color $transition-fast;
+
+    &:hover,
+    &:focus-visible {
+      color: $text;
+      background: $accent-hover-bg;
+      text-decoration: none;
+    }
+
+    &.toc-link--current {
+      color: $accent-hover;
+      font-weight: 600;
+      border-left-color: $accent;
+      background: $accent-soft;
+    }
   }
 }
 
-.toc-backdrop-enter-active,
+.toc-backdrop-enter-active {
+  transition: opacity $duration-sheet-backdrop $ease-sheet-enter;
+}
+
 .toc-backdrop-leave-active {
-  transition: opacity $transition-slow;
+  transition: opacity $duration-sheet-leave $ease-sheet-leave;
 }
 
 .toc-backdrop-enter-from,
@@ -462,17 +500,26 @@
   opacity: 0;
 }
 
-.toc-sheet-enter-active,
+.toc-sheet-enter-active {
+  transition: transform $duration-sheet-enter $ease-sheet-enter;
+}
+
 .toc-sheet-leave-active {
-  transition:
-    transform $transition-sheet,
-    opacity $transition-slow;
+  transition: transform $duration-sheet-leave $ease-sheet-leave;
 }
 
 .toc-sheet-enter-from,
 .toc-sheet-leave-to {
-  transform: translateY(100%);
-  opacity: 0.92;
+  transform: translate3d(0, 100%, 0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .toc-backdrop-enter-active,
+  .toc-backdrop-leave-active,
+  .toc-sheet-enter-active,
+  .toc-sheet-leave-active {
+    transition-duration: 0.01ms !important;
+  }
 }
 
 main.layout__content,
@@ -498,7 +545,6 @@ main.layout-home__content {
     font-weight: 600;
     margin: 0 0 0.5rem;
     line-height: 1.35;
-    letter-spacing: -0.02em;
     color: $qa-heading;
   }
 

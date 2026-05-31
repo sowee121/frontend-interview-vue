@@ -1,7 +1,7 @@
 {
   "slug": "network",
-  "title": "网络/安全",
-  "documentTitle": "网络/安全",
+  "title": "网络安全",
+  "documentTitle": "网络安全",
   "description": "覆盖建连、HTTP 演进、缓存与跨域，以及鉴权与 XSS/CSRF/CSP 等前端必知的安全机制。",
   "lead": "聚焦接口交互、鉴权选型与常见攻击面的防护思路。",
   "items": [

@@ -1,7 +1,7 @@
 {
   "slug": "coding",
   "title": "编程题",
-  "documentTitle": "编程题 · 手写常考",
+  "documentTitle": "编程题",
   "description": "手写常考编程题：Promise 与异步控制、函数工具、数组与树、排序及原生 API 模拟。",
   "lead": "按主题练手写实现，源码带通俗注释，方便对照口述。",
   "items": [

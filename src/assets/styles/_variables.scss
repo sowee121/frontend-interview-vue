@@ -50,22 +50,26 @@ $transition-fast: 0.15s ease;
 $transition-base: 0.2s ease;
 $transition-card: 0.18s ease;
 $transition-slow: 0.25s ease;
-$transition-sheet: 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+$duration-sheet-enter: 0.38s;
+$duration-sheet-leave: 0.3s;
+$duration-sheet-backdrop: 0.32s;
+$ease-sheet-enter: cubic-bezier(0.16, 1, 0.3, 1);
+$ease-sheet-leave: cubic-bezier(0.4, 0, 0.2, 1);
+$transition-sheet: $duration-sheet-enter $ease-sheet-enter;
 
 // —— 焦点环 ——
 $focus-ring-width: 2px;
 $focus-ring-offset: 2px;
 
 // —— 布局 ——
-$layout-max: 1180px;
-$layout-home-inner-max: 920px;
-$sidebar-col: 240px;
-$gap-layout: 2.5rem;
+$layout-max: 1280px;
+$layout-home-inner-max: 980px;
+$sidebar-col: 200px;
 $spacing-sm: 0.75rem;
 $pad-header-y: 0.7rem;
-$pad-page: 1.35rem;
-$pad-article: 2.25rem 2.5rem;
-$pad-article-tight: 1.35rem 1.15rem;
+$pad-page: 1.1rem;
+$pad-article: 1.75rem;
+$pad-article-tight: 1.15rem;
 $pad-card: 1.2rem 1.35rem;
 
 // —— 断点 ——
@@ -85,7 +89,7 @@ $z-toc-backdrop: 33;
 $z-toc-sheet: 34;
 $z-toc-fab: 40;
 $sticky-sidebar-top: 5rem;
-$sidebar-sticky-gap: 0.75rem; // 与 $spacing-sm 一致，吸顶时顶栏与目录标题间距
+$sidebar-sticky-gap: 1.1rem; // 吸顶时顶栏与目录标题间距
 // 锚点滚动预留：吸顶 SiteHeader + 章节条换行时仍不遮挡标题
 $qa-scroll-margin: 6.75rem;
 $badge-radius: 6px;

@@ -992,7 +992,7 @@
           },
           {
             "type": "text",
-            "value": "；XSS/CSRF/CSP 机制见网络/安全章。"
+            "value": "；XSS/CSRF/CSP 机制见网络安全章。"
           }
         ]
       ]

@@ -17,21 +17,23 @@
     font-weight: 600;
     margin: 0 0 0.5rem;
     line-height: 1.35;
-    letter-spacing: -0.02em;
     color: $qa-heading;
   }
 
   &__lead {
     color: $muted;
     font-size: 0.9375rem;
-    margin: 0 0 1.75rem;
-    padding-bottom: 1.1rem;
+    margin: 0 0 1.25rem;
+    padding-bottom: 0.85rem;
     border-bottom: 1px solid $border;
   }
 }
 
 .qa-block {
-  margin-bottom: 2rem;
+  --qa-q-badge-size: 1.35rem;
+  --qa-q-gap: 0.5rem;
+  --qa-text-indent: calc(var(--qa-q-badge-size) + var(--qa-q-gap));
+  margin-bottom: 1.5rem;
   scroll-margin-top: var(--anchor-scroll-margin, #{$qa-scroll-margin});
 
   &:last-child {
@@ -49,18 +51,18 @@
     margin: 0 0 0.35rem;
     color: $qa-heading;
     display: flex;
-    gap: 0.5rem;
+    gap: var(--qa-q-gap);
     align-items: flex-start;
 
     &::before {
       content: 'Q';
       flex-shrink: 0;
-      width: 1.35rem;
-      height: 1.35rem;
-      line-height: 1.35rem;
+      width: var(--qa-q-badge-size);
+      height: var(--qa-q-badge-size);
+      line-height: var(--qa-q-badge-size);
       text-align: center;
       font-size: 0.65rem;
-      font-weight: 700;
+      font-weight: 600;
       background: $accent-soft;
       color: $accent;
       border-radius: $badge-radius;
@@ -74,7 +76,7 @@
   /* 题面说明：与标题错开一行，小号、浅色，与正文 lead 区分度略低 */
   &__q-note {
     margin: 0;
-    padding-left: 2.1rem; /* 与 Q 角标 + gap 对齐正文起点 */
+    padding-left: var(--qa-text-indent);
     font-size: $font-size-xs;
     line-height: $line-height-tight;
     font-weight: 400;
@@ -83,7 +85,7 @@
 
   &__answer {
     margin: 0;
-    padding-left: 1.6rem;
+    padding-left: var(--qa-text-indent);
     font-size: 0.875rem;
     color: $text;
     line-height: 1.6;
@@ -97,9 +99,8 @@
 
     p {
       margin: 0 0 0.5rem;
-      text-wrap: pretty;
-      word-break: normal;
-      overflow-wrap: normal;
+      word-break: break-all;
+      overflow-wrap: anywhere;
 
       &:last-child {
         margin-bottom: 0;
@@ -126,14 +127,13 @@
   }
 
   @media (max-width: $bp-article-tight) {
+    --qa-q-badge-size: 1.25rem;
+
     &__q {
       font-size: 0.9375rem;
       line-height: 1.35rem;
 
       &::before {
-        width: 1.25rem;
-        height: 1.25rem;
-        line-height: 1.25rem;
         font-size: 0.62rem;
       }
     }
