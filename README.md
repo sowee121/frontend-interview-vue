@@ -7,7 +7,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
 [![Live Demo](https://img.shields.io/badge/demo-GitHub%20Pages-2ea44f)](https://sowee121.github.io/frontend-interview-vue/)
 
-**前端面试手册** — 面向前端工程师的面试题库静态站点：16 个专题章节、结构化 JSON 答案、章内目录与代码高亮，支持桌面与手机浏览器复习。内容构建时打包进前端，**无需后端**。
+**前端面试手册** — 面向前端工程师的面试题库静态站点：18 个专题章节、结构化 JSON 答案、章内目录与代码高亮，支持桌面与手机浏览器复习。内容构建时打包进前端，**无需后端**。
 
 **在线访问**：https://sowee121.github.io/frontend-interview-vue/
 
@@ -27,7 +27,7 @@
 
 | 特性 | 说明 |
 |------|------|
-| 16 个专题 | HTML/CSS、JavaScript、ES6、TypeScript、Vue 2、Vue 3、React、Node、小程序、浏览器、网络安全、工程化、性能、场景题、Agent、编程手写题 |
+| 18 个专题 | HTML/CSS、JavaScript、ES6、TypeScript、Vue 2、Vue 3、React、Node、小程序、Electron、浏览器、网络安全、工程化、性能、场景题、AI、Agent、编程手写题 |
 | 章内目录 | 桌面端侧栏锚点 + sticky，点击跳转 `#question-id` |
 | 顶栏章节导航 | 顶栏可横向滑动的章节 tabs，跨章切换 |
 | 移动端 | ≤900px 隐藏侧栏；**左下** FAB 唤起底部章内目录，**右下** FAB 回到顶部 |
@@ -55,7 +55,7 @@ pnpm install
 pnpm dev
 ```
 
-本地开发默认根路径 [http://localhost:5173](http://localhost:5173)（与 GitHub Pages 子路径无关，便于日常改题）。
+本地开发默认根路径 [http://localhost:5174](http://localhost:5174)（与 GitHub Pages 子路径无关，便于日常改题）。
 
 若要本地验证**与线上一致**的生产构建：
 
@@ -97,7 +97,7 @@ frontend-interview-vue/
 │   ├── config/site.ts           # 站点名、页脚链接（SITE_NAME 等）
 │   ├── data/qa/json/            # 各章题目与答案（主要维护入口）
 │   ├── data/qa/registry.ts      # 章节 JSON 静态注册
-│   ├── data/constants.ts        # CHAPTER_ORDER（16 章顺序）
+│   ├── data/constants.ts        # CHAPTER_ORDER（18 章顺序）
 │   ├── components/              # 答案渲染、侧栏、FAB、页脚等
 │   ├── composables/             # 路由章节数据等
 │   ├── views/                   # 首页、章节页

@@ -94,6 +94,22 @@
             "type": "text",
             "value": "工程上：表单字段、开关等多用 ref；复杂对象状态可 reactive，传给子组件时尽量传对象引用而非解构后的裸值。"
           }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "示例："
+          },
+          {
+            "type": "text",
+            "value": "ref 要 .value；解构 reactive 用 toRefs。"
+          }
+        ],
+        [
+          {
+            "type": "code",
+            "value": "const count = ref(0)\ncount.value++\n\nconst state = reactive({ n: 1 })\n// 错：解构丢代理\n// let { n } = state\nconst { n } = toRefs(state)\nn.value++"
+          }
         ]
       ]
     },
@@ -261,6 +277,22 @@
           {
             "type": "text",
             "value": " 监听具体字段更稳。"
+          }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "示例："
+          },
+          {
+            "type": "text",
+            "value": "选项式钩子 → 组合式 API。"
+          }
+        ],
+        [
+          {
+            "type": "code",
+            "value": "import { onMounted, onBeforeUnmount } from 'vue'\n\nonMounted(() => { /* ≈ mounted */ })\nonBeforeUnmount(() => { /* ≈ beforeUnmount */ })\n// setup 本身早于 beforeCreate/created"
           }
         ]
       ]
@@ -452,6 +484,22 @@
             "type": "text",
             "value": "面试常追问：渲染 DOM 在 body，但组件仍属于原父组件子树，事件冒泡、状态、provide/inject 关系不变。"
           }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "示例："
+          },
+          {
+            "type": "text",
+            "value": "弹层挂到 body。"
+          }
+        ],
+        [
+          {
+            "type": "code",
+            "value": "<Teleport to=\"body\">\n  <div v-if=\"open\" class=\"modal\">...</div>\n</Teleport>"
+          }
         ]
       ]
     },
@@ -573,6 +621,32 @@
           {
             "type": "text",
             "value": "迁移项目常保留选项式写法；新功能优先组合式 + script setup，不必一刀切重写。"
+          }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "历史包袱（Vue 2）："
+          },
+          {
+            "type": "text",
+            "value": "过滤器 "
+          },
+          {
+            "type": "code",
+            "value": "filters"
+          },
+          {
+            "type": "text",
+            "value": " 已移除，改用方法/计算属性；"
+          },
+          {
+            "type": "code",
+            "value": "mixin"
+          },
+          {
+            "type": "text",
+            "value": " 易造成命名冲突与来源不清，复杂复用优先组合式函数。"
           }
         ]
       ]

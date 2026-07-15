@@ -206,6 +206,22 @@
             "type": "text",
             "value": "；面试提一句「兼容或改老代码时见过」即可。"
           }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "示例："
+          },
+          {
+            "type": "text",
+            "value": "水平垂直居中。"
+          }
+        ],
+        [
+          {
+            "type": "code",
+            "value": ".box {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n}"
+          }
         ]
       ]
     },
@@ -347,6 +363,22 @@
           {
             "type": "text",
             "value": " 会导致失效。"
+          }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "示例："
+          },
+          {
+            "type": "text",
+            "value": "父相子绝。"
+          }
+        ],
+        [
+          {
+            "type": "code",
+            "value": ".parent { position: relative; }\n.child {\n  position: absolute;\n  right: 0;\n  top: 0;\n}"
           }
         ]
       ]
@@ -606,76 +638,6 @@
       ]
     },
     {
-      "id": "q-layer-order",
-      "navLabel": "@layer",
-      "question": "CSS @layer 解决什么问题？",
-      "questionNote": "CSS 层（@layer）用来声明样式层的优先级顺序，整理第三方与业务样式冲突。",
-      "answer": [
-        [
-          {
-            "type": "strong",
-            "value": "一句话："
-          },
-          {
-            "type": "text",
-            "value": "把样式分进"
-          },
-          {
-            "type": "strong",
-            "value": "层（layer）"
-          },
-          {
-            "type": "text",
-            "value": "并声明层顺序，用层优先级代替堆 "
-          },
-          {
-            "type": "code",
-            "value": "!important"
-          },
-          {
-            "type": "text",
-            "value": "。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "例如 "
-          },
-          {
-            "type": "code",
-            "value": "@layer reset, theme, utilities"
-          },
-          {
-            "type": "text",
-            "value": "；"
-          },
-          {
-            "type": "strong",
-            "value": "同层内仍按选择器权重比"
-          },
-          {
-            "type": "text",
-            "value": "，但"
-          },
-          {
-            "type": "strong",
-            "value": "整层优先级低于未分层样式"
-          },
-          {
-            "type": "text",
-            "value": " 的设计可整理第三方冲突。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "Tailwind v4、现代设计系统里出现率高；老浏览器不支持时要有降级方案。"
-          }
-        ]
-      ]
-    },
-    {
       "id": "q-dark-mode",
       "navLabel": "深色模式",
       "question": "CSS 怎么做跟随系统的深色模式？",
@@ -722,45 +684,21 @@
             "type": "text",
             "value": " 让原生表单滚动条与系统 UI 协调；图片/图标注意对比度，参考 Web 内容无障碍指南（WCAG）。"
           }
-        ]
-      ]
-    },
-    {
-      "id": "q-reduced-motion",
-      "navLabel": "减少动效",
-      "question": "prefers-reduced-motion 用来干啥？",
-      "questionNote": "用户系统开了「减少动态效果」时，应减弱或关闭非必要动画，属于无障碍基本要求。",
-      "answer": [
+        ],
         [
           {
-            "type": "code",
-            "value": "@media (prefers-reduced-motion: reduce)"
+            "type": "strong",
+            "value": "示例："
           },
           {
             "type": "text",
-            "value": " 表示用户系统开了「减少动态效果」（无障碍/省电）；应把长过渡、视差、自动轮播减弱或关掉。"
+            "value": "跟随系统深色。"
           }
         ],
         [
           {
-            "type": "text",
-            "value": "实现：把动画时长/距离改短，或 "
-          },
-          {
             "type": "code",
-            "value": "animation: none"
-          },
-          {
-            "type": "text",
-            "value": "；"
-          },
-          {
-            "type": "code",
-            "value": "matchMedia(\"(prefers-reduced-motion: reduce)\")"
-          },
-          {
-            "type": "text",
-            "value": " 在 JS 里也可读，控制复杂交互。"
+            "value": ":root { color-scheme: light dark; }\n@media (prefers-color-scheme: dark) {\n  :root { --bg: #111; --fg: #eee; }\n}\nbody { background: var(--bg); color: var(--fg); }"
           }
         ]
       ]
@@ -829,6 +767,22 @@
           {
             "type": "text",
             "value": "3）统一用分隔线组件封装，避免每个业务手写一套。"
+          }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "示例："
+          },
+          {
+            "type": "text",
+            "value": "高清屏 1px 细线（示意）。"
+          }
+        ],
+        [
+          {
+            "type": "code",
+            "value": ".hairline::after {\n  content: '';\n  position: absolute;\n  left: 0; right: 0; bottom: 0;\n  border-bottom: 1px solid #ccc;\n  transform: scaleY(0.5);\n  transform-origin: 0 100%;\n}"
           }
         ]
       ]

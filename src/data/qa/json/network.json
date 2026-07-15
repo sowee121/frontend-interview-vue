@@ -622,6 +622,22 @@
             "type": "text",
             "value": " 仅 GET，属历史方案。"
           }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "示例："
+          },
+          {
+            "type": "text",
+            "value": "服务端放行示意（配合前端 credentials 策略）。"
+          }
+        ],
+        [
+          {
+            "type": "code",
+            "value": "Access-Control-Allow-Origin: https://app.example.com\nAccess-Control-Allow-Credentials: true\n// 注意：带 Cookie 时 Origin 不能是 *"
+          }
         ]
       ]
     },
@@ -699,6 +715,22 @@
           {
             "type": "text",
             "value": "；开发期代理同源可绕预检。"
+          }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "示例："
+          },
+          {
+            "type": "text",
+            "value": "易触发预检的请求形态。"
+          }
+        ],
+        [
+          {
+            "type": "code",
+            "value": "fetch('/api', {\n  method: 'PUT',\n  headers: {\n    Authorization: 'Bearer xxx',\n    'Content-Type': 'application/json',\n  },\n  body: JSON.stringify({ a: 1 }),\n})\n// 浏览器先发 OPTIONS 预检"
           }
         ]
       ]
@@ -986,6 +1018,22 @@
             "type": "text",
             "value": " 能不开就不开。"
           }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "示例："
+          },
+          {
+            "type": "text",
+            "value": "偏严的 CSP 起步策略。"
+          }
+        ],
+        [
+          {
+            "type": "code",
+            "value": "Content-Security-Policy:\n  default-src 'self';\n  script-src 'self';\n  img-src 'self' https: data:;\n  connect-src 'self' https://api.example.com"
+          }
         ]
       ]
     },
@@ -1073,6 +1121,148 @@
           {
             "type": "text",
             "value": "3）注意代理超时、握手鉴权；断线重连与心跳见场景题。"
+          }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "示例："
+          },
+          {
+            "type": "text",
+            "value": "浏览器侧连接。"
+          }
+        ],
+        [
+          {
+            "type": "code",
+            "value": "const ws = new WebSocket('wss://example.com/ws')\nws.onopen = () => ws.send('hi')\nws.onmessage = (e) => console.log(e.data)"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-anti-replay",
+      "navLabel": "防重放",
+      "question": "接口防重放一般怎么做？前端对称加密「签名」靠谱吗？",
+      "questionNote": "时间戳 + nonce + 服务端验签；说清前端密钥的局限。",
+      "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "一句话："
+          },
+          {
+            "type": "text",
+            "value": "客户端带时间窗与一次性随机串，服务端校验时效、nonce 不复用，并用只有服务端掌握的密钥验签。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "1）"
+          },
+          {
+            "type": "text",
+            "value": "常见载荷：时间戳（防过期重放）+ "
+          },
+          {
+            "type": "code",
+            "value": "nonce"
+          },
+          {
+            "type": "text",
+            "value": "（防短时重复）+ 签名；过期请求直接拒。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2）"
+          },
+          {
+            "type": "text",
+            "value": "签名应用 "
+          },
+          {
+            "type": "code",
+            "value": "HMAC"
+          },
+          {
+            "type": "text",
+            "value": " 或非对称私钥在服务端验；密钥不能指望藏在前端包里。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3）"
+          },
+          {
+            "type": "strong",
+            "value": "前端 AES「签名」"
+          },
+          {
+            "type": "text",
+            "value": "：最多增加抓包拼请求成本，不能当防伪造；真正防伪靠服务端密钥与权限。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "4）"
+          },
+          {
+            "type": "text",
+            "value": "和 JWT/HTTPS：传输保密靠 HTTPS；身份靠 token；防重放是另一层，别混成一件事。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-biz-login-code",
+      "navLabel": "业务登录失效码",
+      "question": "登录失效除了 HTTP 401，业务错误码踢登录要注意啥？",
+      "questionNote": "HTTP 层与业务层两套路径要统一清会话，避免只处理一种。",
+      "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "一句话："
+          },
+          {
+            "type": "text",
+            "value": "有的系统用业务 code 表示会话失效；拦截器要同时覆盖 HTTP 状态与约定业务码，并单飞处理跳转。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "1）"
+          },
+          {
+            "type": "text",
+            "value": "401/403：走统一未授权处理；业务码如「登录失效」同样清 token 并跳登录。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2）"
+          },
+          {
+            "type": "text",
+            "value": "多请求同时失效：只弹一次登录、只清一次态，避免连环 toast；可与 refresh 单飞队列配合。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3）"
+          },
+          {
+            "type": "text",
+            "value": "区分「无权限」与「未登录」：前者 403 页，后者回登录，别一律踢回首页。"
           }
         ]
       ]

@@ -1,0 +1,811 @@
+{
+  "slug": "electron",
+  "title": "Electron",
+  "documentTitle": "Electron",
+  "description": "桌面端 Electron 高频考点：进程模型、安全隔离、IPC 示例、打包发版与自动更新、自助机场景。",
+  "lead": "先分清主进程 / preload / 渲染进程，再谈安全基线和打包更新。IPC 与打包段落带精简示例，便于口述对照。",
+  "items": [
+    {
+      "id": "q-electron-why",
+      "navLabel": "为何用 Electron",
+      "question": "什么场景适合用 Electron？和纯 Web、原生桌面比怎么选？",
+      "questionNote": "触控自助机、企业内部客户端等「要 Web 技术栈 + 本机能力」时常被问到。",
+      "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "一句话："
+          },
+          {
+            "type": "text",
+            "value": "Electron 用 Chromium + Node 包成桌面应用，适合复用前端技术、又需要文件/外设/本地更新等本机能力的场景。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "1）相对纯 Web：能访问本机能力，但安装包大、内存开销大，不适合轻量工具硬上。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2）相对原生：交付快、跨平台一套 UI；性能与系统深度集成弱于原生。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3）自助机/内网客户端：大屏触控 + 读卡扫码打印，Electron 常是务实选择。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-electron-process",
+      "navLabel": "进程模型",
+      "question": "Electron 主进程、渲染进程、preload 分别干什么？",
+      "questionNote": "先分清三层职责，再谈安全暴露。",
+      "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "一句话："
+          },
+          {
+            "type": "text",
+            "value": "主进程管应用与本机；渲染进程跑页面；preload 是中间桥梁，只暴露约定好的接口。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "1）"
+          },
+          {
+            "type": "strong",
+            "value": "主进程"
+          },
+          {
+            "type": "text",
+            "value": "：创建窗口、菜单；读写文件、外设、装更新等多在这里。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2）"
+          },
+          {
+            "type": "strong",
+            "value": "渲染进程"
+          },
+          {
+            "type": "text",
+            "value": "：每个 "
+          },
+          {
+            "type": "code",
+            "value": "BrowserWindow"
+          },
+          {
+            "type": "text",
+            "value": " 一套页面，跑 Vue/React；默认不该直接拿到 Node。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3）"
+          },
+          {
+            "type": "strong",
+            "value": "preload"
+          },
+          {
+            "type": "text",
+            "value": "：窗口加载前注入，用 "
+          },
+          {
+            "type": "code",
+            "value": "contextBridge"
+          },
+          {
+            "type": "text",
+            "value": " 把白名单方法挂到页面 "
+          },
+          {
+            "type": "code",
+            "value": "window"
+          },
+          {
+            "type": "text",
+            "value": "。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-electron-window",
+      "navLabel": "创建窗口",
+      "question": "主进程里怎么创建窗口并挂上 preload？开发态和生产态加载页面有啥区别？",
+      "questionNote": "webPreferences 安全项 + loadURL/loadFile。",
+      "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "一句话："
+          },
+          {
+            "type": "text",
+            "value": "主进程 new BrowserWindow，配好 preload 与隔离选项；开发连本地 Vite，生产加载打包后的 index.html。"
+          }
+        ],
+        [
+          {
+            "type": "code",
+            "value": "// main.js（示意）\nconst { app, BrowserWindow } = require('electron');\nconst path = require('node:path');\n\nfunction createWindow() {\n  const win = new BrowserWindow({\n    width: 1280,\n    height: 800,\n    webPreferences: {\n      preload: path.join(__dirname, 'preload.js'),\n      contextIsolation: true, // 官方推荐：开隔离\n      nodeIntegration: false, // 页面不要直接 require Node\n    },\n  });\n  // 开发：连 Vite；生产：loadFile 打进包的 html\n  if (process.env.VITE_DEV_SERVER_URL) {\n    win.loadURL(process.env.VITE_DEV_SERVER_URL);\n  } else {\n    win.loadFile(path.join(__dirname, '../renderer/index.html'));\n  }\n}\n\napp.whenReady().then(createWindow);"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "工程上常把 main / preload / renderer 分目录构建；生产关闭开发者工具，避免现场误开调试。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-electron-security",
+      "navLabel": "安全基线",
+      "question": "Electron 安全一般怎么配？nodeIntegration、contextIsolation 各是啥？",
+      "questionNote": "官方推荐：关 Node 注入、开上下文隔离、只经 contextBridge 暴露。",
+      "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "基线："
+          },
+          {
+            "type": "code",
+            "value": "contextIsolation: true"
+          },
+          {
+            "type": "text",
+            "value": "，"
+          },
+          {
+            "type": "code",
+            "value": "nodeIntegration: false"
+          },
+          {
+            "type": "text",
+            "value": "，页面里不要直接 "
+          },
+          {
+            "type": "code",
+            "value": "require"
+          },
+          {
+            "type": "text",
+            "value": " Node。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "1）"
+          },
+          {
+            "type": "code",
+            "value": "nodeIntegration"
+          },
+          {
+            "type": "text",
+            "value": " 为 true 时，页面脚本等同握有本机能力；一旦有跨站脚本（XSS），风险极大。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2）"
+          },
+          {
+            "type": "code",
+            "value": "contextIsolation"
+          },
+          {
+            "type": "text",
+            "value": " 把 preload 与页面上下文隔开，只能通过 "
+          },
+          {
+            "type": "code",
+            "value": "contextBridge.exposeInMainWorld"
+          },
+          {
+            "type": "text",
+            "value": " 显式挂少量 API。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3）再收紧：少开远程 URL、校验更新包、能力白名单；勿把整个 ipcRenderer 挂到 window。"
+          }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "示例："
+          },
+          {
+            "type": "text",
+            "value": "创建窗口时的安全三项。"
+          }
+        ],
+        [
+          {
+            "type": "code",
+            "value": "new BrowserWindow({\n  webPreferences: {\n    preload: path.join(__dirname, 'preload.js'),\n    contextIsolation: true,\n    nodeIntegration: false,\n  },\n})"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-electron-ipc",
+      "navLabel": "IPC 通信与示例",
+      "question": "主进程和渲染进程怎么通信？请用代码说明 invoke/handle 这条安全链路。",
+      "questionNote": "推荐：页面 → preload（contextBridge）→ ipcRenderer.invoke → ipcMain.handle。",
+      "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "一句话："
+          },
+          {
+            "type": "text",
+            "value": "请求-响应用 invoke/handle；主进程主动推消息用 webContents.send + preload 转发的 on。"
+          }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "主进程注册："
+          },
+          {
+            "type": "text",
+            "value": "通道名固定，参数校验后再干敏感事。"
+          }
+        ],
+        [
+          {
+            "type": "code",
+            "value": "// main.js\nconst { ipcMain, dialog } = require('electron');\n\n// 渲染过来：选文件（示例）\nipcMain.handle('dialog:openFile', async () => {\n  const { canceled, filePaths } = await dialog.showOpenDialog({\n    properties: ['openFile'],\n  });\n  if (canceled) return null;\n  return filePaths[0]; // 只回路径，别把整个 fs 暴露出去\n});\n\n// 渲染过来：设备相关意图（示意，真外设放主进程驱动）\nipcMain.handle('device:scan', async (_event, payload) => {\n  if (!payload || typeof payload.type !== 'string') {\n    throw new Error('invalid payload');\n  }\n  // return await scanHardware(payload.type);\n  return { ok: true, type: payload.type };\n});"
+          }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "preload 白名单："
+          },
+          {
+            "type": "text",
+            "value": "只暴露业务方法，不暴露裸 "
+          },
+          {
+            "type": "code",
+            "value": "ipcRenderer"
+          },
+          {
+            "type": "text",
+            "value": "。"
+          }
+        ],
+        [
+          {
+            "type": "code",
+            "value": "// preload.js\nconst { contextBridge, ipcRenderer } = require('electron');\n\ncontextBridge.exposeInMainWorld('api', {\n  openFile: () => ipcRenderer.invoke('dialog:openFile'),\n  scan: (type) => ipcRenderer.invoke('device:scan', { type }),\n  // 主 → 渲染：订阅时返回取消函数，避免泄漏\n  onUpdateProgress: (cb) => {\n    const listener = (_e, data) => cb(data);\n    ipcRenderer.on('update:progress', listener);\n    return () => ipcRenderer.removeListener('update:progress', listener);\n  },\n});"
+          }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "渲染进程调用："
+          },
+          {
+            "type": "text",
+            "value": "业务代码只碰 "
+          },
+          {
+            "type": "code",
+            "value": "window.api"
+          },
+          {
+            "type": "text",
+            "value": "。"
+          }
+        ],
+        [
+          {
+            "type": "code",
+            "value": "// renderer（Vue/React 里）\nasync function onPickFile() {\n  const filePath = await window.api.openFile();\n  if (filePath) console.log('picked', filePath);\n}\n\nasync function onScan() {\n  const res = await window.api.scan('barcode');\n  console.log(res);\n}\n\n// 主进程推送进度\nconst off = window.api.onUpdateProgress((p) => {\n  console.log('progress', p.percent);\n});\n// 组件卸载时：off();"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "主进程推送示意："
+          },
+          {
+            "type": "code",
+            "value": "win.webContents.send('update:progress', { percent: 42 })"
+          },
+          {
+            "type": "text",
+            "value": "。单向通知用 send/on；要返回值优先 invoke/handle。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-electron-ipc-patterns",
+      "navLabel": "IPC 两种模式",
+      "question": "ipcMain.on / send 和 invoke / handle 怎么选？",
+      "questionNote": "有返回值用 Promise 风格；事件流用 on/send。",
+      "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "结论："
+          },
+          {
+            "type": "code",
+            "value": "invoke/handle"
+          },
+          {
+            "type": "text",
+            "value": " 适合「调一次拿结果」；"
+          },
+          {
+            "type": "code",
+            "value": "send/on"
+          },
+          {
+            "type": "text",
+            "value": " 适合「通知、进度、可多次回调」。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "1）打开对话框、读配置、调外设一次 → handle；更新进度、托盘菜单触发 → send。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2）on 必须成对移除监听，路由切换/组件销毁时卸载，否则泄漏或重复触发。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3）通道名用命名空间（"
+          },
+          {
+            "type": "code",
+            "value": "dialog:"
+          },
+          {
+            "type": "text",
+            "value": " / "
+          },
+          {
+            "type": "code",
+            "value": "device:"
+          },
+          {
+            "type": "text",
+            "value": "），避免字符串散落难搜。"
+          }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "示例："
+          },
+          {
+            "type": "text",
+            "value": "有返回值用 invoke；推送用 send。"
+          }
+        ],
+        [
+          {
+            "type": "code",
+            "value": "// 渲染 → 主（有返回）\nconst path = await window.api.openFile()\n// 主 → 渲染（通知）\nwin.webContents.send('update:progress', { percent: 50 })"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-electron-pack",
+      "navLabel": "打包实现",
+      "question": "Electron 打包具体怎么做？electron-builder 一般配什么？",
+      "questionNote": "讲清产物：安装包 + 更新用的最新版元数据；asar 与平台 target。",
+      "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "一句话："
+          },
+          {
+            "type": "text",
+            "value": "先把 main/preload/renderer 编成可运行目录，再用 electron-builder（或同类工具）打成各平台安装包。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "1）构建流水：编译 TS/Vite 产出 "
+          },
+          {
+            "type": "code",
+            "value": "dist"
+          },
+          {
+            "type": "text",
+            "value": " → builder 把 Electron 运行时 + 业务文件打成 "
+          },
+          {
+            "type": "code",
+            "value": "nsis/dmg/AppImage"
+          },
+          {
+            "type": "text",
+            "value": " 等。"
+          }
+        ],
+        [
+          {
+            "type": "code",
+            "value": "// package.json 片段（示意）\n{\n  \"main\": \"dist/main/index.js\",\n  \"scripts\": {\n    \"build\": \"vite build && electron-builder\"\n  },\n  \"build\": {\n    \"appId\": \"com.example.kiosk\",\n    \"productName\": \"KioskApp\",\n    \"directories\": { \"output\": \"release\" },\n    \"files\": [\"dist/**/*\", \"package.json\"],\n    \"asar\": true,\n    \"win\": { \"target\": [\"nsis\"] },\n    \"publish\": [\n      { \"provider\": \"generic\", \"url\": \"https://cdn.example.com/kiosk-updates/\" }\n    ]\n  }\n}"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2）"
+          },
+          {
+            "type": "code",
+            "value": "asar"
+          },
+          {
+            "type": "text",
+            "value": " 把源码打成归档，减少散文件；需要原生解压的资源可放 "
+          },
+          {
+            "type": "code",
+            "value": "asarUnpack"
+          },
+          {
+            "type": "text",
+            "value": "。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3）发版产物除安装包外，通常还有 "
+          },
+          {
+            "type": "code",
+            "value": "latest.yml"
+          },
+          {
+            "type": "text",
+            "value": "（或平台对应元数据）和安装包，供自动更新比对版本与下载地址。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-electron-update",
+      "navLabel": "自动更新实现",
+      "question": "Electron 自动更新具体怎么实现？检查、下载、安装怎么串？",
+      "questionNote": "常用 electron-updater；讲清主进程流程与失败回退，不背死版本号。",
+      "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "一句话："
+          },
+          {
+            "type": "text",
+            "value": "主进程用更新库读远端 latest 元数据 → 比对版本 → 下载安装包 → 校验 → 退出时静默安装；渲染层只展示进度与按钮。"
+          }
+        ],
+        [
+          {
+            "type": "code",
+            "value": "// main.js — electron-updater 示意\nconst { autoUpdater } = require('electron-updater');\nconst { BrowserWindow, ipcMain } = require('electron');\n\nautoUpdater.autoDownload = false; // 先询用户或业务空闲再下\n\nfunction setupAutoUpdate() {\n  autoUpdater.checkForUpdates();\n\n  autoUpdater.on('update-available', (info) => {\n    // 通知渲染：有新版本\n    BrowserWindow.getAllWindows()[0]?.webContents.send('update:available', info);\n  });\n\n  autoUpdater.on('download-progress', (p) => {\n    BrowserWindow.getAllWindows()[0]?.webContents.send('update:progress', {\n      percent: p.percent,\n    });\n  });\n\n  autoUpdater.on('update-downloaded', () => {\n    BrowserWindow.getAllWindows()[0]?.webContents.send('update:downloaded');\n  });\n\n  autoUpdater.on('error', (err) => {\n    BrowserWindow.getAllWindows()[0]?.webContents.send('update:error', String(err));\n  });\n}\n\nipcMain.handle('update:startDownload', async () => {\n  await autoUpdater.downloadUpdate();\n});\n\nipcMain.handle('update:quitAndInstall', () => {\n  autoUpdater.quitAndInstall(); // 退出并安装已下载包\n});"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "1）"
+          },
+          {
+            "type": "strong",
+            "value": "配置来源"
+          },
+          {
+            "type": "text",
+            "value": "：builder 的 "
+          },
+          {
+            "type": "code",
+            "value": "publish.url"
+          },
+          {
+            "type": "text",
+            "value": " 指向静态目录或 GitHub Releases；客户端启动后 "
+          },
+          {
+            "type": "code",
+            "value": "checkForUpdates"
+          },
+          {
+            "type": "text",
+            "value": " 拉 "
+          },
+          {
+            "type": "code",
+            "value": "latest.yml"
+          },
+          {
+            "type": "text",
+            "value": " 比版本。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2）"
+          },
+          {
+            "type": "strong",
+            "value": "校验"
+          },
+          {
+            "type": "text",
+            "value": "：库会按发布元数据校验文件完整性；正式环境应配代码签名，防篡改。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3）"
+          },
+          {
+            "type": "strong",
+            "value": "自助机"
+          },
+          {
+            "type": "text",
+            "value": "：业务空闲再 "
+          },
+          {
+            "type": "code",
+            "value": "quitAndInstall"
+          },
+          {
+            "type": "text",
+            "value": "；失败提示并保留旧版可运行，必要时提供手动装包兜底。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-electron-pack-vs-update",
+      "navLabel": "打包与更新关系",
+      "question": "打包和自动更新是什么关系？开发时改代码算更新吗？",
+      "questionNote": "分清本地开发热重载、发安装包、运行时增量更新三件事。",
+      "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "三件事："
+          },
+          {
+            "type": "text",
+            "value": "开发热更只方便写码；打包产出可分发安装包；自动更新是「已安装客户端」去拉新安装包。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "1）开发："
+          },
+          {
+            "type": "code",
+            "value": "vite"
+          },
+          {
+            "type": "text",
+            "value": " HMR / 主进程重启，用户机器上没有这套。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2）打包：CI 或本地 "
+          },
+          {
+            "type": "code",
+            "value": "electron-builder"
+          },
+          {
+            "type": "text",
+            "value": " 产出安装包并上传到更新源。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3）更新：线上客户端读同一更新源，下载对应平台产物再安装；两边版本号/"
+          },
+          {
+            "type": "code",
+            "value": "app.getVersion()"
+          },
+          {
+            "type": "text",
+            "value": " 要一致策略。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-electron-kiosk",
+      "navLabel": "自助机交互",
+      "question": "自助机类 Electron 应用，超时回首页、会话清理一般怎么做？",
+      "questionNote": "无操作计时 + 倒计时确认 + 清登录态/草稿。",
+      "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "目标："
+          },
+          {
+            "type": "text",
+            "value": "上一用户离开后，下一用户看不到其账号与草稿。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "1）监听点击/触摸重置无操作计时；超时先倒计时，再回首页。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2）回首页清内存态、草稿、token；进行中请求 abort，防脏写。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3）触控热区够大；读卡等外设仍走主进程 IPC，不在页面直连驱动。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-electron-native",
+      "navLabel": "本机能力边界",
+      "question": "打开系统对话框、外链、读写文件，应该放在哪一层？",
+      "questionNote": "敏感能力进主进程；渲染只发意图。",
+      "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "原则："
+          },
+          {
+            "type": "text",
+            "value": "凡是碰文件系统、壳层窗口、系统协议的，主进程做；渲染只调白名单 API。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "1）选文件/存文件："
+          },
+          {
+            "type": "code",
+            "value": "dialog"
+          },
+          {
+            "type": "text",
+            "value": " 在主进程；把路径或已处理结果回给渲染。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2）打开浏览器："
+          },
+          {
+            "type": "code",
+            "value": "shell.openExternal"
+          },
+          {
+            "type": "text",
+            "value": " 在主进程，并校验 http(s) 白名单，防任意协议攻击。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3）读写本地配置：主进程用 "
+          },
+          {
+            "type": "code",
+            "value": "fs"
+          },
+          {
+            "type": "text",
+            "value": " / "
+          },
+          {
+            "type": "code",
+            "value": "app.getPath('userData')"
+          },
+          {
+            "type": "text",
+            "value": "；别把任意路径拼接权交给页面。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-electron-vs-webview",
+      "navLabel": "和内嵌 WebView",
+      "question": "Electron 和 App 内嵌 WebView / 小程序有啥本质差别？",
+      "questionNote": "分清完整桌面壳与宿主容器。",
+      "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "区别："
+          },
+          {
+            "type": "text",
+            "value": "Electron 自带 Chromium 与主进程；WebView/小程序跑在宿主里，能力由宿主开放。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "1）Electron：更新、外设、本地文件自主权大，体积与内存成本也大。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2）WebView：跟宿主分发；JSBridge 看宿主约束。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3）独立安装跑设备（自助机）偏 Electron；App/微信触达用户偏 WebView 或小程序。"
+          }
+        ]
+      ]
+    }
+  ]
+}

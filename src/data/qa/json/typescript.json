@@ -330,6 +330,22 @@
             "type": "text",
             "value": "。"
           }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "示例："
+          },
+          {
+            "type": "text",
+            "value": "unknown 必须先收窄才能用。"
+          }
+        ],
+        [
+          {
+            "type": "code",
+            "value": "function f(x: unknown) {\n  // x.toFixed() // 报错\n  if (typeof x === 'number') x.toFixed(2) // OK\n}\n// any：可随意调用，但放弃类型保护"
+          }
         ]
       ]
     },
@@ -625,6 +641,22 @@
           {
             "type": "text",
             "value": "：只保留指定字段，适合列表页只展示部分列、下拉选项只要 id 和名称。"
+          }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "示例："
+          },
+          {
+            "type": "text",
+            "value": "Partial / Pick 作用在同一类型。"
+          }
+        ],
+        [
+          {
+            "type": "code",
+            "value": "type User = { id: number; name: string; age: number }\ntype UserPatch = Partial<User>           // 字段全可选\ntype UserLite = Pick<User, 'id' | 'name'> // 只保留两字段"
           }
         ]
       ]

@@ -92,6 +92,22 @@
             "type": "text",
             "value": "：销毁前后，清定时器、解绑事件、取消订阅/请求，避免内存泄漏。"
           }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "示例："
+          },
+          {
+            "type": "text",
+            "value": "常用钩子放什么（口述对照）。"
+          }
+        ],
+        [
+          {
+            "type": "code",
+            "value": "created() { /* 读路由、拉数，DOM 还没有 */ }\nmounted() { /* 绑第三方、量 DOM */ }\nbeforeDestroy() { /* 清定时器、解绑 */ }"
+          }
         ]
       ]
     },
@@ -240,6 +256,22 @@
             "type": "text",
             "value": " 触发引用变更。"
           }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "示例："
+          },
+          {
+            "type": "text",
+            "value": "直接赋值 vs $set。"
+          }
+        ],
+        [
+          {
+            "type": "code",
+            "value": "// 不会触发更新（对象新属性）\nthis.user.age = 18\n// 会触发\nthis.$set(this.user, 'age', 18)\nthis.$delete(this.user, 'age')"
+          }
         ]
       ]
     },
@@ -325,6 +357,22 @@
           {
             "type": "text",
             "value": " 比改 length 更稳。"
+          }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "示例："
+          },
+          {
+            "type": "text",
+            "value": "下标赋值 vs 变异方法。"
+          }
+        ],
+        [
+          {
+            "type": "code",
+            "value": "// 可能不更新视图\nthis.list[0] = item\n// 推荐\nthis.$set(this.list, 0, item)\nthis.list.splice(0, 1, item)"
           }
         ]
       ]
@@ -628,6 +676,22 @@
             "type": "text",
             "value": " 深度监听对象内部，开销更大，尽量监听具体字段。"
           }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "示例："
+          },
+          {
+            "type": "text",
+            "value": "computed 缓存 vs watch 副作用。"
+          }
+        ],
+        [
+          {
+            "type": "code",
+            "value": "computed: {\n  fullName() { return this.first + this.last }\n},\nwatch: {\n  keyword: {\n    immediate: true,\n    handler(v) { this.fetch(v) } // 发请求\n  }\n}"
+          }
         ]
       ]
     },
@@ -736,43 +800,143 @@
             "type": "text",
             "value": " 暂停，或在销毁时清理，避免后台继续跑占资源。"
           }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "示例："
+          },
+          {
+            "type": "text",
+            "value": "缓存进出钩子。"
+          }
+        ],
+        [
+          {
+            "type": "code",
+            "value": "<keep-alive :include=\"['List']\">\n  <router-view />\n</keep-alive>\n// 组件内\nactivated() { /* 恢复轮询 */ }\ndeactivated() { /* 暂停定时器 */ }"
+          }
         ]
       ]
     },
     {
-      "id": "q-vue2-mixin-plugin-filter",
-      "navLabel": "mixin/插件/过滤器",
-      "question": "Vue 2 的 mixin、插件（Vue.use）和过滤器 filters 怎么理解？常见坑？",
-      "questionNote": "mixin 与 filters 在 Vue 3 已不推荐/移除；能说清历史包袱与替代方案即可。",
+      "id": "q-vue2-class-component",
+      "navLabel": "类组件写法",
+      "question": "Vue 2 里 vue-class-component / 装饰器写法怎么玩？和 Options API 啥关系？",
+      "questionNote": "平安等老项目常见；本质仍是编译成选项式对象，Vue 3 已不主推。",
       "answer": [
         [
           {
-            "type": "code",
-            "value": "mixin"
+            "type": "strong",
+            "value": "一句话："
           },
           {
             "type": "text",
-            "value": "：把选项式逻辑注入多个组件。缺点是命名冲突、来源不透明、调试困难；大型项目更推荐抽 composable 或小组件。"
+            "value": "用 TypeScript class + 装饰器写组件，构建时仍落成 Vue 2 的 options；读写 "
+          },
+          {
+            "type": "code",
+            "value": "this.xxx"
+          },
+          {
+            "type": "text",
+            "value": " 更像 OOP，但生命周期映射别记错。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "常见组合："
+          },
+          {
+            "type": "code",
+            "value": "vue-class-component"
+          },
+          {
+            "type": "text",
+            "value": " + "
+          },
+          {
+            "type": "code",
+            "value": "vue-property-decorator"
+          },
+          {
+            "type": "text",
+            "value": "（"
+          },
+          {
+            "type": "code",
+            "value": "@Prop"
+          },
+          {
+            "type": "text",
+            "value": " / "
+          },
+          {
+            "type": "code",
+            "value": "@Watch"
+          },
+          {
+            "type": "text",
+            "value": " 等）；Vuex 可用 "
+          },
+          {
+            "type": "code",
+            "value": "vuex-class"
+          },
+          {
+            "type": "text",
+            "value": "。"
           }
         ],
         [
           {
             "type": "code",
-            "value": "Vue.use(plugin)"
-          },
-          {
-            "type": "text",
-            "value": "：安装插件，可注册全局组件/指令、在原型挂方法。注意避免污染全局与重复安装。"
+            "value": "// Vue 2 + TS 类组件示意（需 babel/装饰器配置）\nimport Vue from 'vue'\nimport Component from 'vue-class-component'\nimport { Prop, Watch } from 'vue-property-decorator'\n\n@Component\nexport default class UserCard extends Vue {\n  @Prop({ type: String, required: true }) readonly name!: string\n\n  count = 0 // 相当于 data\n\n  get label() { // 相当于 computed\n    return this.name.toUpperCase()\n  }\n\n  @Watch('count')\n  onCountChange(n: number) {\n    console.log('count ->', n)\n  }\n\n  mounted() { // 同名生命周期\n    this.count = 1\n  }\n\n  inc() { // methods\n    this.count++\n  }\n}"
           }
         ],
         [
           {
-            "type": "code",
-            "value": "filters"
+            "type": "text",
+            "value": "1）"
+          },
+          {
+            "type": "strong",
+            "value": "优点"
           },
           {
             "type": "text",
-            "value": "：模板里做日期/金额等格式化，逻辑藏进模板难测；Vue 3 已移除，工程里改用方法、计算属性或独立格式化函数。"
+            "value": "：TS 类型集中、类字段直观；和 Options 组件可混用。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2）"
+          },
+          {
+            "type": "strong",
+            "value": "坑"
+          },
+          {
+            "type": "text",
+            "value": "：装饰器与 "
+          },
+          {
+            "type": "code",
+            "value": "emit"
+          },
+          {
+            "type": "text",
+            "value": " / 混入顺序易踩坑；面试要说明「最终还是 options」。新项目优先 Composition API 或 "
+          },
+          {
+            "type": "code",
+            "value": "<script setup>"
+          },
+          {
+            "type": "text",
+            "value": "，不必新开类组件栈。"
           }
         ]
       ]

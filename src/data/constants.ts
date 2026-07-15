@@ -8,11 +8,13 @@ export const CHAPTER_ORDER = [
   'react',
   'node',
   'miniprogram',
+  'electron',
   'browser',
   'network',
   'engineering',
   'performance',
   'scenario',
+  'ai',
   'agent',
   'coding',
 ] as const

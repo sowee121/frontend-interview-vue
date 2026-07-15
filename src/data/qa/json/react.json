@@ -78,6 +78,22 @@
             "type": "text",
             "value": "，而不是包住 hook 调用本身。"
           }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "示例："
+          },
+          {
+            "type": "text",
+            "value": "错误示范：条件调用 Hook。"
+          }
+        ],
+        [
+          {
+            "type": "code",
+            "value": "// 错\nif (flag) useEffect(() => {}, [])\n// 对：钩子顶层无条件，条件移进 effect 内\nuseEffect(() => {\n  if (!flag) return\n  // ...\n}, [flag])"
+          }
         ]
       ]
     },
@@ -215,6 +231,22 @@
           {
             "type": "text",
             "value": " 等。"
+          }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "示例："
+          },
+          {
+            "type": "text",
+            "value": "受控 vs 非受控。"
+          }
+        ],
+        [
+          {
+            "type": "code",
+            "value": "// 受控\n<input value={v} onChange={(e) => setV(e.target.value)} />\n// 非受控\n<input defaultValue=\"hi\" ref={ref} />"
           }
         ]
       ]
@@ -356,23 +388,23 @@
             "type": "text",
             "value": "先用 React DevTools Profiler 找真正慢的子树再包；到处 useCallback 反而增加依赖心智负担。"
           }
-        ]
-      ]
-    },
-    {
-      "id": "q-use-memo-callback",
-      "navLabel": "useMemo / useCallback",
-      "question": "useMemo、useCallback 什么时候该用？有啥常见坑？",
-      "questionNote": "目的是稳定引用或减少昂贵计算；别为「减少渲染」滥用，先证明子组件真的贵。",
-      "answer": [
+        ],
         [
           {
             "type": "strong",
-            "value": "该用时："
+            "value": "何时用 / 常见坑："
           },
           {
             "type": "text",
-            "value": "传给 "
+            "value": "依赖真会变才包 "
+          },
+          {
+            "type": "code",
+            "value": "useMemo/useCallback"
+          },
+          {
+            "type": "text",
+            "value": "；依赖写漏或每次新对象，记不住也白包。子组件未 "
           },
           {
             "type": "code",
@@ -380,69 +412,15 @@
           },
           {
             "type": "text",
-            "value": " 子组件的回调需稳定引用；"
+            "value": " 时，父级 "
           },
           {
             "type": "code",
-            "value": "useEffect"
+            "value": "useCallback"
           },
           {
             "type": "text",
-            "value": " 依赖数组里放函数；"
-          },
-          {
-            "type": "code",
-            "value": "useMemo"
-          },
-          {
-            "type": "text",
-            "value": " 缓存大列表 filter/sort 等昂贵计算。"
-          }
-        ],
-        [
-          {
-            "type": "strong",
-            "value": "坑 1："
-          },
-          {
-            "type": "text",
-            "value": "依赖漏写导致闭包读到旧 state；补依赖，或用函数式 "
-          },
-          {
-            "type": "code",
-            "value": "setState"
-          },
-          {
-            "type": "text",
-            "value": "、"
-          },
-          {
-            "type": "code",
-            "value": "useRef"
-          },
-          {
-            "type": "text",
-            "value": " 存最新值。"
-          }
-        ],
-        [
-          {
-            "type": "strong",
-            "value": "坑 2："
-          },
-          {
-            "type": "text",
-            "value": "为减少渲染滥用 useCallback，多一次比较、代码更难读——先 Profiler 证明子组件真贵。"
-          }
-        ],
-        [
-          {
-            "type": "strong",
-            "value": "坑 3："
-          },
-          {
-            "type": "text",
-            "value": "列表行里每项都 useCallback，deps 含整条 item 导致引用仍不稳，memo 照样失效。"
+            "value": " 收益有限。"
           }
         ]
       ]
@@ -519,6 +497,22 @@
           {
             "type": "text",
             "value": " 存最新值。"
+          }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "示例："
+          },
+          {
+            "type": "text",
+            "value": "依赖数组三种填法。"
+          }
+        ],
+        [
+          {
+            "type": "code",
+            "value": "useEffect(() => { /* 每次 commit 后 */ })\nuseEffect(() => { /* 仅挂载 */ }, [])\nuseEffect(() => {\n  fetchUser(id)\n}, [id]) // id 变才重跑"
           }
         ]
       ]
@@ -599,6 +593,22 @@
           {
             "type": "text",
             "value": " 或动态 import。"
+          }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "示例："
+          },
+          {
+            "type": "text",
+            "value": "读布局放 layout，避免闪一下。"
+          }
+        ],
+        [
+          {
+            "type": "code",
+            "value": "useLayoutEffect(() => {\n  const h = boxRef.current.getBoundingClientRect().height\n  setHeight(h) // 浏览器绘制前同步改\n}, [])"
           }
         ]
       ]
@@ -1217,6 +1227,100 @@
           {
             "type": "text",
             "value": "（延迟展示派生值）可搭配；只用于可能卡顿的大更新，别滥用。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-react-css-approaches",
+      "navLabel": "CSS 方案对比",
+      "question": "React 里常见 CSS 方案有哪些？CSS Modules、CSS-in-JS、原子化 CSS 怎么选？",
+      "questionNote": "对比全局 CSS / Modules / styled-components·emotion / Tailwind；说清隔离、动态样式与工程成本。",
+      "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "一句话："
+          },
+          {
+            "type": "text",
+            "value": "按「要不要强隔离、要不要运行时动态样式、团队是否吃类名约定」选，没有唯一正确答案。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "1）"
+          },
+          {
+            "type": "strong",
+            "value": "全局 CSS / Sass"
+          },
+          {
+            "type": "text",
+            "value": "：写法熟、零运行时；易撞类名，大项目靠 BEM 或严格目录约定。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2）"
+          },
+          {
+            "type": "strong",
+            "value": "CSS Modules"
+          },
+          {
+            "type": "text",
+            "value": "：构建期把 "
+          },
+          {
+            "type": "code",
+            "value": "styles.btn"
+          },
+          {
+            "type": "text",
+            "value": " 编译成唯一类名，组件级隔离稳、无运行时税；动态主题多用 CSS 变量配合。"
+          }
+        ],
+        [
+          {
+            "type": "code",
+            "value": "// CSS Modules 示意\nimport styles from './Button.module.css'\n\nexport function Button({ children }) {\n  return <button className={styles.btn}>{children}</button>\n}"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3）"
+          },
+          {
+            "type": "strong",
+            "value": "CSS-in-JS"
+          },
+          {
+            "type": "text",
+            "value": "（styled-components / Emotion）：样式跟组件、易按 props 变肤；注意运行时开销与 SSR 注入，现代栈也有零运行时变体（如 Linaria / Panda）。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "4）"
+          },
+          {
+            "type": "strong",
+            "value": "原子化"
+          },
+          {
+            "type": "text",
+            "value": "（Tailwind 等）：工具类拼布局快、设计 token 统一；类名冗长、复杂动效/深度定制有时仍要回退自定义 CSS。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "选型口径：中大型业务默认 CSS Modules + 设计变量很稳；强设计系统/高频按 props 换肤可看 CSS-in-JS；设计稿高度规范、追求交付速度可 Tailwind。同一项目少混三套，除非边界清晰（如第三方包自带样式）。"
           }
         ]
       ]

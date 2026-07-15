@@ -75,12 +75,6 @@ function collectText(item) {
   return parts.join('\n')
 }
 
-function paragraphTexts(item) {
-  return (item.answer ?? []).map((para) =>
-    para.map((s) => s.value).join(''),
-  )
-}
-
 function hasChineseContext(text, acronym) {
   if (PAIRED_HINTS.some((re) => re.test(text))) return true
   // 同段内 acronym 前有中文（至少 2 字）
@@ -120,19 +114,20 @@ function lintFile(filePath) {
         issues.push({ file: base, id: item.id, kind: 'pseudo-code', snippet: label })
       }
     }
-    for (const para of paragraphTexts(item)) {
-      const isCodeOnly =
-        para.length > 0 &&
-        (item.answer?.every((p) => p.length === 1 && p[0]?.type === 'code') ?? false)
-      if (!isCodeOnly && para.replace(/\s/g, '').length > 140) {
+    for (const segs of item.answer ?? []) {
+      const paraText = segs.map((s) => s.value).join('')
+      const isSingleCodePara = segs.length === 1 && segs[0]?.type === 'code'
+      const isCodeOnlyAnswer =
+        item.answer?.every((p) => p.length === 1 && p[0]?.type === 'code') ?? false
+      if (!isSingleCodePara && !isCodeOnlyAnswer && paraText.replace(/\s/g, '').length > 140) {
         issues.push({
           file: base,
           id: item.id,
           kind: 'long-paragraph',
-          snippet: para.slice(0, 80) + '…',
+          snippet: paraText.slice(0, 80) + '…',
         })
       }
-      if (/；[2-9]\d*）/.test(para)) {
+      if (/；[2-9]\d*）/.test(paraText)) {
         issues.push({
           file: base,
           id: item.id,

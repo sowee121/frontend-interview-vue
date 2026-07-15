@@ -2,8 +2,8 @@
   "slug": "agent",
   "title": "Agent",
   "documentTitle": "Agent",
-  "description": "以 Cursor、OpenAI Codex app（ChatGPT 编程 Agent 桌面端）、Claude Code 为主线：选型分工、提问与上下文、审代码、安全，以及 MCP/RAG。",
-  "lead": "偏「会用、会验、会控风险」。大模型流式回复的前端实现见场景题「流式对话输出」。",
+  "description": "以 Cursor、OpenAI Codex app、Claude Code 为主线；覆盖闭环/多 Agent、A2A 与 MCP、Skills、Computer Use、Memory 与评测等前沿概念，以及日常提问、审代码与安全。",
+  "lead": "偏「会用、会验、会控风险」，并补面试常问的 Agent 架构与协议。大模型流式对话见「AI」章。",
   "items": [
     {
       "id": "q-ai-tools",
@@ -546,7 +546,7 @@
         [
           {
             "type": "text",
-            "value": "3）和 RAG 互补：MCP 偏执行动作，RAG 偏检索知识。"
+            "value": "3）和 RAG 互补：MCP 偏执行动作，RAG 偏检索知识；和 Agent 间协作见同章「A2A 与 MCP」。"
           }
         ]
       ]
@@ -619,6 +619,406 @@
           {
             "type": "text",
             "value": "3）鉴权、支付等敏感目录必须人工重点看。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-agent-loop",
+      "navLabel": "Agent 闭环",
+      "question": "面试常问：什么是 Agent？和「聊天补全 / 一次 Tool Call」差在哪？",
+      "questionNote": "观察-思考-行动循环；能多步直到达标或失败。",
+      "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "一句话："
+          },
+          {
+            "type": "text",
+            "value": "Agent 是带着目标、在环境里反复「看结果→再决策→再行动」的循环，不是单次问答。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "1）常见闭环（类 ReAct）：读状态 → 推理下一步 → 调工具/改文件 → 观察输出 → 直到完成或人力介入。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2）单次补全/单次函数调用没有「根据执行结果改计划」；Agent 有状态、可重试、可换路径。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3）Cursor Agent、Claude Code、Codex 本质都是带工具权限的长循环；差别在环境（IDE/终端/桌面）与护栏。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-agent-plan-mode",
+      "navLabel": "Plan 再执行",
+      "question": "现在很多产品有 Plan / Ask 模式，再切到 Agent 执行。为什么先规划更稳？",
+      "questionNote": "降 scope 漂移；大改前对齐方案与风险。",
+      "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "一句话："
+          },
+          {
+            "type": "text",
+            "value": "先让模型只读出方案与影响面，人确认后再授权写文件，避免一上来大面积乱改。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "1）Plan：列要改的文件、步骤、风险、验收；适合重构、跨模块需求。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2）确认后小步执行；某步验收失败就停，别一口气「做完再说」。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3）面试可对标：规格驱动（Spec）→ Agent 实现 → 测试/人审，比纯「口嗨改代码」可控。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-agent-multi",
+      "navLabel": "多 Agent 编排",
+      "question": "多 Agent（如 Planner / Researcher / Coder / Critic）相对单 Agent 解决什么问题？坑在哪？",
+      "questionNote": "分角色降复杂度；协调与一致性成本上升。",
+      "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "一句话："
+          },
+          {
+            "type": "text",
+            "value": "把长任务拆成专长角色并行或流水线，比一个全能 Agent 更稳，但要管好交接与冲突。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "1）常见角色：规划、检索、实现、审查/测试；编码场景里也有「主 Agent + 子 Agent」后台干活。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2）收益：上下文更聚焦、可并行（如 Codex worktree）、审查角色拦幻觉。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3）坑：重复劳动、目标漂移、同文件冲突；要明确契约（输入/输出/完成标准）和合并策略。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-agent-a2a",
+      "navLabel": "A2A 与 MCP",
+      "question": "A2A（Agent-to-Agent）和 MCP 分别解决什么？能不能互相替代？",
+      "questionNote": "MCP 连工具/数据；A2A 连 Agent 协作；互补。",
+      "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "一句话："
+          },
+          {
+            "type": "text",
+            "value": "模型上下文协议（MCP）管「怎么连工具」；Agent 间协议（A2A）管「Agent 怎么发现彼此并派活」。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "1）"
+          },
+          {
+            "type": "strong",
+            "value": "MCP"
+          },
+          {
+            "type": "text",
+            "value": "：标准化工具/资源接口（读库、浏览器、Issue），Cursor / Claude Code / Codex 都可接。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2）"
+          },
+          {
+            "type": "strong",
+            "value": "A2A"
+          },
+          {
+            "type": "text",
+            "value": "（Google 等推动）：用 Agent Card 声明能力与鉴权，任务对象跟踪委托与结果，方便跨厂商协作。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3）不互相替代：一个 Agent 可经 MCP 用工具，再经 A2A 把子任务交给别的 Agent。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-agent-skills",
+      "navLabel": "Skills 技能包",
+      "question": "Cursor / Claude / Codex 里的 Skills（技能）是什么？和写一长段 system prompt 有何不同？",
+      "questionNote": "可复用流程+工具约定；按需加载，省窗口。",
+      "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "一句话："
+          },
+          {
+            "type": "text",
+            "value": "Skills 是可复用的「专长包」：步骤说明、约束、可选脚本/工具绑定，比每轮粘贴长提示更可维护。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "1）适用：发版检查、改文案规范、对接某内部 API 固定流程等重复场景。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2）相对整段规则：按任务触发加载，省上下文；版本可进仓，人和 Agent 共用同一套玩法。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3）和 "
+          },
+          {
+            "type": "code",
+            "value": "AGENTS.md"
+          },
+          {
+            "type": "text",
+            "value": " / "
+          },
+          {
+            "type": "code",
+            "value": ".cursor/rules"
+          },
+          {
+            "type": "text",
+            "value": " 配合：规则写全局禁忌，Skills 写专题 SOP。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-agent-computer-use",
+      "navLabel": "Computer Use",
+      "question": "Computer Use / Browser Use 这类「操控图形界面」的 Agent，和只改仓库代码的编码 Agent 差在哪？",
+      "questionNote": "截图/DOM/键鼠动作；长链条更脆，要验收回路。",
+      "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "一句话："
+          },
+          {
+            "type": "text",
+            "value": "编码 Agent 主战场是文件与终端；Computer Use 直接看屏幕、点界面，适合无 API 的桌面/Web 操作。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "1）感知：截图、无障碍树或 DOM；行动：点击、输入、滚动、等页面稳定。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2）更易因布局改版、弹窗、慢加载失败；要重试、断言、人工确认敏感步骤。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3）前端协作场景：对照设计稿点验、录复现路径、填表走通主流程；别和「改源码」混成一种能力。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-agent-memory",
+      "navLabel": "Agent Memory",
+      "question": "Agent 的 Memory 一般怎么分层？为什么「窗口变大了」仍要记忆系统？",
+      "questionNote": "工作记忆 vs 长期记忆；检索与摘要，不是塞满上下文。",
+      "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "一句话："
+          },
+          {
+            "type": "text",
+            "value": "大窗口降低「塞不下」，解决不了「该记什么、跨会话复用、噪声过大」。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "1）工作记忆：当前任务的对话、打开的文件、工具结果；易满，要摘要或新开会话。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2）长期记忆：用户偏好、项目约定、失败教训；用规则文件、向量/图谱检索或产品侧 Memory 存。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3）工程习惯：可复用事实进 "
+          },
+          {
+            "type": "code",
+            "value": "AGENTS.md"
+          },
+          {
+            "type": "text",
+            "value": " / 文档；一次性细节别污染长期记忆。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-agent-hitl",
+      "navLabel": "人在回路",
+      "question": "Agent 自主跑命令、推分支时，Human-in-the-Loop（人在回路）和沙箱权限你怎么设？",
+      "questionNote": "最小权限；写库/付费/删数据必须确认。",
+      "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "一句话："
+          },
+          {
+            "type": "text",
+            "value": "默认可读、可跑无害命令；高风险动作要审批门，并可用 worktree / 容器隔离副作用。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "1）分级：读文件、lint、单测 → 可自动；改生产配置、删库、发外网请求 → 明确确认。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2）Codex worktree、本地沙箱限制网络与系统目录，降低「跑飞」成本。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3）面试口径：自主度 ↑ 必须配可回滚（git）与证据（日志/测试），不是关掉所有确认。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-agent-eval",
+      "navLabel": "评测与可观测",
+      "question": "把 Agent 接到业务后，怎么评测好不好用？可观测性（Observability）看哪些信号？",
+      "questionNote": "成功率、成本、步骤轨迹；别只看「聊得顺」。",
+      "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "一句话："
+          },
+          {
+            "type": "text",
+            "value": "用任务级指标 + 轨迹回放，衡量是否达标、多贵、哪里反复失败。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "1）指标：任务成功率、人工介入率、平均步数/token/费用、回归测试通过率。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2）轨迹：每次工具调用入参出参、重试原因、是否升级给人；便于复盘幻觉与权限误用。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3）评测集：固定场景（修某类 bug、按 Figma 改 UI）反复跑；改 prompt/Skills 后对比，避免凭感觉上线。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-agent-sdk",
+      "navLabel": "自建 Agent",
+      "question": "如果公司要在产品里「嵌一个 Agent」（不只用 Cursor），前端/全栈侧常会碰到哪些架构取舍？",
+      "questionNote": "工具边界、状态机、流式 UI、鉴权与配额。",
+      "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "一句话："
+          },
+          {
+            "type": "text",
+            "value": "把「模型推理」和「工具执行」分开：后端跑闭环与权限，前端做流式展示与确认点。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "1）工具白名单 + 服务端代调（搜知识库、写工单），前端不直接持有危险密钥。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2）状态：会话 id、当前计划、待确认动作；用 SSE/WebSocket 推 delta 与工具事件（细节见「AI」章）。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3）配额、审计日志、失败降级（转人工）；优先窄场景闭环，再扩成通用助理。"
           }
         ]
       ]

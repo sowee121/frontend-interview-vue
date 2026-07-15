@@ -244,6 +244,22 @@
             "type": "text",
             "value": " 前，适合主业务 bundle 与有依赖关系的模块。"
           }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "示例："
+          },
+          {
+            "type": "text",
+            "value": "三种 script 加载。"
+          }
+        ],
+        [
+          {
+            "type": "code",
+            "value": "<script src=\"a.js\"></script>          <!-- 阻塞解析 -->\n<script src=\"b.js\" defer></script>   <!-- 并行下，DOMContentLoaded 前按序执行 -->\n<script src=\"c.js\" async></script>   <!-- 并行下，下完就执行，顺序不定 -->"
+          }
         ]
       ]
     },
@@ -416,6 +432,22 @@
             "type": "text",
             "value": " 对滚动性能友好。"
           }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "示例："
+          },
+          {
+            "type": "text",
+            "value": "捕获 / 冒泡。"
+          }
+        ],
+        [
+          {
+            "type": "code",
+            "value": "parent.addEventListener('click', fn, true)  // 捕获\nchild.addEventListener('click', (e) => {\n  e.stopPropagation() // 阻止继续传播\n})"
+          }
         ]
       ]
     },
@@ -465,6 +497,22 @@
           {
             "type": "text",
             "value": "，并尽量缩小监听范围。"
+          }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "示例："
+          },
+          {
+            "type": "text",
+            "value": "滚动监听声明被动。"
+          }
+        ],
+        [
+          {
+            "type": "code",
+            "value": "el.addEventListener('touchmove', onMove, { passive: true })\n// 无法在监听里 preventDefault，利于滚动流畅"
           }
         ]
       ]
@@ -712,6 +760,22 @@
             "type": "text",
             "value": " 可作多标签连接点，但生态与兼容性一般。"
           }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "示例："
+          },
+          {
+            "type": "text",
+            "value": "BroadcastChannel 同步登出。"
+          }
+        ],
+        [
+          {
+            "type": "code",
+            "value": "const bc = new BroadcastChannel('auth')\nbc.postMessage({ type: 'logout' })\nbc.onmessage = (e) => {\n  if (e.data.type === 'logout') clearToken()\n}"
+          }
         ]
       ]
     },
@@ -921,6 +985,22 @@
           {
             "type": "text",
             "value": " 可把绘制放到 worker。"
+          }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "示例："
+          },
+          {
+            "type": "text",
+            "value": "主线程与 Worker 传消息。"
+          }
+        ],
+        [
+          {
+            "type": "code",
+            "value": "// main\nconst w = new Worker('heavy.js')\nw.postMessage({ n: 1e7 })\nw.onmessage = (e) => console.log(e.data)\n\n// heavy.js\nonmessage = (e) => {\n  // 算完\n  postMessage(result)\n}"
           }
         ]
       ]

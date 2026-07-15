@@ -2,6 +2,7 @@ import type { ChapterPayload } from '@/types/qa-content'
 import type { ChapterSlug } from '@/data/constants'
 
 import agent from './json/agent.json'
+import ai from './json/ai.json'
 import browser from './json/browser.json'
 import coding from './json/coding.json'
 import engineering from './json/engineering.json'
@@ -13,6 +14,7 @@ import node from './json/node.json'
 import performance from './json/performance.json'
 import react from './json/react.json'
 import miniprogram from './json/miniprogram.json'
+import electron from './json/electron.json'
 import scenario from './json/scenario.json'
 import typescript from './json/typescript.json'
 import vue2 from './json/vue2.json'
@@ -32,8 +34,10 @@ export const chapterPayloads: Record<ChapterSlug, ChapterPayload> = {
   engineering: engineering as ChapterPayload,
   react: react as ChapterPayload,
   miniprogram: miniprogram as ChapterPayload,
+  electron: electron as ChapterPayload,
   vue2: vue2 as ChapterPayload,
   vue3: vue3 as ChapterPayload,
   scenario: scenario as ChapterPayload,
+  ai: ai as ChapterPayload,
   agent: agent as ChapterPayload,
 }

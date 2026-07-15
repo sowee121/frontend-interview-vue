@@ -434,6 +434,22 @@
             "type": "text",
             "value": " 把读端接到写端；若写端慢，读端会暂停，避免内存堆积，这叫背压（backpressure）。"
           }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "示例："
+          },
+          {
+            "type": "text",
+            "value": "只读流 pipe，避免整文件进内存。"
+          }
+        ],
+        [
+          {
+            "type": "code",
+            "value": "import { createReadStream, createWriteStream } from 'node:fs'\ncreateReadStream('big.bin').pipe(createWriteStream('out.bin'))"
+          }
         ]
       ]
     },
@@ -935,6 +951,22 @@
           {
             "type": "text",
             "value": "小白记法：接口卡死先想是不是在主线程算了太久；上传下载慢多半是 I/O，用流和异步即可，不必上线程。"
+          }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "示例："
+          },
+          {
+            "type": "text",
+            "value": "worker_threads 最小通信。"
+          }
+        ],
+        [
+          {
+            "type": "code",
+            "value": "import { Worker } from 'node:worker_threads'\nconst w = new Worker('./cpu.js')\nw.postMessage({ n: 40 })\nw.on('message', console.log)"
           }
         ]
       ]

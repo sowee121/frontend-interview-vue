@@ -80,6 +80,22 @@
             "type": "text",
             "value": "，避免慢请求覆盖新关键词结果。"
           }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "示例："
+          },
+          {
+            "type": "text",
+            "value": "防抖 + 取消上一次请求。"
+          }
+        ],
+        [
+          {
+            "type": "code",
+            "value": "let ctrl\nconst onSearch = debounce(async (q) => {\n  ctrl?.abort()\n  ctrl = new AbortController()\n  const res = await fetch('/s?q=' + q, { signal: ctrl.signal })\n  // ...\n}, 300)"
+          }
         ]
       ]
     },
@@ -163,6 +179,22 @@
           {
             "type": "text",
             "value": " 或节流，避免一帧算多次。"
+          }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "示例："
+          },
+          {
+            "type": "text",
+            "value": "底部哨兵 + IntersectionObserver。"
+          }
+        ],
+        [
+          {
+            "type": "code",
+            "value": "const io = new IntersectionObserver((entries) => {\n  if (entries[0].isIntersecting) loadMore()\n})\nio.observe(sentryEl)"
           }
         ]
       ]
@@ -492,6 +524,22 @@
             "type": "text",
             "value": " 共享刷新逻辑。"
           }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "示例："
+          },
+          {
+            "type": "text",
+            "value": "refresh 单飞。"
+          }
+        ],
+        [
+          {
+            "type": "code",
+            "value": "let refreshing = null\nasync function ensureToken() {\n  if (!refreshing) {\n    refreshing = refreshApi().finally(() => { refreshing = null })\n  }\n  return refreshing\n}"
+          }
         ]
       ]
     },
@@ -622,6 +670,22 @@
             "type": "text",
             "value": "2）定时心跳，超时未 pong 主动 close 再重连；服务端处理重复会话 id。"
           }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "示例："
+          },
+          {
+            "type": "text",
+            "value": "指数退避重连骨架。"
+          }
+        ],
+        [
+          {
+            "type": "code",
+            "value": "function connect(retry = 0) {\n  const ws = new WebSocket(url)\n  ws.onclose = () => {\n    const delay = Math.min(1000 * 2 ** retry, 30000)\n    setTimeout(() => connect(retry + 1), delay)\n  }\n  ws.onopen = () => { /* reset retry */ }\n}"
+          }
         ]
       ]
     },
@@ -656,99 +720,27 @@
             "type": "text",
             "value": "HTTP/2 下 SSE 与代理兼容性要实测；只读实时用 SSE 往往更省事。"
           }
-        ]
-      ]
-    },
-    {
-      "id": "q-ai-stream-chat",
-      "navLabel": "流式对话输出",
-      "question": "大模型对话里的「逐字输出」，前后端各自做了什么？",
-      "questionNote": "服务端流式推 token/chunk；前端 ReadableStream 或 SSE 增量拼文案，别和纯前端打字机动画混淆。",
-      "answer": [
-        [
-          {
-            "type": "strong",
-            "value": "一句话："
-          },
-          {
-            "type": "text",
-            "value": "不是等整段生成完再显示，而是模型边算边通过 HTTP 流/SSE 推片段，前端边收边 append 到气泡里。"
-          }
         ],
         [
           {
             "type": "text",
-            "value": "1）"
-          },
-          {
-            "type": "strong",
-            "value": "服务端"
-          },
-          {
-            "type": "text",
-            "value": "：接口开 stream（如 "
+            "value": "大模型对话常选 SSE：单向推 token 即可；但要 "
           },
           {
             "type": "code",
-            "value": "stream: true"
+            "value": "POST"
           },
           {
             "type": "text",
-            "value": "），按 token 或一小段文本写出；常见形态是 "
+            "value": " 带对话上下文时，用 "
           },
           {
             "type": "code",
-            "value": "text/event-stream"
+            "value": "fetchEventSource"
           },
           {
             "type": "text",
-            "value": "（SSE）或分块传输（chunked）的 JSON 行。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "2）"
-          },
-          {
-            "type": "strong",
-            "value": "前端收流"
-          },
-          {
-            "type": "text",
-            "value": "："
-          },
-          {
-            "type": "code",
-            "value": "fetch"
-          },
-          {
-            "type": "text",
-            "value": " 后对 "
-          },
-          {
-            "type": "code",
-            "value": "response.body.getReader()"
-          },
-          {
-            "type": "text",
-            "value": " 循环 "
-          },
-          {
-            "type": "code",
-            "value": "read()"
-          },
-          {
-            "type": "text",
-            "value": "，用 "
-          },
-          {
-            "type": "code",
-            "value": "TextDecoder"
-          },
-          {
-            "type": "text",
-            "value": " 解码；或 "
+            "value": " 一类实现，而不是浏览器原生 "
           },
           {
             "type": "code",
@@ -756,51 +748,13 @@
           },
           {
             "type": "text",
-            "value": " 接 SSE。解析每行 "
-          },
-          {
-            "type": "code",
-            "value": "data: {...}"
-          },
-          {
-            "type": "text",
-            "value": "，把 delta 拼到当前消息 state。"
+            "value": "。"
           }
         ],
         [
           {
             "type": "text",
-            "value": "3）"
-          },
-          {
-            "type": "strong",
-            "value": "和「打字机」的区别"
-          },
-          {
-            "type": "text",
-            "value": "：真流式是网络层陆续到达；若全文已返回再用 "
-          },
-          {
-            "type": "code",
-            "value": "setInterval"
-          },
-          {
-            "type": "text",
-            "value": " 逐字展示只是动效，不能降低首字等待时间。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "4）体验："
-          },
-          {
-            "type": "code",
-            "value": "AbortController"
-          },
-          {
-            "type": "text",
-            "value": " 可停止生成；滚动条跟到底；失败要区分用户取消与断流重试。通道选型见「SSE 与 WebSocket」。"
+            "value": "大模型流式对话的协议与打断细节见「AI」章。"
           }
         ]
       ]
@@ -1044,6 +998,32 @@
             "type": "text",
             "value": "。"
           }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "工程落地："
+          },
+          {
+            "type": "text",
+            "value": "文案按语言拆 JSON/命名空间，路由级 "
+          },
+          {
+            "type": "code",
+            "value": "import()"
+          },
+          {
+            "type": "text",
+            "value": " 懒加载语言包；CI 可扫缺失 key；日期金额优先 "
+          },
+          {
+            "type": "code",
+            "value": "Intl"
+          },
+          {
+            "type": "text",
+            "value": "。"
+          }
         ]
       ]
     },
@@ -1092,39 +1072,77 @@
       ]
     },
     {
-      "id": "q-permission-route",
-      "navLabel": "按钮级权限",
-      "question": "前端按钮级权限一般怎么实现？",
-      "questionNote": "权限码列表 + v-if/封装组件；强调接口鉴权与数据权限分层。",
+      "id": "q-dynamic-menu-auth",
+      "navLabel": "动态菜单鉴权",
+      "question": "后台管理系统里，动态路由、动态菜单和按钮权限怎么分工？只改前端够吗？",
+      "questionNote": "菜单/路由管能不能进页，按钮管页内操作；安全边界始终在服务端。",
       "answer": [
         [
           {
+            "type": "strong",
+            "value": "一句话："
+          },
+          {
             "type": "text",
-            "value": "1）登录后接口返回权限码如 "
+            "value": "路由决定能进哪些页，菜单决定侧栏看见什么，按钮权限码决定页内操作显隐；三者同源自接口下发的权限数据。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "1）"
+          },
+          {
+            "type": "strong",
+            "value": "动态路由"
+          },
+          {
+            "type": "text",
+            "value": "：登录后按角色/权限过滤路由表再 "
           },
           {
             "type": "code",
-            "value": "['order:export']"
+            "value": "addRoute"
           },
           {
             "type": "text",
-            "value": "，存 Pinia/Context；路由控菜单，组件 "
+            "value": "，无权限路由不注册或进 403。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2）"
+          },
+          {
+            "type": "strong",
+            "value": "动态菜单"
+          },
+          {
+            "type": "text",
+            "value": "：用同一份树生成侧栏，避免「菜单没有但路由手输还能进」的体验裂缝（仍要配合路由守卫）。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3）"
+          },
+          {
+            "type": "strong",
+            "value": "按钮级"
+          },
+          {
+            "type": "text",
+            "value": "：权限码 "
           },
           {
             "type": "code",
-            "value": "v-if=\"hasPerm('order:export')\""
+            "value": "hasPerm('order:export')"
           },
           {
             "type": "text",
-            "value": " 或 "
-          },
-          {
-            "type": "code",
-            "value": "<AuthButton />"
-          },
-          {
-            "type": "text",
-            "value": "。"
+            "value": " 控制导出等操作；隐藏只是体验。"
           }
         ],
         [
@@ -1134,7 +1152,405 @@
           },
           {
             "type": "text",
-            "value": "前端隐藏不等于安全，接口必须鉴权；权限变更要刷新或推送；数据权限（本部门）可另层设计。"
+            "value": "改前端永远挡不住直调 API；菜单与接口鉴权、数据权限要服务端一并校验。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-print-strategies",
+      "navLabel": "菜鸟/CLodop/Web 打印",
+      "question": "菜鸟打印、CLodop 打印和 Web 打印有啥区别？各自优缺点怎么说？",
+      "questionNote": "ERP/面单场景常同时对接多种；先分「本地打印客户端」和「纯浏览器」再比生态与能力。",
+      "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "一句话："
+          },
+          {
+            "type": "text",
+            "value": "前两者依赖本机打印客户端，网页经本地通道驱动打印机；Web 打印只靠浏览器 "
+          },
+          {
+            "type": "code",
+            "value": "window.print"
+          },
+          {
+            "type": "text",
+            "value": " 或导出 PDF，不装插件。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "1）"
+          },
+          {
+            "type": "strong",
+            "value": "菜鸟打印组件"
+          },
+          {
+            "type": "text",
+            "value": "：面向电商/物流电子面单，模板走菜鸟体系（固定尺码面单等）。优点是对接平台面单规范、批量打运单成熟；缺点是要装客户端、偏物流场景，非菜鸟链路定制报表不合适。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2）"
+          },
+          {
+            "type": "strong",
+            "value": "CLodop（Lodop 云打印）"
+          },
+          {
+            "type": "text",
+            "value": "：通用本机打印服务，JS 调 "
+          },
+          {
+            "type": "code",
+            "value": "LODOP"
+          },
+          {
+            "type": "text",
+            "value": " API 拼版（文本/HTML/条码等）。优点是静默打印、指定打印机、票据套打强；缺点是每台电脑要装服务、授权与浏览器兼容要运维，能力绑定控件 API。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3）"
+          },
+          {
+            "type": "strong",
+            "value": "Web 打印"
+          },
+          {
+            "type": "text",
+            "value": "："
+          },
+          {
+            "type": "code",
+            "value": "window.print"
+          },
+          {
+            "type": "text",
+            "value": " + "
+          },
+          {
+            "type": "code",
+            "value": "@media print"
+          },
+          {
+            "type": "text",
+            "value": "，或 html2canvas/jspdf 导出。优点是零安装、实现快；缺点是难静默、难精确控打印机与毫米级套打，用户要盯系统打印对话框。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "选型：平台电子面单优先菜鸟；仓库/财务自定义票据偏 CLodop；预览一致的报告导出可用 Web 打印或 PDF。业务上常统一封装打印服务，按渠道切换实现。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-print-plugin-ws",
+      "navLabel": "打印插件 WebSocket",
+      "question": "前端怎么跟本机打印插件（如菜鸟、CLodop）做 Socket 通信交互？",
+      "questionNote": "本质是连本机 WebSocket 服务发指令；保持长连接、按 requestID 对响应，打印前先验连接。",
+      "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "一句话："
+          },
+          {
+            "type": "text",
+            "value": "用户电脑跑打印客户端，浏览器用 "
+          },
+          {
+            "type": "code",
+            "value": "WebSocket"
+          },
+          {
+            "type": "text",
+            "value": " 连 "
+          },
+          {
+            "type": "code",
+            "value": "127.0.0.1"
+          },
+          {
+            "type": "text",
+            "value": " 本地端口，发 JSON/控件指令，在 "
+          },
+          {
+            "type": "code",
+            "value": "onmessage"
+          },
+          {
+            "type": "text",
+            "value": " 里收打印结果。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "1）"
+          },
+          {
+            "type": "strong",
+            "value": "建连"
+          },
+          {
+            "type": "text",
+            "value": "：页面加载后连本机服务（菜鸟常见 "
+          },
+          {
+            "type": "code",
+            "value": "ws://127.0.0.1:13528"
+          },
+          {
+            "type": "text",
+            "value": "，以官方文档为准）。建议全局单例长连接，别每次打印新建；断线指数退避重连，打印前先看 "
+          },
+          {
+            "type": "code",
+            "value": "readyState"
+          },
+          {
+            "type": "text",
+            "value": "。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2）"
+          },
+          {
+            "type": "strong",
+            "value": "发指令"
+          },
+          {
+            "type": "text",
+            "value": "：菜鸟多为 JSON，带 "
+          },
+          {
+            "type": "code",
+            "value": "requestID"
+          },
+          {
+            "type": "text",
+            "value": " / "
+          },
+          {
+            "type": "code",
+            "value": "cmd"
+          },
+          {
+            "type": "text",
+            "value": "（如 "
+          },
+          {
+            "type": "code",
+            "value": "getPrinters"
+          },
+          {
+            "type": "text",
+            "value": "、"
+          },
+          {
+            "type": "code",
+            "value": "print"
+          },
+          {
+            "type": "text",
+            "value": "）；CLodop 则引入官方脚本后调 "
+          },
+          {
+            "type": "code",
+            "value": "LODOP.ADD_PRINT_*"
+          },
+          {
+            "type": "text",
+            "value": " / "
+          },
+          {
+            "type": "code",
+            "value": "PRINT"
+          },
+          {
+            "type": "text",
+            "value": "，由其内部再与本机服务通信。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3）"
+          },
+          {
+            "type": "strong",
+            "value": "收响应"
+          },
+          {
+            "type": "text",
+            "value": "：按 "
+          },
+          {
+            "type": "code",
+            "value": "cmd"
+          },
+          {
+            "type": "text",
+            "value": " 与 "
+          },
+          {
+            "type": "code",
+            "value": "requestID"
+          },
+          {
+            "type": "text",
+            "value": " 匹配回调；成功提示、失败弹未安装客户端/打印机离线；批量任务可排队，避免把本机服务打挂。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "4）"
+          },
+          {
+            "type": "strong",
+            "value": "注意"
+          },
+          {
+            "type": "text",
+            "value": "：HTTPS 页连本地 "
+          },
+          {
+            "type": "code",
+            "value": "ws"
+          },
+          {
+            "type": "text",
+            "value": " 可能受限，需官方 "
+          },
+          {
+            "type": "code",
+            "value": "wss"
+          },
+          {
+            "type": "text",
+            "value": " / 证书方案；探测失败要引导下载安装打印组件，而不是静默失败。"
+          }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "示例："
+          },
+          {
+            "type": "text",
+            "value": "连本机打印服务发指令（端口以官方为准）。"
+          }
+        ],
+        [
+          {
+            "type": "code",
+            "value": "const ws = new WebSocket('ws://127.0.0.1:13528')\nws.onopen = () => {\n  ws.send(JSON.stringify({\n    cmd: 'getPrinters',\n    requestID: '1',\n  }))\n}\nws.onmessage = (e) => console.log(JSON.parse(e.data))"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-hybrid-login",
+      "navLabel": "Hybrid 登录态",
+      "question": "小程序或 App 内嵌 H5，登录态一般怎么打通？",
+      "questionNote": "常见链路：H5 先问宿主有无用户授权，无则授权中间页，同意后再登录，后续请求带 token。",
+      "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "一句话："
+          },
+          {
+            "type": "text",
+            "value": "H5 不独立再做一套静默登录；首次进页先确认宿主侧用户信息是否已授权，未授权走中间页，授权通过后再换业务 token，之后请求统一携带。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "1）"
+          },
+          {
+            "type": "strong",
+            "value": "首次进入"
+          },
+          {
+            "type": "text",
+            "value": "：H5 判断是否已有宿主（小程序/App）用户登录信息的授权结论；没有则跳转授权中间页，引导用户同意授权。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2）"
+          },
+          {
+            "type": "strong",
+            "value": "授权通过后"
+          },
+          {
+            "type": "text",
+            "value": "：再用宿主凭证或授权结果去业务侧登录/换票，拿到 H5 可用的 "
+          },
+          {
+            "type": "code",
+            "value": "token"
+          },
+          {
+            "type": "text",
+            "value": "（或会话 id），写入本地并由请求拦截器带上。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3）"
+          },
+          {
+            "type": "strong",
+            "value": "再次进入"
+          },
+          {
+            "type": "text",
+            "value": "：已有有效 token 则直接打通，不必反复授权；失效时清态并回到「授权/登录」路径，而不是让 H5 与宿主各弹一套互冲的登录页。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "4）"
+          },
+          {
+            "type": "strong",
+            "value": "边界"
+          },
+          {
+            "type": "text",
+            "value": "：授权与登录态仍以服务端校验为准；小程序 "
+          },
+          {
+            "type": "code",
+            "value": "web-view"
+          },
+          {
+            "type": "text",
+            "value": " 需配业务域名，凭证宜短期可吊销。"
           }
         ]
       ]

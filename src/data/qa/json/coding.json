@@ -48,20 +48,6 @@
       "questionNote": "面试官想听：等全部 settled 再 resolve；结果为 { status: 'fulfilled'|'rejected', value/reason }[]；单项 rejected 不会拖垮整体。适合「每个接口都要结果」的批量场景。"
     },
     {
-      "id": "q-impl-promise-any",
-      "navLabel": "手写 Promise.any",
-      "question": "实现 Promise.any(iterable)",
-      "answer": [
-        [
-          {
-            "type": "code",
-            "value": "// 全部失败时的错误：有 AggregateError 就用规范类型，否则降级为 Error 并挂 errors\nconst rejAll = (errors) =>\n  typeof AggregateError !== 'undefined'\n    ? new AggregateError(errors, 'All promises were rejected')\n    : Object.assign(new Error('All promises were rejected'), { errors });\n\nconst promiseAny = (arr) =>\n  new Promise((resolve, reject) => {\n    const n = arr.length;\n    if (!n) return reject(rejAll([])); // 空数组：立刻算全失败\n    let left = n; // 还剩多少项没先结束落定\n    const errors = [];\n    arr.forEach((p, i) =>\n      Promise.resolve(p).then(resolve, (e) => {\n        errors[i] = e; // 按下标存失败原因，方便和原顺序对齐\n        if (!--left) reject(rejAll(errors)); // 最后一项也失败了才 reject\n      }),\n    );\n  });"
-          }
-        ]
-      ],
-      "questionNote": "面试官想听：有一个 fulfilled 就 resolve；全部 rejected（含空数组）才 reject 并带 AggregateError。和 race 区别：race 看谁最先 settled（含 rejected），any 只认第一个 fulfilled。"
-    },
-    {
       "id": "q-impl-serial-async",
       "navLabel": "异步串行",
       "question": "异步任务串行执行",
@@ -147,17 +133,17 @@
     },
     {
       "id": "q-impl-new",
-      "navLabel": "手写 new",
-      "question": "手写 new 运算符",
+      "navLabel": "手写 new / create",
+      "question": "手写 new 运算符；顺带说明 Object.create(proto)",
       "answer": [
         [
           {
             "type": "code",
-            "value": "// myNew：Ctor 是构造函数，args 是构造参数\nconst myNew = (Ctor, ...args) => {\n  const o = Object.create(Ctor.prototype); // 实例的原型链指向 Ctor.prototype\n  const r = Ctor.apply(o, args); // 执行构造函数，可能往 o 上挂属性\n  // 规范：只有返回值是对象或函数时才用返回值，否则用 o\n  return r != null && (typeof r === 'object' || typeof r === 'function') ? r : o;\n};"
+            "value": "// myNew：Ctor 是构造函数，args 是构造参数\nconst myNew = (Ctor, ...args) => {\n  const o = Object.create(Ctor.prototype); // 实例的原型链指向 Ctor.prototype\n  const r = Ctor.apply(o, args); // 执行构造函数，可能往 o 上挂属性\n  // 规范：只有返回值是对象或函数时才用返回值，否则用 o\n  return r != null && (typeof r === 'object' || typeof r === 'function') ? r : o;\n};\n\n// Object.create：空对象原型指向 proto（new 第一步同类）\nconst create = (proto) => {\n  const F = function () {};\n  F.prototype = proto;\n  return new F();\n};"
           }
         ]
       ],
-      "questionNote": "面试官想听：以构造函数 prototype 为原型创建对象，把 this 绑上去执行构造；若构造函数显式返回对象或函数，用返回值当实例，否则返回新建对象。"
+      "questionNote": "面试官想听：以构造函数 prototype 为原型创建对象并绑 this 执行；若构造显式返回对象/函数则用返回值。Object.create 即「只建原型链、不跑构造」。"
     },
     {
       "id": "q-impl-instanceof",
@@ -172,48 +158,6 @@
         ]
       ],
       "questionNote": "面试官想听：判断 left 的原型链上有没有出现过 right.prototype；right 必须是带 prototype 的函数；这和 typeof 不同，表达的是原型链关系而不是类型标签。"
-    },
-    {
-      "id": "q-impl-object-assign",
-      "navLabel": "手写 Object.assign",
-      "question": "手写 Object.assign(target, ...sources)",
-      "answer": [
-        [
-          {
-            "type": "code",
-            "value": "// assign：浅拷贝；后面 source 的同名属性会覆盖前面的\nconst assign = (target, ...srcs) => {\n  const t = Object(target); // 和原生一致：原始类型先包装成对象\n  for (const s of srcs) {\n    if (s == null) continue; // null / undefined 源直接跳过\n    const obj = Object(s);\n    for (const k of Object.keys(obj)) {\n      // 只遍历可枚举自有字符串键；Symbol 键另题\n      t[k] = obj[k];\n    }\n  }\n  return t; // 返回同一个 target 引用\n};"
-          }
-        ]
-      ],
-      "questionNote": "面试官想听：把各 source 的可枚举自有属性浅拷贝到 target，后面的覆盖前面的；target 会先转成对象；null/undefined 源要跳过。"
-    },
-    {
-      "id": "q-impl-object-create",
-      "navLabel": "手写 Object.create",
-      "question": "手写 Object.create(proto)",
-      "answer": [
-        [
-          {
-            "type": "code",
-            "value": "// Object.create：借助 new 把实例的原型链设为 proto\nconst create = (proto) => {\n  const F = function () {}; // 空构造函数，只占位\n  F.prototype = proto; // 实例将继承 proto 链上的属性\n  return new F(); // new 出的对象 __proto__ === proto\n};"
-          }
-        ]
-      ],
-      "questionNote": "面试官想听：创建一个空对象，让它原型链指向 proto；标准写法是空构造函数 + prototype 指向；若环境允许也可用带 __proto__ 的字面量一行版。"
-    },
-    {
-      "id": "q-impl-json-stringify-lite",
-      "navLabel": "JSON.stringify 子集",
-      "question": "手写 JSON.stringify 子集",
-      "answer": [
-        [
-          {
-            "type": "code",
-            "value": "// 子集 stringify：递归 + 分支；完整版还要处理循环引用（WeakSet）等\nconst stringify = (v) => {\n  if (v === null || typeof v === 'number' || typeof v === 'boolean') return String(v); // null 和原始类型\n  if (typeof v === 'string') return JSON.stringify(v); // 自动加引号并转义\n  if (Array.isArray(v)) return '[' + v.map(stringify).join(',') + ']'; // 数组元素递归\n  return (\n    '{' +\n    Object.keys(v)\n      .map((k) => JSON.stringify(k) + ':' + stringify(v[k])) // 键必须带引号\n      .join(',') +\n    '}'\n  );\n};"
-          }
-        ]
-      ],
-      "questionNote": "面试官想听：只支持 null、布尔、数字、字符串、数组、普通对象；不含函数、undefined、Symbol、循环引用、Date/Map 等；能说出和原生 JSON.stringify 的差距即可。"
     },
     {
       "id": "q-impl-is-equal",
@@ -357,23 +301,25 @@
     },
     {
       "id": "q-impl-list-to-tree",
-      "navLabel": "数组转树",
-      "question": "扁平列表转树 listToTree(list)",
+      "navLabel": "列表 ⇄ 树",
+      "question": "扁平列表转树 listToTree，以及树再压平 treeToList",
       "answer": [
         [
           {
             "type": "code",
             "value": "// listToTree：Map 存 id → 带 children 的节点；reduce 挂父子关系\nconst listToTree = (list) => {\n  const m = new Map(list.map((n) => [n.id, { ...n, children: [] }])); // 复制数据并初始化 children\n  return list.reduce((roots, n) => {\n    const node = m.get(n.id);\n    const p = m.get(n.parentId); // 找不到父节点就视为根\n    (p ? p.children : roots).push(node); // 有父挂子树，无父进 roots\n    return roots;\n  }, []);\n};"
           }
-        ]
-      ],
-      "questionNote": "面试官想听：每项有 id、parentId，输出根节点数组，每个节点带 children；先用 Map 建 id→节点，再挂父子关系，根节点的 parentId 依题面约定。"
-    },
-    {
-      "id": "q-impl-tree-to-list",
-      "navLabel": "树转数组",
-      "question": "手写 treeToList(nodes, childKey?)",
-      "answer": [
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "反向 treeToList："
+          },
+          {
+            "type": "text",
+            "value": "深度优先，去掉 children 字段推入结果。"
+          }
+        ],
         [
           {
             "type": "code",
@@ -381,7 +327,7 @@
           }
         ]
       ],
-      "questionNote": "面试官想听：把树或森林按深度优先、前序遍历展平成一维数组；默认子节点字段是 children；输出节点可去掉 children，只留业务字段。"
+      "questionNote": "扁平→树：id/parentId → 根数组带 children。树→列表：DFS 去掉 children。面试常一对出。"
     },
     {
       "id": "q-impl-deep-clone",
@@ -412,74 +358,18 @@
       "questionNote": "面试官想听：on 注册、off 注销、emit 同步触发所有监听；emit 应先复制监听集合再遍历，避免回调里再次 on/off 出问题；返回值可表示是否有监听。"
     },
     {
-      "id": "q-impl-sort-bubble",
-      "navLabel": "冒泡排序",
-      "question": "手写冒泡排序 bubbleSort(arr)",
+      "id": "q-impl-sort",
+      "navLabel": "排序汇总",
+      "question": "手写冒泡 / 选择 / 插入 / 快排，并说明 Array.sort 语义",
       "answer": [
         [
           {
             "type": "code",
-            "value": "// 冒泡：每轮把当前未排序区间的最大元素「冒」到右端；swapped 优化已有序的情况\nconst bubbleSort = (arr) => {\n  const a = [...arr];\n  for (let i = a.length - 1; i > 0; i--) {\n    let swapped = false;\n    for (let j = 0; j < i; j++) {\n      if (a[j] > a[j + 1]) {\n        [a[j], a[j + 1]] = [a[j + 1], a[j]]; // 解构交换\n        swapped = true;\n      }\n    }\n    if (!swapped) break; // 一轮没交换说明已有序，提前结束\n  }\n  return a;\n};"
+            "value": "// ——— 冒泡：每轮把最大值「冒」到右端；swapped 可提前结束 ———\nconst bubbleSort = (arr) => {\n  const a = [...arr];\n  for (let i = a.length - 1; i > 0; i--) {\n    let swapped = false;\n    for (let j = 0; j < i; j++) {\n      if (a[j] > a[j + 1]) {\n        [a[j], a[j + 1]] = [a[j + 1], a[j]];\n        swapped = true;\n      }\n    }\n    if (!swapped) break;\n  }\n  return a;\n};\n\n// ——— 选择：每轮把区间最小值换到左端 i ———\nconst selectionSort = (arr) => {\n  const a = [...arr];\n  for (let i = 0; i < a.length; i++) {\n    let min = i;\n    for (let j = i + 1; j < a.length; j++) if (a[j] < a[min]) min = j;\n    if (min !== i) [a[i], a[min]] = [a[min], a[i]];\n  }\n  return a;\n};\n\n// ——— 插入：把 a[i] 插入左侧有序区；近乎有序时很快 ———\nconst insertionSort = (arr) => {\n  const a = [...arr];\n  for (let i = 1; i < a.length; i++) {\n    const x = a[i];\n    let j = i;\n    while (j > 0 && a[j - 1] > x) {\n      a[j] = a[j - 1];\n      j--;\n    }\n    a[j] = x;\n  }\n  return a;\n};\n\n// ——— 三路快排（非原地，好写）；工程可随机选 pivot ———\nconst quickSort = (arr) => {\n  if (arr.length <= 1) return arr;\n  const p = arr[0];\n  const left = [],\n    mid = [],\n    right = [];\n  for (const x of arr) {\n    if (x < p) left.push(x);\n    else if (x > p) right.push(x);\n    else mid.push(x);\n  }\n  return [...quickSort(left), ...mid, ...quickSort(right)];\n};\n\n// ——— Array.sort：默认按字符串排；数字要用 compareFn；会改原数组 ———\n// [10, 2, 1].sort() → [1, 10, 2]（字典序）\nconst sortAsc = (arr) => [...arr].sort((a, b) => a - b); // 拷贝后再排\n// 对象：users.sort((a, b) => a.age - b.age)\n// ES2019+ 规范要求稳定排序"
           }
         ]
       ],
-      "questionNote": "面试官想听：相邻元素两两比较，每轮把最大值放到右端；加 swapped 标志可提前结束；返回新数组，不修改入参；能说清时间复杂度 O(n²)。"
-    },
-    {
-      "id": "q-impl-sort-selection",
-      "navLabel": "选择排序",
-      "question": "手写选择排序 selectionSort(arr)",
-      "answer": [
-        [
-          {
-            "type": "code",
-            "value": "// 选择排序：每轮把区间里最小值换到左端 i\nconst selectionSort = (arr) => {\n  const a = [...arr];\n  for (let i = 0; i < a.length; i++) {\n    let min = i; // 先假设 i 是最小\n    for (let j = i + 1; j < a.length; j++) if (a[j] < a[min]) min = j; // 扫描找更小下标\n    if (min !== i) [a[i], a[min]] = [a[min], a[i]]; // 不一样才交换\n  }\n  return a;\n};"
-          }
-        ]
-      ],
-      "questionNote": "面试官想听：每轮在未排序区间找最小元素下标，和位置 i 交换；比较次数固定 O(n²)，交换少，实现简单但不适合大数据。"
-    },
-    {
-      "id": "q-impl-sort-insertion",
-      "navLabel": "插入排序",
-      "question": "手写插入排序 insertionSort(arr)",
-      "answer": [
-        [
-          {
-            "type": "code",
-            "value": "// 插入排序：把 a[i] 插入到左侧已有序段的正确位置\nconst insertionSort = (arr) => {\n  const a = [...arr];\n  for (let i = 1; i < a.length; i++) {\n    const x = a[i]; // 待插入元素\n    let j = i;\n    while (j > 0 && a[j - 1] > x) {\n      a[j] = a[j - 1]; // 比 x 大的元素整体右移一格\n      j--;\n    }\n    a[j] = x; // 空出的位置放入 x\n  }\n  return a;\n};"
-          }
-        ]
-      ],
-      "questionNote": "面试官想听：维护左侧有序区，把 a[i] 向左插入到合适位置；数据量小或近乎有序时接近线性；快排小数组阈值优化常用插入排序。"
-    },
-    {
-      "id": "q-impl-sort-quick",
-      "navLabel": "快速排序",
-      "question": "手写快速排序 quickSort(arr)",
-      "answer": [
-        [
-          {
-            "type": "code",
-            "value": "// 三路快排（非原地）：好写；和 Lomuto/Hoare 原地 partition 写法不同\nconst quickSort = (arr) => {\n  if (arr.length <= 1) return arr; // 递归终止\n  const p = arr[0]; // 基准值；工程里常随机选\n  const left = [],\n    mid = [],\n    right = [];\n  for (const x of arr) {\n    if (x < p) left.push(x);\n    else if (x > p) right.push(x);\n    else mid.push(x); // 和 pivot 相等的放中间，缓解全相等时的退化\n  }\n  return [...quickSort(left), ...mid, ...quickSort(right)];\n};"
-          }
-        ]
-      ],
-      "questionNote": "面试官想听：选基准 pivot，分成小于、等于、大于三区再递归；这版额外空间 O(n) 但好写；原地 partition 和随机 pivot 是常见追问；全相等时固定端点 pivot 可能退化到 O(n) 深度。"
-    },
-    {
-      "id": "q-impl-array-sort",
-      "navLabel": "Array.sort",
-      "question": "说明 Array.sort 的用法与语义",
-      "answer": [
-        [
-          {
-            "type": "code",
-            "value": "// 默认 sort：按字符串排，[10, 2, 1].sort() 会得到 [1, 10, 2]\n// 数值升序：(a, b) => a - b；返回值正负决定顺序，0 表示相等\n// 原地排序：先 [...arr] 再 sort 可避免改原数组\nconst sortAsc = (arr) => [...arr].sort((a, b) => a - b);\n\n// 对象数组：users.sort((a, b) => a.age - b.age)\n// 稳定性：ES2019 起规范要求稳定排序；老引擎以实际为准"
-          }
-        ]
-      ],
-      "questionNote": "面试官想听：不传比较函数时元素先转字符串再按字典序排，数字数组默认排序不符合数值大小；传 compareFn 时返回值 <0 表示 a 在前；sort 会改原数组，要保留原数组就先拷贝再 sort。"
+      "questionNote": "冒泡/选择/插入多为 O(n²) 教学；快排平均更好、注意 pivot 退化；业务优先 Array.sort + compareFn，别默认字符串排序。返回新数组示意不改入参。"
     }
   ]
 }

@@ -307,6 +307,22 @@
             "type": "text",
             "value": "；未传或传 `undefined` 时生效。与解构默认值可组合处理「配置对象」参数。"
           }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "示例："
+          },
+          {
+            "type": "text",
+            "value": "箭头函数不绑定自己的 this。"
+          }
+        ],
+        [
+          {
+            "type": "code",
+            "value": "const obj = {\n  n: 1,\n  // 错：箭头拿不到 obj 当 this\n  bad: () => this.n,\n  // 对：普通方法\n  ok() { return this.n },\n  // 默认参数\n  add(x, y = 1) { return x + y },\n}"
+          }
         ]
       ]
     },
@@ -676,6 +692,22 @@
             "type": "text",
             "value": "。Vue/React 更常做「不可变更新」：只改变化分支，配合 diff，而非每次深拷贝整棵状态树。"
           }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "示例："
+          },
+          {
+            "type": "text",
+            "value": "浅拷贝写法与深拷贝边界。"
+          }
+        ],
+        [
+          {
+            "type": "code",
+            "value": "const a = { n: 1, o: { x: 2 } }\nconst shallow = { ...a }       // o 仍共享引用\nconst deep = structuredClone(a) // 现代环境深拷贝\n// JSON.parse(JSON.stringify(a)) 会丢 Date/undefined/函数"
+          }
         ]
       ]
     },
@@ -831,157 +863,6 @@
       ]
     },
     {
-      "id": "q-iterator",
-      "navLabel": "Iterator 与 for-of",
-      "question": "可迭代对象是什么？for-of 背后做了啥？",
-      "answer": [
-        [
-          {
-            "type": "text",
-            "value": "部署了 "
-          },
-          {
-            "type": "strong",
-            "value": "Iterator（遍历器）接口"
-          },
-          {
-            "type": "text",
-            "value": " 的数据结构称为可遍历结构；默认键为 "
-          },
-          {
-            "type": "code",
-            "value": "[Symbol.iterator]()"
-          },
-          {
-            "type": "text",
-            "value": "，返回"
-          },
-          {
-            "type": "strong",
-            "value": "遍历器对象（指针对象）"
-          },
-          {
-            "type": "text",
-            "value": "，反复调用 "
-          },
-          {
-            "type": "code",
-            "value": "next()"
-          },
-          {
-            "type": "text",
-            "value": " 得到 "
-          },
-          {
-            "type": "code",
-            "value": "{ value, done }"
-          },
-          {
-            "type": "text",
-            "value": "。"
-          }
-        ],
-        [
-          {
-            "type": "code",
-            "value": "for...of"
-          },
-          {
-            "type": "text",
-            "value": " 循环等价于：取遍历器后反复 "
-          },
-          {
-            "type": "code",
-            "value": "next()"
-          },
-          {
-            "type": "text",
-            "value": "，直到 "
-          },
-          {
-            "type": "code",
-            "value": "done === true"
-          },
-          {
-            "type": "text",
-            "value": "；若迭代器抛错且未处理，会走 "
-          },
-          {
-            "type": "code",
-            "value": "iterator.return()"
-          },
-          {
-            "type": "text",
-            "value": " 做清理（若存在）。"
-          }
-        ],
-        [
-          {
-            "type": "code",
-            "value": "Array.from"
-          },
-          {
-            "type": "text",
-            "value": "、"
-          },
-          {
-            "type": "code",
-            "value": "[...iter]"
-          },
-          {
-            "type": "text",
-            "value": "、"
-          },
-          {
-            "type": "code",
-            "value": "Promise.all"
-          },
-          {
-            "type": "text",
-            "value": "、"
-          },
-          {
-            "type": "strong",
-            "value": "解构赋值"
-          },
-          {
-            "type": "text",
-            "value": "、"
-          },
-          {
-            "type": "code",
-            "value": "Promise.all"
-          },
-          {
-            "type": "text",
-            "value": " 等都要求右侧具备 Iterator 接口。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "手写题常考自定义遍历器；"
-          },
-          {
-            "type": "strong",
-            "value": "Generator 函数"
-          },
-          {
-            "type": "text",
-            "value": " "
-          },
-          {
-            "type": "code",
-            "value": "function*"
-          },
-          {
-            "type": "text",
-            "value": " 是生成遍历器的简便写法，原生带 Iterator 接口。"
-          }
-        ]
-      ]
-    },
-    {
       "id": "q-promise",
       "navLabel": "Promise 组合方法",
       "question": "Promise.all / race / allSettled / any 区别？什么时候用？",
@@ -1124,6 +1005,22 @@
           {
             "type": "text",
             "value": "。适合多 CDN/多镜像任意一个可用即可的兜底。"
+          }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "示例："
+          },
+          {
+            "type": "text",
+            "value": "四个静态方法取向对照。"
+          }
+        ],
+        [
+          {
+            "type": "code",
+            "value": "const ps = [Promise.resolve(1), Promise.reject('e')]\n\nPromise.all(ps)        // 一挂全挂\nPromise.allSettled(ps) // 等全部落定，带 status\nPromise.race(ps)       // 谁先完成用谁（成功或失败）\nPromise.any(ps)        // 谁先成功用谁；全失败才 AggregateError"
           }
         ]
       ]
@@ -1501,6 +1398,48 @@
             "type": "text",
             "value": "3）不存在变量提升；本质仍是 `typeof Class === \"function\"`。手写继承实现见 JavaScript 章「继承」题。"
           }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "示例："
+          },
+          {
+            "type": "text",
+            "value": "extends + super 最小继承。"
+          }
+        ],
+        [
+          {
+            "type": "code",
+            "value": "class Animal {\n  constructor(name) { this.name = name }\n  speak() { return this.name }\n}\nclass Dog extends Animal {\n  constructor(name, age) {\n    super(name)\n    this.age = age\n  }\n}"
+          }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "对比 ES5："
+          },
+          {
+            "type": "text",
+            "value": "以前常用「寄生组合」——"
+          },
+          {
+            "type": "code",
+            "value": "Parent.call(this)"
+          },
+          {
+            "type": "text",
+            "value": " 拿实例字段，"
+          },
+          {
+            "type": "code",
+            "value": "Child.prototype = Object.create(Parent.prototype)"
+          },
+          {
+            "type": "text",
+            "value": " 接原型；class 是同套路的语法糖，面试点到即可。"
+          }
         ]
       ]
     },
@@ -1614,100 +1553,21 @@
             "type": "text",
             "value": " 绑定正确。"
           }
-        ]
-      ]
-    },
-    {
-      "id": "q-esm-cjs",
-      "navLabel": "ESM vs CommonJS",
-      "question": "ES Module 和 CommonJS 区别？为啥 ESM 更利于 tree-shaking？",
-      "answer": [
+        ],
         [
           {
-            "type": "text",
-            "value": "CommonJS（"
-          },
-          {
-            "type": "code",
-            "value": "require/module.exports"
-          },
-          {
-            "type": "text",
-            "value": "）："
-          },
-          {
             "type": "strong",
-            "value": "运行时加载"
+            "value": "示例："
           },
           {
             "type": "text",
-            "value": "，导出的是值的拷贝，"
-          },
-          {
-            "type": "code",
-            "value": "module.exports"
-          },
-          {
-            "type": "text",
-            "value": " 可被运行时改写。"
+            "value": "Proxy get 拦截示意。"
           }
         ],
         [
           {
-            "type": "text",
-            "value": "ES6 "
-          },
-          {
-            "type": "strong",
-            "value": "Module 语法"
-          },
-          {
-            "type": "text",
-            "value": "（"
-          },
-          {
             "type": "code",
-            "value": "import/export"
-          },
-          {
-            "type": "text",
-            "value": "）："
-          },
-          {
-            "type": "strong",
-            "value": "编译阶段"
-          },
-          {
-            "type": "text",
-            "value": " 静态分析依赖；导出与导入是"
-          },
-          {
-            "type": "strong",
-            "value": "动态引用"
-          },
-          {
-            "type": "text",
-            "value": "（live binding），导入方读到的是同一绑定上的最新值。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "Tree-shaking 依赖静态分析：构建工具能在编译期判断哪些导出未被引用，安全删除死代码。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "CJS 的 "
-          },
-          {
-            "type": "code",
-            "value": "require(x)"
-          },
-          {
-            "type": "text",
-            "value": " 可能是动态路径，导出也可被改写，难以可靠裁剪。现代库与 Vite/Webpack 默认 ESM 为主。"
+            "value": "const obj = { a: 1 }\nconst p = new Proxy(obj, {\n  get(target, key, receiver) {\n    console.log('get', key)\n    return Reflect.get(target, key, receiver)\n  },\n})\np.a // 打印 get a，再返回 1"
           }
         ]
       ]
@@ -1950,6 +1810,22 @@
           {
             "type": "text",
             "value": " 会把 0 误当成「未设置」。"
+          }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "示例："
+          },
+          {
+            "type": "text",
+            "value": "可选链与空值合并同输入对比。"
+          }
+        ],
+        [
+          {
+            "type": "code",
+            "value": "const user = { profile: null }\nuser.profile?.name      // undefined，不抛错\nuser.profile.name       // 抛错\n\n0 || 42   // 42（0 会被 || 当成假）\n0 ?? 42   // 0（只有 null/undefined 才用右侧）"
           }
         ]
       ]

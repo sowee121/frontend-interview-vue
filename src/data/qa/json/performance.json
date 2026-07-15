@@ -560,86 +560,6 @@
       ]
     },
     {
-      "id": "q-preload",
-      "navLabel": "preload 与 prefetch",
-      "question": "link rel=preload 和 prefetch 区别？",
-      "questionNote": "preload 抢带宽拉本页关键资源；prefetch 空闲预取下一路由。",
-      "answer": [
-        [
-          {
-            "type": "code",
-            "value": "preload"
-          },
-          {
-            "type": "text",
-            "value": "："
-          },
-          {
-            "type": "strong",
-            "value": "高优先级"
-          },
-          {
-            "type": "text",
-            "value": "提前拿「本页马上要用」的字体、首屏 CSS、最大内容绘制（LCP）图或拆分 chunk。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "1）"
-          },
-          {
-            "type": "code",
-            "value": "as"
-          },
-          {
-            "type": "text",
-            "value": " 须与真实请求类型一致，否则浏览器可能浪费带宽或重复拉取。"
-          }
-        ],
-        [
-          {
-            "type": "code",
-            "value": "prefetch"
-          },
-          {
-            "type": "text",
-            "value": "："
-          },
-          {
-            "type": "strong",
-            "value": "低优先级"
-          },
-          {
-            "type": "text",
-            "value": "在空闲时预取下一页可能用到的资源，适合单页应用（SPA）路由切换。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "2）"
-          },
-          {
-            "type": "code",
-            "value": "preconnect"
-          },
-          {
-            "type": "text",
-            "value": " / "
-          },
-          {
-            "type": "code",
-            "value": "dns-prefetch"
-          },
-          {
-            "type": "text",
-            "value": " 则提前建连或做域名解析（DNS），减传输层安全（TLS）往返时延。"
-          }
-        ]
-      ]
-    },
-    {
       "id": "q-code-split",
       "navLabel": "代码分割",
       "question": "前端怎么做代码分割？",
@@ -727,6 +647,22 @@
           {
             "type": "text",
             "value": " 把框架与业务拆开；改完测首包与二次导航耗时。"
+          }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "示例："
+          },
+          {
+            "type": "text",
+            "value": "路由级懒加载。"
+          }
+        ],
+        [
+          {
+            "type": "code",
+            "value": "// Vue\ncomponent: () => import('./views/Orders.vue')\n// React\nconst Orders = lazy(() => import('./Orders'))"
           }
         ]
       ]
@@ -1071,6 +1007,184 @@
           {
             "type": "text",
             "value": "：空闲预取下一路由 chunk。可与网络安全章 DNS/TLS 优化一起答。"
+          }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "示例："
+          },
+          {
+            "type": "text",
+            "value": "常用 hint 对照。"
+          }
+        ],
+        [
+          {
+            "type": "code",
+            "value": "<link rel=\"dns-prefetch\" href=\"//cdn.example.com\">\n<link rel=\"preconnect\" href=\"https://api.example.com\" crossorigin>\n<link rel=\"preload\" href=\"/font.woff2\" as=\"font\" crossorigin>\n<link rel=\"prefetch\" href=\"/next-page.js\">"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-table-virtual",
+      "navLabel": "表格虚拟滚动",
+      "question": "大数据表格卡顿时，虚拟滚动要注意哪些点？",
+      "questionNote": "相对普通长列表：列多、行高可变、单元格控件更重。",
+      "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "一句话："
+          },
+          {
+            "type": "text",
+            "value": "只挂可视行 DOM；表格还要管列渲染成本、动态行高与卸载清理。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "1）"
+          },
+          {
+            "type": "text",
+            "value": "行虚拟化按 "
+          },
+          {
+            "type": "code",
+            "value": "scrollTop"
+          },
+          {
+            "type": "text",
+            "value": " 算可视区间；列很多时避免每格都挂重型编辑器，按需进入编辑态。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2）"
+          },
+          {
+            "type": "text",
+            "value": "动态行高要估算或测量缓存，否则滚动跳动；固定行高实现更稳。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3）"
+          },
+          {
+            "type": "text",
+            "value": "配合服务端分页：虚拟滚动管「这一页内」渲染，不是一次拉全量十万行。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "4）"
+          },
+          {
+            "type": "text",
+            "value": "路由离开销毁表格实例与数据缓存，防泄漏与残留监听。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-echarts-lifecycle",
+      "navLabel": "ECharts 生命周期",
+      "question": "封装 ECharts 时，初始化和销毁要注意啥？",
+      "questionNote": "init、setOption、resize、dispose；主题切换别叠多个实例。",
+      "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "一句话："
+          },
+          {
+            "type": "text",
+            "value": "容器有尺寸再 "
+          },
+          {
+            "type": "code",
+            "value": "echarts.init"
+          },
+          {
+            "type": "text",
+            "value": "；卸载必须 "
+          },
+          {
+            "type": "code",
+            "value": "dispose"
+          },
+          {
+            "type": "text",
+            "value": "；窗口变化听 "
+          },
+          {
+            "type": "code",
+            "value": "resize"
+          },
+          {
+            "type": "text",
+            "value": "。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "1）"
+          },
+          {
+            "type": "text",
+            "value": "数据更新优先 "
+          },
+          {
+            "type": "code",
+            "value": "setOption"
+          },
+          {
+            "type": "text",
+            "value": "，避免反复 init 叠实例。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2）"
+          },
+          {
+            "type": "text",
+            "value": "按需引入图表与组件，减小首包；弹窗里的图等可见后再 init。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3）"
+          },
+          {
+            "type": "text",
+            "value": "主题或深色切换：换 option/theme 或重建一次，并清掉旧实例。"
+          }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "示例："
+          },
+          {
+            "type": "text",
+            "value": "init / 更新 / 销毁。"
+          }
+        ],
+        [
+          {
+            "type": "code",
+            "value": "const chart = echarts.init(el)\nchart.setOption(option)\nwindow.addEventListener('resize', () => chart.resize())\n// 卸载\nchart.dispose()"
           }
         ]
       ]

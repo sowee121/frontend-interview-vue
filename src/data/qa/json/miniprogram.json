@@ -237,6 +237,22 @@
             "type": "text",
             "value": "口述技巧：页面展示用 onShow 拉数据；onLoad 里拿路由参数；离开页在 onUnload 清定时器。"
           }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "示例："
+          },
+          {
+            "type": "text",
+            "value": "Page 常用钩子骨架。"
+          }
+        ],
+        [
+          {
+            "type": "code",
+            "value": "Page({\n  onLoad(query) { /* 读参、首拉 */ },\n  onShow() { /* 每次可见 */ },\n  onHide() { /* 切入后台 */ },\n  onUnload() { /* 卸载清理 */ },\n})"
+          }
         ]
       ]
     },
@@ -368,6 +384,22 @@
             "type": "text",
             "value": "原因：跨线程通信有成本，频繁/大数据会掉帧、交互发粘。"
           }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "示例："
+          },
+          {
+            "type": "text",
+            "value": "只传变化字段。"
+          }
+        ],
+        [
+          {
+            "type": "code",
+            "value": "// 差：整表推过去\nthis.setData({ list: this.data.list })\n// 好：路径更新\nthis.setData({ 'list[2].status': 'paid' })"
+          }
         ]
       ]
     },
@@ -452,6 +484,22 @@
           {
             "type": "text",
             "value": "；需要穿透用 externalClasses 或 :host。"
+          }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "示例："
+          },
+          {
+            "type": "text",
+            "value": "properties + 向父触发事件。"
+          }
+        ],
+        [
+          {
+            "type": "code",
+            "value": "Component({\n  properties: { title: { type: String, value: '' } },\n  methods: {\n    onTap() {\n      this.triggerEvent('ok', { id: 1 })\n    },\n  },\n})"
           }
         ]
       ]
@@ -818,6 +866,22 @@
             "type": "text",
             "value": " 要写清楚落地页参数，方便统计与还原场景。"
           }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "示例："
+          },
+          {
+            "type": "text",
+            "value": "自定义分享卡片。"
+          }
+        ],
+        [
+          {
+            "type": "code",
+            "value": "onShareAppMessage() {\n  return {\n    title: '一起寄件',\n    path: '/pages/index/index?from=share',\n    imageUrl: 'https://cdn.example.com/share.png',\n  }\n}"
+          }
         ]
       ]
     },
@@ -869,6 +933,158 @@
           {
             "type": "text",
             "value": "面试答法：业务只要微信，可用原生或 uni；要多端且团队 React 选 Taro。注意各端 API 差异与条件编译。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-mp-setdata-path",
+      "navLabel": "setData 路径更新",
+      "question": "小程序 setData 除了少传数据，路径更新还能怎么优化？",
+      "questionNote": "在已有 setData 题上加深：路径写法与合并更新。",
+      "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "一句话："
+          },
+          {
+            "type": "text",
+            "value": "用路径只改树上一枝，并合并同屏多次更新，减少逻辑层到视图层的通信量。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "1）"
+          },
+          {
+            "type": "text",
+            "value": "路径更新如 "
+          },
+          {
+            "type": "code",
+            "value": "'list[3].status'"
+          },
+          {
+            "type": "text",
+            "value": "，避免每次把整个 "
+          },
+          {
+            "type": "code",
+            "value": "list"
+          },
+          {
+            "type": "text",
+            "value": " 序列化过去。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2）"
+          },
+          {
+            "type": "text",
+            "value": "同一次用户操作能合并的字段放一次 "
+          },
+          {
+            "type": "code",
+            "value": "setData"
+          },
+          {
+            "type": "text",
+            "value": "；输入类配合防抖。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3）"
+          },
+          {
+            "type": "text",
+            "value": "超大列表优先虚拟列表或分页，而不是指望「偷偷 patch 框架」；自定义优化要能量化证明。"
+          }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "示例："
+          },
+          {
+            "type": "text",
+            "value": "合并同屏多次更新。"
+          }
+        ],
+        [
+          {
+            "type": "code",
+            "value": "this.setData({\n  'form.name': name,\n  'form.phone': phone,\n}) // 一次通信多字段"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-mp-ci-publish",
+      "navLabel": "小程序 CI 发布",
+      "question": "小程序多环境与自动化上传发布一般怎么做？",
+      "questionNote": "env 脚本切配置；miniprogram-ci 一类工具上传；混淆放流水线。",
+      "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "一句话："
+          },
+          {
+            "type": "text",
+            "value": "用脚本切换环境变量与 appid 配置，CI 里安装依赖后调用官方上传接口提体验版/提交审核。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "1）"
+          },
+          {
+            "type": "text",
+            "value": "本地："
+          },
+          {
+            "type": "code",
+            "value": "env sit|prod"
+          },
+          {
+            "type": "text",
+            "value": " 一类命令写入接口域名、埋点开关等，避免手改配置漏提测。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2）"
+          },
+          {
+            "type": "text",
+            "value": "流水线：密钥放 CI 密钥库；"
+          },
+          {
+            "type": "code",
+            "value": "miniprogram-ci"
+          },
+          {
+            "type": "text",
+            "value": "（或平台等价工具）上传，失败阻断。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3）"
+          },
+          {
+            "type": "text",
+            "value": "代码混淆、掉 console 建议只在发布流水线开，本地调试保持可读。"
           }
         ]
       ]

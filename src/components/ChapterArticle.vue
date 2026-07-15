@@ -23,6 +23,6 @@ defineProps<{
       v-for="q in payload.items"
       :key="q.id"
       :item="q"
-      :syntax-highlight-mode="payload.slug === 'coding' ? 'coding-functions' : 'off'"
+      :syntax-highlight-mode="'coding-functions'"
     />
 </template>

@@ -4,7 +4,7 @@ export type RichSegment =
   | { type: 'strong'; value: string }
   | { type: 'code'; value: string; highlight?: boolean }
 
-/** RichAnswer：编程题章节仅对函数实现块启用高亮 */
+/** RichAnswer：coding / electron 章对「单段纯 code」启用块级高亮 */
 export type SyntaxHighlightMode = 'off' | 'coding-functions'
 
 export interface QaItem {
