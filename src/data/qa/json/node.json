@@ -2,33 +2,33 @@
   "slug": "node",
   "title": "Node",
   "documentTitle": "Node",
-  "description": "面向前端初学 Node / BFF：从「Node 是什么」到事件循环、模块、中间件，答案偏白话，便于零基础建立图景。",
-  "lead": "默认你只熟悉浏览器里的 JavaScript；本章用前端能类比的说法讲 Node，每题可先记「一句话结论」再往下看细节。",
+  "description": "浏览器与 Node 差异、事件循环与模块、中间件与 BFF，以及环境变量、安全与 npm scripts。",
+  "lead": "以前端视角理解 Node：环境差异、模块与中间件，以及常见的 BFF 协作点。",
   "items": [
     {
       "id": "q-node-vs-browser",
       "navLabel": "Node 与浏览器 JS",
-      "question": "Node 里的 JavaScript 和浏览器里有什么本质区别？",
-      "questionNote": "先建立图景：写 Node 不是换一门语言，而是换了一个运行环境。",
+      "question": "Node 中的 JavaScript 与浏览器环境有哪些本质区别？",
+      "questionNote": "核心差异在运行环境与可用 API，而非 JavaScript 语法本身。",
       "answer": [
         [
           {
             "type": "strong",
-            "value": "一句话："
+            "value": "要点："
           },
           {
             "type": "text",
-            "value": "语法都是 JavaScript，但 Node 跑在服务器侧，能读写文件、监听端口，没有 DOM。"
+            "value": "语法同为 JavaScript；Node 运行于服务端，可访问文件系统与网络端口，不提供 DOM、BOM 等浏览器 API。"
           }
         ],
         [
           {
             "type": "strong",
-            "value": "浏览器里："
+            "value": "浏览器环境："
           },
           {
             "type": "text",
-            "value": "JS 主要操作页面（DOM）、发请求（fetch）、响应用户点击；代码在标签或打包后的 bundle 里执行，有 "
+            "value": "JavaScript 运行于页面上下文，可操作 DOM、发起网络请求并响应用户交互；执行环境提供 "
           },
           {
             "type": "code",
@@ -44,17 +44,17 @@
           },
           {
             "type": "text",
-            "value": "。"
+            "value": " 等全局对象。"
           }
         ],
         [
           {
             "type": "strong",
-            "value": "Node 里："
+            "value": "Node 环境："
           },
           {
             "type": "text",
-            "value": "JS 跑在服务器（或本机终端），基于 "
+            "value": "JavaScript 运行于服务器或本机进程，基于 "
           },
           {
             "type": "code",
@@ -62,7 +62,7 @@
           },
           {
             "type": "text",
-            "value": " 执行引擎 + "
+            "value": " 引擎与 "
           },
           {
             "type": "code",
@@ -70,7 +70,7 @@
           },
           {
             "type": "text",
-            "value": " 处理文件、网络等 I/O。没有窗口对象，全局用 "
+            "value": " 处理文件、网络等 I/O；无窗口对象，全局入口为 "
           },
           {
             "type": "code",
@@ -84,11 +84,11 @@
         [
           {
             "type": "strong",
-            "value": "前端为什么要学："
+            "value": "前端学习价值："
           },
           {
             "type": "text",
-            "value": "写本地开发工具（Vite）、写 BFF 聚合接口、写简单后端，都是「用 JS 在 Node 里跑」，不是重新学一门语言。"
+            "value": "本地构建工具（Vite）、BFF 接口聚合、轻量后端服务均在 Node 中运行 JavaScript，无需另学语言。"
           }
         ]
       ]
@@ -96,29 +96,29 @@
     {
       "id": "q-node-event-loop",
       "navLabel": "Node 事件循环",
-      "question": "Node 的事件循环和浏览器有啥不同？",
-      "questionNote": "和浏览器一样要理解「单线程 + 异步」，但调度细节由 libuv 负责。",
+      "question": "Node 的事件循环与浏览器有何不同？",
+      "questionNote": "与浏览器同为单线程配合异步 I/O，阶段调度由 libuv 负责。",
       "answer": [
         [
           {
             "type": "strong",
-            "value": "一句话："
+            "value": "要点："
           },
           {
             "type": "text",
-            "value": "主线程仍是一条，耗时 I/O 交给系统，完成后回调进队列；别在主线程做重计算。"
+            "value": "主线程仍为单条执行流；耗时 I/O 交由操作系统异步处理，完成后回调入队，主线程不宜执行重计算。"
           }
         ],
         [
           {
             "type": "text",
-            "value": "浏览器里你学过：宏任务（如 setTimeout）、微任务（Promise.then）。一次执行完同步代码，再清微任务，再取宏任务。"
+            "value": "浏览器侧：宏任务（如 setTimeout）与微任务（Promise.then）交替调度——同步代码执行完毕后清空微任务队列，再取下一宏任务。"
           }
         ],
         [
           {
             "type": "strong",
-            "value": "Node 里："
+            "value": "Node 侧："
           },
           {
             "type": "text",
@@ -130,17 +130,17 @@
           },
           {
             "type": "text",
-            "value": " 管理阶段（如 timers、poll、check）。每个阶段结束后会清空微任务队列，再进入下一阶段。"
+            "value": " 管理 timers、poll、check 等阶段；每阶段结束后清空微任务队列，再进入下一阶段。"
           }
         ],
         [
           {
             "type": "strong",
-            "value": "和写前端的关系："
+            "value": "与业务开发："
           },
           {
             "type": "text",
-            "value": "写 "
+            "value": "执行 "
           },
           {
             "type": "code",
@@ -148,7 +148,7 @@
           },
           {
             "type": "text",
-            "value": " 时，读文件在后台进行，主线程可以继续接别的请求；读完后 Promise 进入微任务，你的 "
+            "value": " 时，读文件在后台进行，主线程可继续处理其他请求；完成后 Promise 进入微任务，"
           },
           {
             "type": "code",
@@ -156,17 +156,17 @@
           },
           {
             "type": "text",
-            "value": " 后面代码才继续。"
+            "value": " 后续代码才继续。"
           }
         ],
         [
           {
             "type": "strong",
-            "value": "小白易踩坑："
+            "value": "常见陷阱："
           },
           {
             "type": "text",
-            "value": "在接口里做大量循环、压缩、加密会卡住所有用户请求。这类 CPU 任务用 "
+            "value": "在接口处理中执行大量循环、压缩或加密会阻塞所有用户请求；此类 CPU 密集任务应使用 "
           },
           {
             "type": "code",
@@ -174,7 +174,7 @@
           },
           {
             "type": "text",
-            "value": " 或单独服务。"
+            "value": " 或独立服务。"
           }
         ]
       ]
@@ -182,17 +182,17 @@
     {
       "id": "q-node-modules",
       "navLabel": "CommonJS 与 ESM",
-      "question": "Node 里 CommonJS 和 ESM 怎么选？",
-      "questionNote": "模块就是「怎么在一个文件里引用另一个文件」。",
+      "question": "Node 中 CommonJS 与 ESM 应如何选择？",
+      "questionNote": "模块体系决定文件间如何引用与导出。",
       "answer": [
         [
           {
             "type": "strong",
-            "value": "一句话："
+            "value": "要点："
           },
           {
             "type": "text",
-            "value": "老项目常见 require；新项目推荐 import，和前端 Vite 一致。"
+            "value": "遗留项目常见 require；新项目推荐 ESM import，与前端 Vite 工程保持一致。"
           }
         ],
         [
@@ -214,7 +214,7 @@
           },
           {
             "type": "text",
-            "value": "。在运行时加载，"
+            "value": "；运行时加载，"
           },
           {
             "type": "code",
@@ -222,13 +222,13 @@
           },
           {
             "type": "text",
-            "value": " 是同步的（所以不适合浏览器原生用）。"
+            "value": " 为同步调用，不适合浏览器原生直接使用。"
           }
         ],
         [
           {
             "type": "text",
-            "value": "导出对象的属性可以后续再改，引用方看到的是同一个对象引用。"
+            "value": "导出对象的属性可后续修改，引用方持有同一对象引用。"
           }
         ],
         [
@@ -250,7 +250,7 @@
           },
           {
             "type": "text",
-            "value": "。静态结构，利于打包分析；"
+            "value": "；静态结构利于打包分析；"
           },
           {
             "type": "code",
@@ -258,7 +258,7 @@
           },
           {
             "type": "text",
-            "value": " 里写 "
+            "value": " 配置 "
           },
           {
             "type": "code",
@@ -266,7 +266,7 @@
           },
           {
             "type": "text",
-            "value": " 则 "
+            "value": " 后 "
           },
           {
             "type": "code",
@@ -280,11 +280,11 @@
         [
           {
             "type": "strong",
-            "value": "怎么记："
+            "value": "选型建议："
           },
           {
             "type": "text",
-            "value": "前端工程化已是 ESM 为主；维护老 Express 项目时会见到 require。混用可在 ESM 里 "
+            "value": "前端工程化以 ESM 为主；维护老 Express 项目时会见到 require。混用可在 ESM 中通过 "
           },
           {
             "type": "code",
@@ -292,91 +292,7 @@
           },
           {
             "type": "text",
-            "value": "，面试说清「新项目优先 ESM」即可。细节见 ES6 章 Module 题。"
-          }
-        ]
-      ]
-    },
-    {
-      "id": "q-node-buffer",
-      "navLabel": "Buffer",
-      "question": "Buffer 是干啥的？为啥前端很少见到？",
-      "questionNote": "处理「不是字符串」的二进制数据时用。",
-      "answer": [
-        [
-          {
-            "type": "strong",
-            "value": "一句话："
-          },
-          {
-            "type": "text",
-            "value": "Buffer 是固定长度的字节数组，用来表示文件内容、图片、网络包等二进制。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "浏览器里图片、文件多用 Blob、ArrayBuffer；Node 早期用 "
-          },
-          {
-            "type": "code",
-            "value": "Buffer"
-          },
-          {
-            "type": "text",
-            "value": "，现在它本质上是 "
-          },
-          {
-            "type": "code",
-            "value": "Uint8Array"
-          },
-          {
-            "type": "text",
-            "value": " 的子类。"
-          }
-        ],
-        [
-          {
-            "type": "strong",
-            "value": "常见场景："
-          },
-          {
-            "type": "text",
-            "value": "读一张图片进内存、对接加密、拼 HTTP 响应体。字符串与 Buffer 互转要指定编码，如 "
-          },
-          {
-            "type": "code",
-            "value": "utf8"
-          },
-          {
-            "type": "text",
-            "value": "、"
-          },
-          {
-            "type": "code",
-            "value": "base64"
-          },
-          {
-            "type": "text",
-            "value": "。"
-          }
-        ],
-        [
-          {
-            "type": "strong",
-            "value": "小白注意："
-          },
-          {
-            "type": "text",
-            "value": "不要用 "
-          },
-          {
-            "type": "code",
-            "value": "fs.readFile"
-          },
-          {
-            "type": "text",
-            "value": " 一次读几个 G 的大文件，会把内存撑爆；大文件用流（下一题）。"
+            "value": " 桥接；可总结为「新项目优先 ESM」。细节见 ES6 章 Module 题。"
           }
         ]
       ]
@@ -390,11 +306,11 @@
         [
           {
             "type": "strong",
-            "value": "一句话："
+            "value": "要点："
           },
           {
             "type": "text",
-            "value": "数据太大或来得持续时，用流一块块处理，省内存、能显示进度。"
+            "value": "数据体量大或持续到达时，用流分块处理，可节省内存并支持进度反馈。"
           }
         ],
         [
@@ -404,13 +320,13 @@
           },
           {
             "type": "text",
-            "value": "Readable（读）、Writable（写）、Duplex（读写）、Transform（读进来加工再写出，如 gzip）。"
+            "value": "Readable（读）、Writable（写）、Duplex（读写）、Transform（读入加工后写出，如 gzip）。"
           }
         ],
         [
           {
             "type": "text",
-            "value": "类比前端：上传大文件分片、下载时边下边写，底层常是流；"
+            "value": "类比前端：大文件分片上传、边下边写，底层常基于流；浏览器中 "
           },
           {
             "type": "code",
@@ -418,7 +334,7 @@
           },
           {
             "type": "text",
-            "value": " 在浏览器里也是 ReadableStream。"
+            "value": " 也是 ReadableStream。"
           }
         ],
         [
@@ -432,7 +348,7 @@
           },
           {
             "type": "text",
-            "value": " 把读端接到写端；若写端慢，读端会暂停，避免内存堆积，这叫背压（backpressure）。"
+            "value": " 将读端接到写端；写端较慢时读端会暂停，避免内存堆积，称为背压（backpressure）。"
           }
         ],
         [
@@ -456,23 +372,23 @@
     {
       "id": "q-node-middleware",
       "navLabel": "中间件",
-      "question": "Koa / Express 中间件怎么理解？",
-      "questionNote": "写接口时「一层层经过的函数」，和前端路由守卫有点像。",
+      "question": "如何理解 Koa / Express 中间件机制？",
+      "questionNote": "请求依次穿过多个处理函数，机制上可类比前端路由守卫。",
       "answer": [
         [
           {
             "type": "strong",
-            "value": "一句话："
+            "value": "要点："
           },
           {
             "type": "text",
-            "value": "每个 HTTP 请求会依次穿过多个中间件函数，做日志、解析 body、鉴权等，最后才到你的业务 handler。"
+            "value": "每个 HTTP 请求依次穿过多个中间件，完成日志记录、body 解析、鉴权等，最终到达业务 handler。"
           }
         ],
         [
           {
             "type": "strong",
-            "value": "Express（更常见入门）："
+            "value": "Express（入门常见）："
           },
           {
             "type": "text",
@@ -484,7 +400,7 @@
           },
           {
             "type": "text",
-            "value": "。调用 "
+            "value": "；调用 "
           },
           {
             "type": "code",
@@ -500,7 +416,7 @@
           },
           {
             "type": "text",
-            "value": " 就结束。适合快速写 REST API。"
+            "value": " 则结束。适合快速编写 REST API。"
           }
         ],
         [
@@ -526,7 +442,7 @@
           },
           {
             "type": "text",
-            "value": " 之前的代码像「进去」，之后的像「出来」，适合统一错误处理、链路日志。"
+            "value": " 之前的代码为「进入」阶段，之后为「返回」阶段，适合统一错误处理与链路日志。"
           }
         ],
         [
@@ -536,7 +452,7 @@
           },
           {
             "type": "text",
-            "value": "解析 JSON body、CORS、记录请求日志、JWT 鉴权、统一 try/catch 返回 500。"
+            "value": "JSON body 解析、跨域资源共享（CORS）、请求日志、JWT 鉴权、统一异常捕获并返回 500。"
           }
         ]
       ]
@@ -544,33 +460,47 @@
     {
       "id": "q-node-bff",
       "navLabel": "BFF",
-      "question": "什么是 BFF？前端为什么要一层 Node？",
-      "questionNote": "BFF = 给前端量身定做的薄后端。",
+      "question": "什么是 BFF？前端为何需要一层 Node 服务？",
+      "questionNote": "BFF（Backend For Frontend）为前端页面定制的接口聚合层，非完整领域服务。",
       "answer": [
         [
           {
             "type": "strong",
-            "value": "一句话："
+            "value": "要点："
           },
           {
             "type": "text",
-            "value": "浏览器不直接打十个微服务，而是打你的 Node 层，由 Node 聚合、裁剪、鉴权后再返回给页面。"
+            "value": "浏览器不直接调用多个微服务，而是请求 BFF 层，由 Node 完成聚合、字段裁剪与鉴权后返回页面所需数据。"
           }
         ],
         [
           {
             "type": "strong",
-            "value": "解决什么问题："
-          },
+            "value": "解决的问题："
+          }
+        ],
+        [
           {
             "type": "text",
-            "value": "1）减少浏览器跨域和暴露多个域名。2）把数据库密钥、内部 API Key 放在服务端。3）按页面需要组装字段，移动端和 Web 可以各有一个 BFF。"
+            "value": "1）减少浏览器直连多微服务带来的跨域与域名暴露问题。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2）将数据库密钥、内部 API Key 等敏感凭据保留在服务端。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3）按页面视图组装字段，移动端与 Web 可分别维护独立 BFF。"
           }
         ],
         [
           {
             "type": "strong",
-            "value": "前端在 BFF 里常做什么："
+            "value": "前端在 BFF 中的职责："
           },
           {
             "type": "text",
@@ -582,7 +512,7 @@
           },
           {
             "type": "text",
-            "value": " 写路由，"
+            "value": " 编写路由，"
           },
           {
             "type": "code",
@@ -590,17 +520,17 @@
           },
           {
             "type": "text",
-            "value": " 调下游 HTTP，合并结果，返回 JSON 给 Vue/React。TypeScript 类型可与前端共享。"
+            "value": " 调用下游 HTTP，合并结果后返回 JSON 给 Vue/React；TypeScript 类型可与前端共享。"
           }
         ],
         [
           {
             "type": "strong",
-            "value": "边界："
+            "value": "职责边界："
           },
           {
             "type": "text",
-            "value": "BFF 别写成「万能后端」；复杂订单、支付规则仍应在领域服务里，BFF 只做聚合与适配。"
+            "value": "BFF 不宜承担完整领域逻辑；复杂订单、支付规则仍应在领域服务中实现，BFF 仅做聚合与适配。"
           }
         ]
       ]
@@ -608,17 +538,17 @@
     {
       "id": "q-node-env",
       "navLabel": "环境变量",
-      "question": "Node 环境变量怎么管理？",
-      "questionNote": "配置「不同环境用不同参数」，别把密码写进代码。",
+      "question": "Node 环境变量应如何管理？",
+      "questionNote": "按环境注入配置参数，敏感信息不得硬编码进源码。",
       "answer": [
         [
           {
             "type": "strong",
-            "value": "一句话："
+            "value": "要点："
           },
           {
             "type": "text",
-            "value": "用 "
+            "value": "通过 "
           },
           {
             "type": "code",
@@ -626,7 +556,7 @@
           },
           {
             "type": "text",
-            "value": " 读配置；本地用 "
+            "value": " 读取配置；本地使用 "
           },
           {
             "type": "code",
@@ -634,7 +564,7 @@
           },
           {
             "type": "text",
-            "value": "，生产由运维/CI 注入。"
+            "value": "，生产由运维或 CI 注入。"
           }
         ],
         [
@@ -666,7 +596,7 @@
           },
           {
             "type": "text",
-            "value": "常装 "
+            "value": "常安装 "
           },
           {
             "type": "code",
@@ -682,7 +612,7 @@
           },
           {
             "type": "text",
-            "value": " 文件（只放开发用假数据）。"
+            "value": "（仅放开发用假数据）。"
           },
           {
             "type": "code",
@@ -716,13 +646,13 @@
           },
           {
             "type": "text",
-            "value": " 时关闭详细错误堆栈、收紧日志。"
+            "value": " 时关闭详细错误堆栈、收紧日志级别。"
           }
         ],
         [
           {
             "type": "text",
-            "value": "和前端对应：Vite 的 "
+            "value": "与前端对应：Vite 的 "
           },
           {
             "type": "code",
@@ -730,7 +660,7 @@
           },
           {
             "type": "text",
-            "value": " 是打包时注入；Node 是运行时读 "
+            "value": " 在打包时注入；Node 在运行时读取 "
           },
           {
             "type": "code",
@@ -738,235 +668,7 @@
           },
           {
             "type": "text",
-            "value": "，概念类似但时机不同。"
-          }
-        ]
-      ]
-    },
-    {
-      "id": "q-node-fs-path",
-      "navLabel": "fs 与 path",
-      "question": "读写文件和路径要注意啥？",
-      "questionNote": "Node 可以直接碰磁盘，这是和浏览器最大的能力差异之一。",
-      "answer": [
-        [
-          {
-            "type": "strong",
-            "value": "一句话："
-          },
-          {
-            "type": "text",
-            "value": "用 "
-          },
-          {
-            "type": "code",
-            "value": "fs"
-          },
-          {
-            "type": "text",
-            "value": " 模块读写文件，用 "
-          },
-          {
-            "type": "code",
-            "value": "path"
-          },
-          {
-            "type": "text",
-            "value": " 安全拼接路径，别手写 "
-          },
-          {
-            "type": "code",
-            "value": "../"
-          },
-          {
-            "type": "text",
-            "value": " 字符串。"
-          }
-        ],
-        [
-          {
-            "type": "strong",
-            "value": "读文件："
-          },
-          {
-            "type": "text",
-            "value": "推荐 "
-          },
-          {
-            "type": "code",
-            "value": "node:fs/promises"
-          },
-          {
-            "type": "text",
-            "value": " + "
-          },
-          {
-            "type": "code",
-            "value": "async/await"
-          },
-          {
-            "type": "text",
-            "value": "。文本用 "
-          },
-          {
-            "type": "code",
-            "value": "utf8"
-          },
-          {
-            "type": "text",
-            "value": " 编码；二进制不指定编码得 Buffer。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "例："
-          },
-          {
-            "type": "code",
-            "value": "await fs.readFile('a.txt', 'utf8')"
-          },
-          {
-            "type": "text",
-            "value": "。CJS 用 "
-          },
-          {
-            "type": "code",
-            "value": "require('node:fs/promises')"
-          },
-          {
-            "type": "text",
-            "value": "，ESM 用 "
-          },
-          {
-            "type": "code",
-            "value": "import fs from 'node:fs/promises'"
-          },
-          {
-            "type": "text",
-            "value": "。"
-          }
-        ],
-        [
-          {
-            "type": "strong",
-            "value": "路径："
-          },
-          {
-            "type": "code",
-            "value": "path.join(__dirname, 'data', 'file.json')"
-          },
-          {
-            "type": "text",
-            "value": " 自动处理斜杠；"
-          },
-          {
-            "type": "code",
-            "value": "path.resolve"
-          },
-          {
-            "type": "text",
-            "value": " 转绝对路径。对外暴露下载接口时要校验路径，防止 "
-          },
-          {
-            "type": "code",
-            "value": "../../../etc/passwd"
-          },
-          {
-            "type": "text",
-            "value": " 这类目录遍历攻击。"
-          }
-        ],
-        [
-          {
-            "type": "strong",
-            "value": "目录操作："
-          },
-          {
-            "type": "code",
-            "value": "fs.mkdir"
-          },
-          {
-            "type": "text",
-            "value": "、"
-          },
-          {
-            "type": "code",
-            "value": "fs.readdir"
-          },
-          {
-            "type": "text",
-            "value": " 等；删除、重命名前想清楚是否递归，避免误删。"
-          }
-        ]
-      ]
-    },
-    {
-      "id": "q-node-worker",
-      "navLabel": "Worker 线程",
-      "question": "CPU 密集怎么办？",
-      "questionNote": "单线程忙不过来时的三种出路。",
-      "answer": [
-        [
-          {
-            "type": "strong",
-            "value": "一句话："
-          },
-          {
-            "type": "text",
-            "value": "主线程只适合 I/O 密集；算密码、压图、跑复杂算法要挪走。"
-          }
-        ],
-        [
-          {
-            "type": "strong",
-            "value": "1）worker_threads："
-          },
-          {
-            "type": "text",
-            "value": "同一进程里开线程，适合算得快、要共享部分内存的任务。"
-          }
-        ],
-        [
-          {
-            "type": "strong",
-            "value": "2）child_process："
-          },
-          {
-            "type": "text",
-            "value": "spawn 子进程，隔离更好，像另起一个 Node 程序干活。"
-          }
-        ],
-        [
-          {
-            "type": "strong",
-            "value": "3）架构层："
-          },
-          {
-            "type": "text",
-            "value": "多开几个 Node 实例 + Nginx 负载均衡，或把计算交给专门的服务（Java/Go/云函数）。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "小白记法：接口卡死先想是不是在主线程算了太久；上传下载慢多半是 I/O，用流和异步即可，不必上线程。"
-          }
-        ],
-        [
-          {
-            "type": "strong",
-            "value": "示例："
-          },
-          {
-            "type": "text",
-            "value": "worker_threads 最小通信。"
-          }
-        ],
-        [
-          {
-            "type": "code",
-            "value": "import { Worker } from 'node:worker_threads'\nconst w = new Worker('./cpu.js')\nw.postMessage({ n: 40 })\nw.on('message', console.log)"
+            "value": "，概念类似但注入时机不同。"
           }
         ]
       ]
@@ -974,29 +676,29 @@
     {
       "id": "q-node-security",
       "navLabel": "Node 安全",
-      "question": "写 Node 接口时前端常协作的安全点有哪些？",
-      "questionNote": "BFF 一旦对外，就要当「真的后端」来想安全。",
+      "question": "编写 Node 接口时，前端常需协作的安全要点有哪些？",
+      "questionNote": "BFF 对外暴露后须按正式后端标准落实鉴权、校验与限流。",
       "answer": [
         [
           {
             "type": "strong",
-            "value": "一句话："
+            "value": "要点："
           },
           {
             "type": "text",
-            "value": "所有入参都不可信；密钥只在服务端；浏览器侧仍要防 XSS/CSRF。"
+            "value": "所有入参均不可信；密钥仅存服务端；浏览器侧仍须防范跨站脚本攻击（XSS）与跨站请求伪造（CSRF）。"
           }
         ],
         [
           {
             "type": "text",
-            "value": "1）校验与限流：body/query 做 schema 校验；登录、发短信接口加频率限制，防刷。"
+            "value": "1）校验与限流：对 body/query 做 schema 校验；登录、发短信接口加频率限制，防刷。"
           }
         ],
         [
           {
             "type": "text",
-            "value": "2）CORS：只允许公司前端域名，慎用 "
+            "value": "2）CORS：仅允许公司前端域名，慎用 "
           },
           {
             "type": "code",
@@ -1004,19 +706,19 @@
           },
           {
             "type": "text",
-            "value": " 配凭证。"
+            "value": " 配合凭证。"
           }
         ],
         [
           {
             "type": "text",
-            "value": "3）HTTP 头：可用 helmet 设置安全头；错误响应生产环境别返回完整堆栈给外网。"
+            "value": "3）HTTP 头：可用 helmet 设置安全头；生产环境错误响应勿向外网返回完整堆栈。"
           }
         ],
         [
           {
             "type": "text",
-            "value": "4）依赖：定期 "
+            "value": "4）依赖：定期执行 "
           },
           {
             "type": "code",
@@ -1024,7 +726,7 @@
           },
           {
             "type": "text",
-            "value": "；XSS/CSRF/CSP 机制见网络安全章。"
+            "value": "；XSS/CSRF/内容安全策略（CSP）机制见网络安全章。"
           }
         ]
       ]
@@ -1032,17 +734,17 @@
     {
       "id": "q-node-npm-scripts",
       "navLabel": "npm scripts",
-      "question": "package.json 里 dependencies 和 scripts 怎么理解？",
-      "questionNote": "和前端项目里的 package.json 是同一套概念。",
+      "question": "如何理解 package.json 中的 dependencies 与 scripts？",
+      "questionNote": "与前端项目里的 package.json 是同一套概念。",
       "answer": [
         [
           {
             "type": "strong",
-            "value": "一句话："
+            "value": "要点："
           },
           {
             "type": "text",
-            "value": "dependencies 是运行时要的包；scripts 是 "
+            "value": "dependencies 为运行时依赖；scripts 定义 "
           },
           {
             "type": "code",
@@ -1064,7 +766,7 @@
           },
           {
             "type": "text",
-            "value": "（线上运行要，如 express）、"
+            "value": "（线上运行，如 express）、"
           },
           {
             "type": "code",
@@ -1118,13 +820,13 @@
           },
           {
             "type": "text",
-            "value": " 临时执行没装进 dependencies 的 CLI。"
+            "value": " 临时执行未装入 dependencies 的 CLI。"
           }
         ],
         [
           {
             "type": "text",
-            "value": "和前端一样会有 "
+            "value": "与前端一样会有 "
           },
           {
             "type": "code",
@@ -1140,7 +842,7 @@
           },
           {
             "type": "text",
-            "value": " 锁版本；monorepo、pnpm 细节见工程化章。"
+            "value": " 锁定版本；monorepo、pnpm 细节见工程化章。"
           }
         ]
       ]

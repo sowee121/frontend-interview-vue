@@ -2,15 +2,25 @@
   "slug": "browser",
   "title": "浏览器",
   "documentTitle": "浏览器",
-  "description": "围绕页面渲染链路、脚本调度、存储与跨页通信，补齐五年前端日常会碰到的浏览器机制。",
-  "lead": "从「输入网址到首屏」出发，覆盖脚本加载、存储选型与常用观察器。",
+  "description": "从输入 URL 到渲染、脚本 defer/async、重排重绘与存储，以及同源、跨页通信与观察器。",
+  "lead": "从导航到渲染串起存储、同源与跨页通信；观察器用于懒加载等场景。",
   "items": [
     {
       "id": "q-url",
       "navLabel": "输入网址到显示",
-      "question": "从输入网址到页面显示，大概经历了啥？",
-      "questionNote": "按阶段串讲即可：解析、建连、HTML/CSS 到绘制；细节深度按面试官追问展开。",
+      "question": "从输入网址到页面显示，大致经历哪些阶段？",
+      "questionNote": "按阶段串联：域名解析、建连、HTML/CSS 解析至布局绘制；细节深度视追问展开。",
       "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "要点："
+          },
+          {
+            "type": "text",
+            "value": "域名解析 → 建连 → 请求 HTML → 解析构建 DOM/CSSOM → 布局绘制 → 合成，各阶段可并行优化。"
+          }
+        ],
         [
           {
             "type": "text",
@@ -40,7 +50,7 @@
           },
           {
             "type": "strong",
-            "value": "TLS 握手"
+            "value": "传输层安全（TLS）握手"
           },
           {
             "type": "text",
@@ -80,7 +90,7 @@
           },
           {
             "type": "text",
-            "value": " 并行拉 CSS，生成 "
+            "value": " 并行加载样式表，生成 "
           },
           {
             "type": "strong",
@@ -110,7 +120,7 @@
           },
           {
             "type": "text",
-            "value": " 算几何、"
+            "value": " 计算几何信息、"
           },
           {
             "type": "strong",
@@ -118,13 +128,13 @@
           },
           {
             "type": "text",
-            "value": " 填像素。"
+            "value": " 填充像素。"
           }
         ],
         [
           {
             "type": "text",
-            "value": "6）复杂动画走 "
+            "value": "6）复杂动画宜采用 "
           },
           {
             "type": "strong",
@@ -170,9 +180,19 @@
     {
       "id": "q-defer-async",
       "navLabel": "defer 和 async",
-      "question": "script 标签里 defer 和 async 区别？",
+      "question": "script 标签中 defer 与 async 有何区别？",
       "questionNote": "核心差异在「下载并行、执行时机、顺序保证」；选型直接影响首屏与脚本依赖。",
       "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "要点："
+          },
+          {
+            "type": "text",
+            "value": "async 下载完即执行、顺序不定；defer 等 HTML 解析完再按文档顺序执行。"
+          }
+        ],
         [
           {
             "type": "code",
@@ -188,7 +208,7 @@
           },
           {
             "type": "text",
-            "value": "，下完"
+            "value": "，下载完成后"
           },
           {
             "type": "strong",
@@ -258,7 +278,7 @@
         [
           {
             "type": "code",
-            "value": "<script src=\"a.js\"></script>          <!-- 阻塞解析 -->\n<script src=\"b.js\" defer></script>   <!-- 并行下，DOMContentLoaded 前按序执行 -->\n<script src=\"c.js\" async></script>   <!-- 并行下，下完就执行，顺序不定 -->"
+            "value": "<script src=\"a.js\"></script>          <!-- 阻塞解析 -->\n<script src=\"b.js\" defer></script>   <!-- 并行下载，DOMContentLoaded 前按序执行 -->\n<script src=\"c.js\" async></script>   <!-- 并行下载，完成即执行，顺序不定 -->"
           }
         ]
       ]
@@ -266,9 +286,19 @@
     {
       "id": "q-repaint",
       "navLabel": "重排与重绘",
-      "question": "重排（reflow）和重绘（repaint）啥区别？怎么减少？",
-      "questionNote": "布局与绘制的代价不同；五年经验应能结合 DevTools Performance 说明优化手段。",
+      "question": "重排（reflow）与重绘（repaint）有何区别？如何减少开销？",
+      "questionNote": "布局与绘制代价不同；宜能结合 DevTools Performance 说明优化手段。",
       "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "要点："
+          },
+          {
+            "type": "text",
+            "value": "重排涉及几何计算、代价更高；重绘只改外观；优化方向是减少布局触发与走合成层。"
+          }
+        ],
         [
           {
             "type": "strong",
@@ -338,9 +368,19 @@
     {
       "id": "q-event-flow",
       "navLabel": "捕获与冒泡",
-      "question": "DOM 事件捕获、冒泡、阻止传播怎么说？",
+      "question": "DOM 事件捕获、冒泡与阻止传播应如何表述？",
       "questionNote": "事件流三阶段与 API 语义要分清；`preventDefault` 不等于阻止冒泡。",
       "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "要点："
+          },
+          {
+            "type": "text",
+            "value": "事件流分捕获、目标、冒泡三阶段；阻止传播与阻止默认行为是不同 API。"
+          }
+        ],
         [
           {
             "type": "text",
@@ -452,77 +492,21 @@
       ]
     },
     {
-      "id": "q-passive",
-      "navLabel": "passive 事件监听",
-      "question": "addEventListener 的 passive 选项干啥用？",
-      "questionNote": "告诉浏览器监听器不会 `preventDefault`，滚动可提前合成；与触摸/滚轮卡顿排查相关。",
-      "answer": [
-        [
-          {
-            "type": "text",
-            "value": "声明监听器"
-          },
-          {
-            "type": "strong",
-            "value": "不会调用 preventDefault"
-          },
-          {
-            "type": "text",
-            "value": "，浏览器可立即滚动合成，不必等 JS 执行完。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "Chrome 对部分 "
-          },
-          {
-            "type": "code",
-            "value": "touchstart/wheel"
-          },
-          {
-            "type": "text",
-            "value": " 默认已是 passive；控制台可能提示非 passive 监听拖慢滚动。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "自定义横向手势必须阻止默认滚动时，不要设 "
-          },
-          {
-            "type": "code",
-            "value": "passive: true"
-          },
-          {
-            "type": "text",
-            "value": "，并尽量缩小监听范围。"
-          }
-        ],
-        [
-          {
-            "type": "strong",
-            "value": "示例："
-          },
-          {
-            "type": "text",
-            "value": "滚动监听声明被动。"
-          }
-        ],
-        [
-          {
-            "type": "code",
-            "value": "el.addEventListener('touchmove', onMove, { passive: true })\n// 无法在监听里 preventDefault，利于滚动流畅"
-          }
-        ]
-      ]
-    },
-    {
       "id": "q-storage",
       "navLabel": "本地存储",
-      "question": "Cookie、localStorage、sessionStorage 怎么选？",
-      "questionNote": "选型看容量、生命周期、是否随请求发送、能否设安全属性；别混用场景。",
+      "question": "Cookie、localStorage、sessionStorage 应如何选择？",
+      "questionNote": "选型看容量、生命周期、是否随请求发送、能否设安全属性；勿混用场景。",
       "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "要点："
+          },
+          {
+            "type": "text",
+            "value": "Cookie 随请求发送、容量小；localStorage 持久且不参与请求；sessionStorage 随标签页生命周期。"
+          }
+        ],
         [
           {
             "type": "strong",
@@ -596,7 +580,7 @@
           },
           {
             "type": "text",
-            "value": "：生命周期跟"
+            "value": "生命周期跟"
           },
           {
             "type": "strong",
@@ -604,7 +588,7 @@
           },
           {
             "type": "text",
-            "value": "走，关页清空，适合多步表单防刷新丢数据。"
+            "value": "绑定，关闭页面即清空，适用于多步表单防刷新丢失数据。"
           }
         ]
       ]
@@ -612,9 +596,19 @@
     {
       "id": "q-cookie-samesite",
       "navLabel": "SameSite 详解",
-      "question": "Cookie 的 SameSite=Lax 和 Strict 区别？",
+      "question": "Cookie 的 SameSite=Lax 与 Strict 有何区别？",
       "questionNote": "SameSite 是 CSRF 防线之一；选型要在安全与「外链首跳未登录」体验间权衡。",
       "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "要点："
+          },
+          {
+            "type": "text",
+            "value": "Strict 最严仅同站导航带 Cookie；Lax 允许顶级 GET 导航；None 需 Secure 用于跨站嵌入。"
+          }
+        ],
         [
           {
             "type": "code",
@@ -630,7 +624,7 @@
           },
           {
             "type": "text",
-            "value": "才带 Cookie；从邮件/外链点进来首跳可能像未登录。"
+            "value": "才携带 Cookie；自邮件或外链首次进入时，可能呈现未登录状态。"
           }
         ],
         [
@@ -674,9 +668,19 @@
     {
       "id": "q-cross-tab",
       "navLabel": "跨标签页通信",
-      "question": "两个标签页怎么互相传消息？",
+      "question": "两个标签页之间如何互相传递消息？",
       "questionNote": "同源与跨域方案不同；注意 `storage` 事件触发页自身收不到。",
       "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "要点："
+          },
+          {
+            "type": "text",
+            "value": "同源优先 BroadcastChannel 或 storage 事件；跨域嵌套用 postMessage 并校验 origin。"
+          }
+        ],
         [
           {
             "type": "text",
@@ -758,7 +762,7 @@
           },
           {
             "type": "text",
-            "value": " 可作多标签连接点，但生态与兼容性一般。"
+            "value": " 可作多标签连接点，但生态支持与兼容性一般。"
           }
         ],
         [
@@ -782,9 +786,19 @@
     {
       "id": "q-sop",
       "navLabel": "同源策略",
-      "question": "同源策略限制啥？和跨域啥关系？",
+      "question": "同源策略限制哪些行为？与跨域有何关系？",
       "questionNote": "「源」= 协议+主机+端口；限制的是 JS 读响应，不是发请求本身。",
       "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "要点："
+          },
+          {
+            "type": "text",
+            "value": "浏览器限制脚本读取跨源 HTTP 响应；发请求与加载资源不受此限，跨域问题由此产生。"
+          }
+        ],
         [
           {
             "type": "text",
@@ -854,7 +868,7 @@
           },
           {
             "type": "text",
-            "value": " 不同源，本地调试常因此踩坑。"
+            "value": " 不同源，本地调试时易因此触发跨域限制。"
           }
         ]
       ]
@@ -862,9 +876,19 @@
     {
       "id": "q-visibility-page",
       "navLabel": "Page Visibility",
-      "question": "document.visibilityState 能干啥？",
+      "question": "document.visibilityState 有哪些典型用途？",
       "questionNote": "比 blur/focus 更贴近「用户是否在看这个标签页」；常用于省资源与埋点。",
       "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "要点："
+          },
+          {
+            "type": "text",
+            "value": "检测标签页可见性，在后台暂停轮询、视频与动画，回到前台再恢复，节省 CPU 与网络。"
+          }
+        ],
         [
           {
             "type": "code",
@@ -916,9 +940,19 @@
     {
       "id": "q-web-worker",
       "navLabel": "Web Worker",
-      "question": "Web Worker 和主线程怎么通信？适合干啥？",
+      "question": "Web Worker 与主线程如何通信？适用于哪些场景？",
       "questionNote": "Worker 无 DOM 访问权；大数据传输优先考虑 Transferable 零拷贝。",
       "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "要点："
+          },
+          {
+            "type": "text",
+            "value": "通过 postMessage 通信，适合 CPU 密集计算；Worker 无法操作 DOM 或访问 window。"
+          }
+        ],
         [
           {
             "type": "code",
@@ -1008,9 +1042,19 @@
     {
       "id": "q-intersection-resize",
       "navLabel": "Intersection 与 Resize",
-      "question": "IntersectionObserver 和 ResizeObserver 一般用在哪？",
-      "questionNote": "两者都是异步回调，比 scroll + getBoundingClientRect 更省主线程；记得 unobserve。",
+      "question": "IntersectionObserver 与 ResizeObserver 一般用在哪些场景？",
+      "questionNote": "两者均为异步回调，较 scroll + getBoundingClientRect 更省主线程；须在触发后 unobserve。",
       "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "要点："
+          },
+          {
+            "type": "text",
+            "value": "IntersectionObserver 监测元素与视口相交；ResizeObserver 监测元素尺寸变化；均比同步测量更省主线程。"
+          }
+        ],
         [
           {
             "type": "code",
@@ -1085,16 +1129,26 @@
       "answer": [
         [
           {
-            "type": "text",
-            "value": "运行在"
-          },
-          {
             "type": "strong",
-            "value": "独立线程"
+            "value": "要点："
           },
           {
             "type": "text",
-            "value": "，可拦截 fetch 做缓存策略，支撑 PWA 离线包与推送通知。"
+            "value": "独立线程拦截 fetch 实现缓存策略，支撑 PWA 离线包与推送通知；须 HTTPS 注册。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "与页面主线程隔离，不阻塞 UI；可注册 "
+          },
+          {
+            "type": "code",
+            "value": "fetch"
+          },
+          {
+            "type": "text",
+            "value": " 事件监听，按策略返回缓存或网络响应。"
           }
         ],
         [
@@ -1145,54 +1199,6 @@
           {
             "type": "text",
             "value": "典型模式：首屏壳离线 + 接口网络优先/兜底；Workbox 是常见封装，不必背每个 API。"
-          }
-        ]
-      ]
-    },
-    {
-      "id": "q-indexeddb",
-      "navLabel": "IndexedDB",
-      "question": "IndexedDB 和 localStorage 怎么选？",
-      "questionNote": "IndexedDB 异步、容量大，适合结构化离线数据；注意版本迁移与配额超限。",
-      "answer": [
-        [
-          {
-            "type": "code",
-            "value": "localStorage"
-          },
-          {
-            "type": "text",
-            "value": "：同步 API、字符串键值、约 5～10MB，适合主题、简单配置。"
-          }
-        ],
-        [
-          {
-            "type": "code",
-            "value": "IndexedDB"
-          },
-          {
-            "type": "text",
-            "value": "：异步、可存对象/Blob、容量大得多，适合离线缓存、草稿、媒体元数据。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "通过 "
-          },
-          {
-            "type": "code",
-            "value": "indexedDB.open"
-          },
-          {
-            "type": "text",
-            "value": " + 事务操作；可用 Dexie 等封装降低样板代码。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "常与 Service Worker 配合做 PWA 离线包；上线前规划 schema 版本迁移与 quota 超限降级。"
           }
         ]
       ]

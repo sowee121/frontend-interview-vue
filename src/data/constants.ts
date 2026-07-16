@@ -3,12 +3,10 @@ export const CHAPTER_ORDER = [
   'javascript',
   'es6',
   'typescript',
-  'vue2',
-  'vue3',
+  'vue',
   'react',
   'node',
   'miniprogram',
-  'electron',
   'browser',
   'network',
   'engineering',
@@ -16,6 +14,8 @@ export const CHAPTER_ORDER = [
   'scenario',
   'ai',
   'agent',
+  'electron',
+  'project',
   'coding',
 ] as const
 

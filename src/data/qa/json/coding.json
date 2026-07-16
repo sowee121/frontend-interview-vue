@@ -2,8 +2,8 @@
   "slug": "coding",
   "title": "编程题",
   "documentTitle": "编程题",
-  "description": "手写常考编程题：Promise 与异步控制、函数工具、数组与树、排序及原生 API 模拟。",
-  "lead": "按主题练手写实现，源码带通俗注释，方便对照口述。",
+  "description": "手写 Promise/防抖节流、call/bind/new，以及深拷贝、扁平化、列表转树与 EventEmitter。",
+  "lead": "高频手写：异步与函数工具优先，再练结构转换与深拷贝；对照注释口述。",
   "items": [
     {
       "id": "q-impl-promise-race",
@@ -13,11 +13,11 @@
         [
           {
             "type": "code",
-            "value": "// Promise.race：谁先 settled（fulfilled/rejected），整体就跟谁\nconst promiseRace = (arr) =>\n  new Promise((resolve, reject) => {\n    // Promise.resolve：把普通值包成 pending→fulfilled\n    for (const p of arr) Promise.resolve(p).then(resolve, reject);\n    // 任一先落定都会触发外层；后续结果被忽略（状态不可逆）\n  });"
+            "value": "// Promise.race：以最先落定（fulfilled 或 rejected）的结果决定整体状态\nconst promiseRace = (arr) =>\n  new Promise((resolve, reject) => {\n    // Promise.resolve：将普通值包装为 pending→fulfilled\n    for (const p of arr) Promise.resolve(p).then(resolve, reject);\n    // 任一先落定即触发外层；后续结果被忽略（状态不可逆）\n  });"
           }
         ]
       ],
-      "questionNote": "面试官想听：遍历可遍历集合，谁先 settled（落定）整体就跟谁；非 Promise 要先 Promise.resolve；空 iterable 应返回永远 pending 的 Promise。常追问和 Promise.all 的区别、怎么做请求超时。"
+      "questionNote": "考察要点：遍历可迭代集合，以最先落定（fulfilled 或 rejected）的结果决定整体状态；非 Promise 值须先经 Promise.resolve 包装；空集合应返回永久 pending 的 Promise。常与 Promise.all 对比，并用于请求超时场景。"
     },
     {
       "id": "q-impl-promise-all",
@@ -27,11 +27,11 @@
         [
           {
             "type": "code",
-            "value": "// Promise.all：全部 fulfilled 才 resolve；有一项 rejected 就立刻 reject\nconst promiseAll = (arr) =>\n  new Promise((resolve, reject) => {\n    const out = [];\n    let n = arr.length;\n    if (!n) return resolve(out); // 空数组：直接 fulfilled\n    arr.forEach((p, i) =>\n      Promise.resolve(p).then(\n        (v) => {\n          out[i] = v;\n          if (--n === 0) resolve(out); // 全部 fulfilled\n        },\n        reject, // 第一个 rejected 传给外层\n      ),\n    );\n  });"
+            "value": "// Promise.all：全部 fulfilled 后 resolve；任一项 rejected 则立即 reject\nconst promiseAll = (arr) =>\n  new Promise((resolve, reject) => {\n    const out = [];\n    let n = arr.length;\n    if (!n) return resolve(out); // 空数组：直接 fulfilled\n    arr.forEach((p, i) =>\n      Promise.resolve(p).then(\n        (v) => {\n          out[i] = v;\n          if (--n === 0) resolve(out); // 全部 fulfilled\n        },\n        reject, // 首个 rejected 传递给外层\n      ),\n    );\n  });"
           }
         ]
       ],
-      "questionNote": "面试官想听：全部 fulfilled 才 resolve 成数组，顺序与入参一致；任一项 rejected 立刻 reject；空数组 resolve []。用 Promise.resolve 统一处理 thenable 与普通值。"
+      "questionNote": "考察要点：全部 fulfilled 后 resolve 为结果数组，顺序与入参一致；任一项 rejected 则立即 reject；空数组 resolve []。须用 Promise.resolve 统一处理 thenable 与普通值。"
     },
     {
       "id": "q-impl-promise-allsettled",
@@ -45,7 +45,7 @@
           }
         ]
       ],
-      "questionNote": "面试官想听：等全部 settled 再 resolve；结果为 { status: 'fulfilled'|'rejected', value/reason }[]；单项 rejected 不会拖垮整体。适合「每个接口都要结果」的批量场景。"
+      "questionNote": "考察要点：等全部 settled 再 resolve；结果为 { status: 'fulfilled'|'rejected', value/reason }[]；单项 rejected 不会拖垮整体。适合「每个接口都要结果」的批量场景。"
     },
     {
       "id": "q-impl-serial-async",
@@ -59,7 +59,7 @@
           }
         ]
       ],
-      "questionNote": "面试官想听：任务数组里每项是返回 Promise 的函数，按顺序一个个执行，不能用 Promise.all 并行；结果数组顺序和 tasks 一致。典型场景：控制接口并发、保证副作用顺序。"
+      "questionNote": "考察要点：任务数组里每项是返回 Promise 的函数，按顺序一个个执行，不能用 Promise.all 并行；结果数组顺序和 tasks 一致。典型场景：控制接口并发、保证副作用顺序。"
     },
     {
       "id": "q-impl-retry",
@@ -69,11 +69,11 @@
         [
           {
             "type": "code",
-            "value": "// 重试：try/catch + 递归；attempts 表示还剩几次机会\nconst retry = async (fn, attempts = 3, delayMs = 0) => {\n  try {\n    return await fn();\n  } catch (e) {\n    if (attempts <= 1) throw e; // 机会用完了，原样抛出\n    if (delayMs) await new Promise((r) => setTimeout(r, delayMs)); // 两次尝试之间等待\n    return retry(fn, attempts - 1, delayMs); // 递归：次数减一再来\n  }\n};"
+            "value": "// 重试：try/catch 配合递归；attempts 表示剩余重试次数\nconst retry = async (fn, attempts = 3, delayMs = 0) => {\n  try {\n    return await fn();\n  } catch (e) {\n    if (attempts <= 1) throw e; // 次数耗尽，原样抛出\n    if (delayMs) await new Promise((r) => setTimeout(r, delayMs)); // 两次尝试间等待\n    return retry(fn, attempts - 1, delayMs); // 递归：次数减一后重试\n  }\n};"
           }
         ]
       ],
-      "questionNote": "面试官想听：fn 是无参异步函数，失败时最多再试 attempts-1 次；可选 delayMs 做间隔；最后一次仍失败就抛出。适用于网络抖动、幂等请求重试。"
+      "questionNote": "考察要点：fn 为无参异步函数，失败时最多再重试 attempts-1 次；可选 delayMs 设置重试间隔；末次仍失败则原样抛出。适用于网络抖动场景下的幂等请求重试。"
     },
     {
       "id": "q-impl-my-promise-lite",
@@ -83,11 +83,11 @@
         [
           {
             "type": "code",
-            "value": "// 教学示意：只演示 fulfilled 路径；完整版要符合 Promise/A+（thenable 展开等）\nclass MyPromise {\n  constructor(executor) {\n    this._state = 'pending'; // 等待中\n    this._value = undefined;\n    this._cb = [];\n    const resolve = (v) => {\n      if (this._state !== 'pending') return;\n      this._state = 'fulfilled'; // resolve → fulfilled\n      this._value = v;\n      queueMicrotask(() => this._cb.splice(0).forEach((fn) => fn()));\n    };\n    try {\n      executor(resolve, () => {}); // reject → rejected，此处占位\n    } catch (e) { /* 同步 throw → rejected */ }\n  }\n  then(onFulfilled) {\n    return new MyPromise((resolve) => {\n      const run = () =>\n        resolve(onFulfilled != null ? onFulfilled(this._value) : this._value);\n      this._state === 'fulfilled'\n        ? queueMicrotask(run)\n        : this._cb.push(run); // 仍 pending 则入队\n    });\n  }\n}"
+            "value": "// 教学示意：仅演示 fulfilled 路径；完整实现须符合 Promise/A+（含 thenable 展开）\nclass MyPromise {\n  constructor(executor) {\n    this._state = 'pending'; // 等待中\n    this._value = undefined;\n    this._cb = [];\n    const resolve = (v) => {\n      if (this._state !== 'pending') return;\n      this._state = 'fulfilled'; // resolve → fulfilled\n      this._value = v;\n      queueMicrotask(() => this._cb.splice(0).forEach((fn) => fn()));\n    };\n    try {\n      executor(resolve, () => {}); // reject → rejected，此处占位\n    } catch (e) { /* 同步 throw → rejected */ }\n  }\n  then(onFulfilled) {\n    return new MyPromise((resolve) => {\n      const run = () =>\n        resolve(onFulfilled != null ? onFulfilled(this._value) : this._value);\n      this._state === 'fulfilled'\n        ? queueMicrotask(run)\n        : this._cb.push(run); // 仍为 pending 则入队\n    });\n  }\n}"
           }
         ]
       ],
-      "questionNote": "面试官想听：constructor 收 executor(resolve, reject)，then 返回新 Promise。本版只演示 pending→fulfilled 与微任务队列；完整版还要 rejected、catch、then 返回 Promise 的 settled 展开。"
+      "questionNote": "考察要点：constructor 接收 executor(resolve, reject)，then 须返回新 Promise。本版仅演示 pending→fulfilled 与微任务队列；完整实现还须覆盖 rejected、catch 及 then 返回 Promise 的展开规则。"
     },
     {
       "id": "q-impl-get-type",
@@ -101,7 +101,7 @@
           }
         ]
       ],
-      "questionNote": "面试官想听：用 Object.prototype.toString.call(x) 得到 \"[object Array]\" 这类字符串，比 typeof 更能区分 null、数组、日期等；若业务要短标签，再做一层映射。"
+      "questionNote": "考察要点：用 Object.prototype.toString.call(x) 得到 \"[object Array]\" 这类字符串，比 typeof 更能区分 null、数组、日期等；若业务要短标签，再做一层映射。"
     },
     {
       "id": "q-impl-call-apply",
@@ -111,11 +111,11 @@
         [
           {
             "type": "code",
-            "value": "// myCall：把要调用的函数临时挂到 ctx 上，这样 this 就指向 ctx\nFunction.prototype.myCall = function (ctx, ...args) {\n  const o = ctx == null ? globalThis : Object(ctx); // null/undefined 用全局对象；原始值会装箱\n  const k = Symbol('__fn__'); // 唯一键，降低和对象自有属性冲突的概率\n  o[k] = this; // 当前函数变成 o 的方法\n  try {\n    return o[k](...args); // 以方法形式调用，this === o\n  } finally {\n    delete o[k]; // 无论成功失败都清理临时属性\n  }\n};\n\n// myApply：第二参是数组或类数组，转成数组后复用 myCall\nFunction.prototype.myApply = function (ctx, arr) {\n  return this.myCall(ctx, ...Array.from(arr ?? []));\n};"
+            "value": "// myCall：将待调用函数临时挂载至 ctx，使 this 指向 ctx\nFunction.prototype.myCall = function (ctx, ...args) {\n  const o = ctx == null ? globalThis : Object(ctx); // null/undefined 绑定全局对象；原始值自动装箱\n  const k = Symbol('__fn__'); // 唯一键，降低与对象自有属性冲突概率\n  o[k] = this; // 当前函数变为 o 的方法\n  try {\n    return o[k](...args); // 以方法形式调用，this === o\n  } finally {\n    delete o[k]; // 无论成败均清理临时属性\n  }\n};\n\n// myApply：第二参为数组或类数组，展开后复用 myCall\nFunction.prototype.myApply = function (ctx, arr) {\n  return this.myCall(ctx, ...Array.from(arr ?? []));\n};"
           }
         ]
       ],
-      "questionNote": "面试官想听：在指定 this 上调用原函数并传参；null/undefined 时 this 落到全局对象；用临时属性改 this，调用后必须删掉避免污染；apply 把类数组第二参展开后复用 call。"
+      "questionNote": "考察要点：在指定 this 上调用原函数并传入参数；this 为 null/undefined 时绑定全局对象；通过临时属性修改 this，调用后须删除以免污染；apply 将类数组第二参展开后复用 call。"
     },
     {
       "id": "q-impl-bind",
@@ -125,11 +125,11 @@
         [
           {
             "type": "code",
-            "value": "// myBind：闭包保存原函数 fn 和预设参数 a1\nFunction.prototype.myBind = function (ctx, ...a1) {\n  const fn = this;\n  const bound = function (...a2) {\n    // new bound() 时 this 是实例，走构造路径；普通调用用绑定的 ctx\n    return fn.apply(this instanceof bound ? this : ctx, [...a1, ...a2]);\n  };\n  // 让 bound 实例能 instanceof 原构造函数：共享原型链\n  bound.prototype = Object.create(fn.prototype);\n  return bound;\n};"
+            "value": "// myBind：闭包保存原函数 fn 与预设参数 a1\nFunction.prototype.myBind = function (ctx, ...a1) {\n  const fn = this;\n  const bound = function (...a2) {\n    // new bound() 时 this 为实例，走构造路径；普通调用使用绑定的 ctx\n    return fn.apply(this instanceof bound ? this : ctx, [...a1, ...a2]);\n  };\n  // 使 bound 实例能 instanceof 原构造函数：共享原型链\n  bound.prototype = Object.create(fn.prototype);\n  return bound;\n};"
           }
         ]
       ],
-      "questionNote": "面试官想听：返回新函数，固定 this 和部分参数；若用 new 调用返回函数，应忽略绑定的 this，实例还要能继承原函数的原型链。"
+      "questionNote": "考察要点：返回新函数以固定 this 与部分参数；若以 new 调用返回函数，应忽略绑定的 this，且实例须能继承原函数原型链。"
     },
     {
       "id": "q-impl-new",
@@ -143,7 +143,7 @@
           }
         ]
       ],
-      "questionNote": "面试官想听：以构造函数 prototype 为原型创建对象并绑 this 执行；若构造显式返回对象/函数则用返回值。Object.create 即「只建原型链、不跑构造」。"
+      "questionNote": "考察要点：以构造函数 prototype 为原型创建对象并绑定 this 执行；若构造显式返回对象或函数则采用返回值。Object.create 仅建立原型链，不执行构造函数。"
     },
     {
       "id": "q-impl-instanceof",
@@ -157,7 +157,7 @@
           }
         ]
       ],
-      "questionNote": "面试官想听：判断 left 的原型链上有没有出现过 right.prototype；right 必须是带 prototype 的函数；这和 typeof 不同，表达的是原型链关系而不是类型标签。"
+      "questionNote": "考察要点：沿 left 的原型链查找是否出现过 right.prototype；right 须为带 prototype 的函数。表达原型链关系，与 typeof 的类型判断语义不同。"
     },
     {
       "id": "q-impl-is-equal",
@@ -171,35 +171,7 @@
           }
         ]
       ],
-      "questionNote": "面试官想听：判断两个值结构是否相同；原始类型用严格相等，对象比键集合并递归子值；数组可当下标为键的对象处理；NaN、Map/Set 等是否等价看题面约定。"
-    },
-    {
-      "id": "q-impl-once",
-      "navLabel": "手写 once",
-      "question": "手写 once(fn)",
-      "answer": [
-        [
-          {
-            "type": "code",
-            "value": "// once：闭包记录「是否已执行」和「首次返回值」\nconst once = (fn) => {\n  let done; // 有值表示已经执行过\n  let memo; // 缓存首次返回值\n  return function (...a) {\n    return done ? memo : ((done = 1), (memo = fn.apply(this, a))); // 逗号表达式：先标记再求值\n  };\n};"
-          }
-        ]
-      ],
-      "questionNote": "面试官想听：返回包装函数，fn 最多执行一次，之后再调直接返回第一次的结果，且要保持调用时的 this；若 fn 是 async，缓存的是 Promise，副作用是否只触发一次要看题面。"
-    },
-    {
-      "id": "q-impl-memoize",
-      "navLabel": "手写 memoize",
-      "question": "手写 memoize(fn)",
-      "answer": [
-        [
-          {
-            "type": "code",
-            "value": "// memoize：Map 存「序列化参数 → 结果」\nconst memoize = (fn) => {\n  const c = new Map();\n  return function (...a) {\n    const k = JSON.stringify(a); // 简单键；键冲突、参数顺序敏感是常见追问\n    if (c.has(k)) return c.get(k); // 命中缓存\n    const v = fn.apply(this, a);\n    c.set(k, v); // 写入缓存\n    return v;\n  };\n};"
-          }
-        ]
-      ],
-      "questionNote": "面试官想听：相同参数不重复计算，适合纯函数；键的生成要和参数类型匹配，JSON.stringify 对循环引用、键顺序无关的对象要小心。"
+      "questionNote": "考察要点：判断两个值结构是否相同；原始类型用严格相等，对象比键集合并递归子值；数组可当下标为键的对象处理；NaN、Map/Set 等是否等价看题面约定。"
     },
     {
       "id": "q-impl-curry",
@@ -213,21 +185,7 @@
           }
         ]
       ],
-      "questionNote": "面试官想听：柯里化把多参函数拆成多次调用，收齐 fn.length 个参数再执行；链式 add(1)(2)(3)() 是变体，空括号表示结束并返回累计和。"
-    },
-    {
-      "id": "q-impl-compose",
-      "navLabel": "compose / pipe",
-      "question": "手写 compose / pipe",
-      "answer": [
-        [
-          {
-            "type": "code",
-            "value": "// compose：最右边的函数最先处理 x，结果一层层往左传\nconst compose =\n  (...fns) =>\n  (x) =>\n    fns.reduceRight((v, f) => f(v), x); // 初始累积值是 x\n\n// pipe(...fns)(x) === fns.reduce((v, f) => f(v), x) // 从左到右"
-          }
-        ]
-      ],
-      "questionNote": "面试官想听：compose(f, g, h)(x) 等价于 f(g(h(x)))，从右往左组合一元函数；pipe 是从左往右，把 reduceRight 换成 reduce 即可。"
+      "questionNote": "考察要点：柯里化把多参函数拆成多次调用，收齐 fn.length 个参数再执行；链式 add(1)(2)(3)() 是变体，空括号表示结束并返回累计和。"
     },
     {
       "id": "q-impl-debounce",
@@ -237,11 +195,11 @@
         [
           {
             "type": "code",
-            "value": "// debounce：每次触发都重置定时器，只有停顿满 wait 毫秒才执行\nconst debounce = (fn, wait) => {\n  let t; // 保存定时器 id\n  return function (...args) {\n    clearTimeout(t); // 新一轮输入，取消上一次「即将执行」\n    t = setTimeout(() => fn.apply(this, args), wait); // 保留调用方 this 和参数\n  };\n};"
+            "value": "// debounce：每次触发均重置定时器，仅在停顿满 wait 毫秒后执行\nconst debounce = (fn, wait) => {\n  let t; // 保存定时器 id\n  return function (...args) {\n    clearTimeout(t); // 新一轮输入，取消上一次待执行回调\n    t = setTimeout(() => fn.apply(this, args), wait); // 保留调用方 this 与参数\n  };\n};"
           }
         ]
       ],
-      "questionNote": "面试官想听：连续触发时只在停止触发满 wait 毫秒后执行一次，适合搜索联想、窗口 resize；要保留最后一次的参数和 this，所以内部用普通 function 而不是箭头函数。"
+      "questionNote": "考察要点：连续触发时仅在停止触发满 wait 毫秒后执行一次，适用于搜索联想、窗口 resize 等场景；须保留末次调用的参数与 this，内部宜用普通 function。"
     },
     {
       "id": "q-impl-throttle",
@@ -251,39 +209,11 @@
         [
           {
             "type": "code",
-            "value": "// 写法一：时间戳版——距上次执行满 wait 才再放行，首次调用会立刻执行\nconst throttle = (fn, wait) => {\n  let prev = 0;\n  return function (...args) {\n    const now = Date.now();\n    if (now - prev >= wait) {\n      prev = now; // 记录本次执行时刻\n      fn.apply(this, args);\n    }\n  };\n};\n\n// 写法二：定时器版——执行后 wait 内直接忽略，适合「执行完再冷却」\nconst throttleTimer = (fn, wait) => {\n  let t;\n  return function (...args) {\n    if (t) return; // 还在冷却期\n    fn.apply(this, args); // 立刻执行一次\n    t = setTimeout(() => {\n      t = null; // 冷却结束，允许下一次\n    }, wait);\n  };\n};"
+            "value": "// 写法一：时间戳版——距上次执行满 wait 才放行，首次调用立即执行\nconst throttle = (fn, wait) => {\n  let prev = 0;\n  return function (...args) {\n    const now = Date.now();\n    if (now - prev >= wait) {\n      prev = now; // 记录本次执行时刻\n      fn.apply(this, args);\n    }\n  };\n};\n\n// 写法二：定时器版——执行后 wait 内忽略后续触发，适用于「执行完再冷却」\nconst throttleTimer = (fn, wait) => {\n  let t;\n  return function (...args) {\n    if (t) return; // 冷却期内\n    fn.apply(this, args); // 立即执行一次\n    t = setTimeout(() => {\n      t = null; // 冷却结束，允许下次触发\n    }, wait);\n  };\n};"
           }
         ]
       ],
-      "questionNote": "面试官想听：wait 时间窗口内最多执行一次；时间戳版首击立即执行，定时器版执行后进入冷却；根据产品要「首击必响」还是「冷却后再响」选写法。"
-    },
-    {
-      "id": "q-impl-array-map",
-      "navLabel": "手写 Array.prototype.map",
-      "question": "手写 Array.prototype.map",
-      "answer": [
-        [
-          {
-            "type": "code",
-            "value": "// map：按 length 遍历，用 `i in arr` 跳过空洞槽位\nconst map = (arr, fn, ctx) => {\n  const out = [];\n  for (let i = 0; i < arr.length; i++) {\n    if (i in arr) out[i] = fn.call(ctx, arr[i], i, arr); // 绑定 thisArg，传入当前值、下标、原数组\n  }\n  return out;\n};"
-          }
-        ]
-      ],
-      "questionNote": "面试官想听：对每个存在的下标调用 callback，结果写入新数组并返回，不修改原数组；稀疏数组要用 i in arr 跳过空洞，和原生 map 一致。"
-    },
-    {
-      "id": "q-impl-unique-by",
-      "navLabel": "按 key 去重",
-      "question": "实现 uniqueBy(arr, key)",
-      "answer": [
-        [
-          {
-            "type": "code",
-            "value": "// uniqueBy：filter + Map；m.set 在 && 右侧仍会执行，用来「边记边滤」\nconst uniqueBy = (arr, key) => {\n  const m = new Map();\n  return arr.filter((o) => !m.has(o[key]) && m.set(o[key], true)); // 第一次见到的 key 才保留\n};"
-          }
-        ]
-      ],
-      "questionNote": "面试官想听：对象数组按字段 key 去重，保留第一次出现的元素，顺序不变；用 Map 记录已出现的 key，期望 O(n) 时间。"
+      "questionNote": "考察要点：wait 时间窗口内最多执行一次；时间戳版首击立即执行，定时器版执行后进入冷却期。按产品需求选择「首击必响」或「冷却后再响」。"
     },
     {
       "id": "q-impl-flatten",
@@ -297,7 +227,7 @@
           }
         ]
       ],
-      "questionNote": "面试官想听：按 depth 层数展开嵌套数组，Infinity 时展开到元素不再是数组；递归 + flatMap 写法简洁，大数组可换迭代或栈避免递归过深。"
+      "questionNote": "考察要点：按 depth 层数展开嵌套数组，depth 为 Infinity 时展开至叶子元素；递归配合 flatMap 写法简洁，大数组可改用迭代或栈以避免递归过深。"
     },
     {
       "id": "q-impl-list-to-tree",
@@ -306,28 +236,28 @@
       "answer": [
         [
           {
-            "type": "code",
-            "value": "// listToTree：Map 存 id → 带 children 的节点；reduce 挂父子关系\nconst listToTree = (list) => {\n  const m = new Map(list.map((n) => [n.id, { ...n, children: [] }])); // 复制数据并初始化 children\n  return list.reduce((roots, n) => {\n    const node = m.get(n.id);\n    const p = m.get(n.parentId); // 找不到父节点就视为根\n    (p ? p.children : roots).push(node); // 有父挂子树，无父进 roots\n    return roots;\n  }, []);\n};"
-          }
-        ],
-        [
-          {
             "type": "strong",
-            "value": "反向 treeToList："
+            "value": "要点："
           },
           {
             "type": "text",
-            "value": "深度优先，去掉 children 字段推入结果。"
+            "value": "listToTree 以 Map 索引节点并按 parentId 挂接；treeToList 为逆操作，经深度优先遍历去除 children 后压平。"
           }
         ],
         [
           {
             "type": "code",
-            "value": "// treeToList：深度优先遍历；解构把子节点从 rest 里剥离\nconst treeToList = (nodes, k = 'children') => {\n  const out = [];\n  const walk = (n) => {\n    if (!n) return;\n    const { [k]: ch, ...rest } = n; // rest 是不含 children 的浅拷贝字段\n    out.push(rest);\n    (ch ?? []).forEach(walk); // 递归子树\n  };\n  [].concat(nodes).forEach(walk); // 兼容单根或森林\n  return out;\n};"
+            "value": "// listToTree：Map 存 id → 带 children 的节点；reduce 挂接父子关系\nconst listToTree = (list) => {\n  const m = new Map(list.map((n) => [n.id, { ...n, children: [] }])); // 复制数据并初始化 children\n  return list.reduce((roots, n) => {\n    const node = m.get(n.id);\n    const p = m.get(n.parentId); // 找不到父节点则视为根\n    (p ? p.children : roots).push(node); // 有父节点挂子树，无父节点进 roots\n    return roots;\n  }, []);\n};"
+          }
+        ],
+        [
+          {
+            "type": "code",
+            "value": "// treeToList：深度优先遍历；解构将子节点从 rest 中剥离\nconst treeToList = (nodes, k = 'children') => {\n  const out = [];\n  const walk = (n) => {\n    if (!n) return;\n    const { [k]: ch, ...rest } = n; // rest 为不含 children 的浅拷贝字段\n    out.push(rest);\n    (ch ?? []).forEach(walk); // 递归子树\n  };\n  [].concat(nodes).forEach(walk); // 兼容单根或森林结构\n  return out;\n};"
           }
         ]
       ],
-      "questionNote": "扁平→树：id/parentId → 根数组带 children。树→列表：DFS 去掉 children。面试常一对出。"
+      "questionNote": "考察要点：扁平列表经 id/parentId 转为根节点数组（含 children）；树结构经深度优先遍历去除 children 后压平。两题为逆操作，面试常成对考查。"
     },
     {
       "id": "q-impl-deep-clone",
@@ -341,7 +271,7 @@
           }
         ]
       ],
-      "questionNote": "面试官想听：递归复制数组和普通对象，循环引用用 WeakMap 记「原对象→副本」；能对比 JSON 方案的局限：丢函数、undefined、Symbol，不能处理环和 Date/RegExp 等。"
+      "questionNote": "考察要点：递归复制数组与普通对象，循环引用用 WeakMap 记录「原对象→副本」映射；须能说明 JSON 方案的局限：丢失函数、undefined、Symbol，且无法处理环与 Date/RegExp 等类型。"
     },
     {
       "id": "q-impl-event-emitter",
@@ -355,21 +285,7 @@
           }
         ]
       ],
-      "questionNote": "面试官想听：on 注册、off 注销、emit 同步触发所有监听；emit 应先复制监听集合再遍历，避免回调里再次 on/off 出问题；返回值可表示是否有监听。"
-    },
-    {
-      "id": "q-impl-sort",
-      "navLabel": "排序汇总",
-      "question": "手写冒泡 / 选择 / 插入 / 快排，并说明 Array.sort 语义",
-      "answer": [
-        [
-          {
-            "type": "code",
-            "value": "// ——— 冒泡：每轮把最大值「冒」到右端；swapped 可提前结束 ———\nconst bubbleSort = (arr) => {\n  const a = [...arr];\n  for (let i = a.length - 1; i > 0; i--) {\n    let swapped = false;\n    for (let j = 0; j < i; j++) {\n      if (a[j] > a[j + 1]) {\n        [a[j], a[j + 1]] = [a[j + 1], a[j]];\n        swapped = true;\n      }\n    }\n    if (!swapped) break;\n  }\n  return a;\n};\n\n// ——— 选择：每轮把区间最小值换到左端 i ———\nconst selectionSort = (arr) => {\n  const a = [...arr];\n  for (let i = 0; i < a.length; i++) {\n    let min = i;\n    for (let j = i + 1; j < a.length; j++) if (a[j] < a[min]) min = j;\n    if (min !== i) [a[i], a[min]] = [a[min], a[i]];\n  }\n  return a;\n};\n\n// ——— 插入：把 a[i] 插入左侧有序区；近乎有序时很快 ———\nconst insertionSort = (arr) => {\n  const a = [...arr];\n  for (let i = 1; i < a.length; i++) {\n    const x = a[i];\n    let j = i;\n    while (j > 0 && a[j - 1] > x) {\n      a[j] = a[j - 1];\n      j--;\n    }\n    a[j] = x;\n  }\n  return a;\n};\n\n// ——— 三路快排（非原地，好写）；工程可随机选 pivot ———\nconst quickSort = (arr) => {\n  if (arr.length <= 1) return arr;\n  const p = arr[0];\n  const left = [],\n    mid = [],\n    right = [];\n  for (const x of arr) {\n    if (x < p) left.push(x);\n    else if (x > p) right.push(x);\n    else mid.push(x);\n  }\n  return [...quickSort(left), ...mid, ...quickSort(right)];\n};\n\n// ——— Array.sort：默认按字符串排；数字要用 compareFn；会改原数组 ———\n// [10, 2, 1].sort() → [1, 10, 2]（字典序）\nconst sortAsc = (arr) => [...arr].sort((a, b) => a - b); // 拷贝后再排\n// 对象：users.sort((a, b) => a.age - b.age)\n// ES2019+ 规范要求稳定排序"
-          }
-        ]
-      ],
-      "questionNote": "冒泡/选择/插入多为 O(n²) 教学；快排平均更好、注意 pivot 退化；业务优先 Array.sort + compareFn，别默认字符串排序。返回新数组示意不改入参。"
+      "questionNote": "考察要点：on 注册监听、off 注销监听、emit 同步触发全部回调；emit 应先复制监听集合再遍历，避免回调内再次 on/off 破坏遍历；返回值可表示是否存在监听。"
     }
   ]
 }

@@ -2,26 +2,32 @@
   "slug": "javascript",
   "title": "JavaScript",
   "documentTitle": "JavaScript",
-  "description": "语言机制与运行时：类型、作用域、原型、this、事件循环与常见坑；ES6+ 语法见 ES6 章。",
-  "lead": "先掌握 JS 核心机制，再对照 ES6 章复习 let/const、Promise、Module 等新特性。",
+  "description": "类型与作用域、原型与 this、事件循环，以及防抖节流、事件委托与常见内存泄漏。",
+  "lead": "先吃透运行时机制，ES6+ 语法细节转到「ES6」章对照。",
   "items": [
     {
       "id": "q-null-undefined",
       "navLabel": "null 和 undefined",
-      "question": "null 和 undefined 有什么区别？typeof null 为啥是 object？",
+      "question": "null 与 undefined 有何区别？typeof null 为何返回 object？",
       "answer": [
         [
           {
             "type": "strong",
-            "value": "语义："
+            "value": "要点："
           },
+          {
+            "type": "text",
+            "value": "undefined 表示缺省未赋值，null 表示开发者主动置空；二者语义不同，判空与比较方式亦不同。"
+          }
+        ],
+        [
           {
             "type": "code",
             "value": "undefined"
           },
           {
             "type": "text",
-            "value": " 表示「缺省、尚未赋值」——声明未初始化、对象缺 key、函数少传参等。"
+            "value": " 出现于声明未初始化、对象缺 key、函数少传参等场景。"
           }
         ],
         [
@@ -31,7 +37,7 @@
           },
           {
             "type": "text",
-            "value": " 是开发者主动写的「此处为空」，常用于释放引用、对接后端空值字段。"
+            "value": " 由开发者显式赋值，常用于释放引用或对接后端空值字段。"
           },
           {
             "type": "code",
@@ -47,13 +53,13 @@
           },
           {
             "type": "text",
-            "value": " 是早期实现把空对象标签误用在 null 上，属于历史包袱。"
+            "value": " 源于早期实现将空对象标签误用于 null，属历史遗留。"
           }
         ],
         [
           {
             "type": "text",
-            "value": "判断 null 一律用 "
+            "value": "判断 null 使用 "
           },
           {
             "type": "code",
@@ -61,7 +67,7 @@
           },
           {
             "type": "text",
-            "value": "。需要同时覆盖 null 与 undefined 时，"
+            "value": "；需同时覆盖 null 与 undefined 时，"
           },
           {
             "type": "code",
@@ -77,7 +83,7 @@
           },
           {
             "type": "text",
-            "value": " 用法；其余比较用 "
+            "value": " 用法，其余比较宜用 "
           },
           {
             "type": "code",
@@ -92,9 +98,31 @@
     },
     {
       "id": "q-loose-equality",
-      "navLabel": "== 与类型转换",
-      "question": "== 和 === 差在哪？面试怎么答抽象相等？",
+      "navLabel": "== 与 ===",
+      "question": "== 与 === 有何区别？如何理解抽象相等比较（Abstract Equality Comparison）？",
       "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "要点："
+          },
+          {
+            "type": "code",
+            "value": "==="
+          },
+          {
+            "type": "text",
+            "value": " 严格相等，类型不同直接为 false；"
+          },
+          {
+            "type": "code",
+            "value": "=="
+          },
+          {
+            "type": "text",
+            "value": " 宽松相等，按规范执行隐式类型转换。"
+          }
+        ],
         [
           {
             "type": "code",
@@ -102,15 +130,7 @@
           },
           {
             "type": "text",
-            "value": "（严格相等）：类型不同直接 "
-          },
-          {
-            "type": "code",
-            "value": "false"
-          },
-          {
-            "type": "text",
-            "value": "，不做隐式转换。业务代码默认用它，可读性最好。"
+            "value": " 不做隐式转换，业务代码默认使用，可读性最佳。"
           }
         ],
         [
@@ -120,7 +140,7 @@
           },
           {
             "type": "text",
-            "value": "（宽松相等）：按规范走"
+            "value": " 走"
           },
           {
             "type": "strong",
@@ -128,13 +148,13 @@
           },
           {
             "type": "text",
-            "value": "——ToPrimitive、数字与字符串互转等。"
+            "value": "，涉及 ToPrimitive、数字与字符串互转等规则。"
           }
         ],
         [
           {
             "type": "text",
-            "value": "典型坑："
+            "value": "典型陷阱："
           },
           {
             "type": "code",
@@ -150,7 +170,7 @@
           },
           {
             "type": "text",
-            "value": " 为真。面试能说清「"
+            "value": " 为真；"
           },
           {
             "type": "code",
@@ -158,13 +178,13 @@
           },
           {
             "type": "text",
-            "value": " 判空是刻意用法」即可，不必背完整比较表。"
+            "value": " 判空是刻意用法，无需背诵完整比较表。"
           }
         ],
         [
           {
             "type": "text",
-            "value": "库与业务里更推荐 "
+            "value": "工程实践推荐 "
           },
           {
             "type": "code",
@@ -172,7 +192,7 @@
           },
           {
             "type": "text",
-            "value": " + 显式 "
+            "value": " 配合显式 "
           },
           {
             "type": "code",
@@ -196,9 +216,13 @@
     {
       "id": "q-type-detection",
       "navLabel": "类型判断",
-      "question": "怎么判断数组、null、日期？typeof 和 instanceof 够用吗？",
+      "question": "如何判断数组、null 与日期等类型？typeof 与 instanceof 是否足够？",
       "answer": [
         [
+          {
+            "type": "strong",
+            "value": "要点："
+          },
           {
             "type": "code",
             "value": "typeof"
@@ -209,11 +233,37 @@
           },
           {
             "type": "code",
+            "value": "instanceof"
+          },
+          {
+            "type": "text",
+            "value": " 依赖原型链；精确判断对象类型宜用 "
+          },
+          {
+            "type": "code",
+            "value": "Object.prototype.toString"
+          },
+          {
+            "type": "text",
+            "value": "。"
+          }
+        ],
+        [
+          {
+            "type": "code",
             "value": "typeof null === \"object\""
           },
           {
             "type": "text",
-            "value": " 是历史 bug，需单独判 null。"
+            "value": " 是历史 bug，null 需单独用 "
+          },
+          {
+            "type": "code",
+            "value": "x === null"
+          },
+          {
+            "type": "text",
+            "value": " 判断。"
           }
         ],
         [
@@ -223,13 +273,13 @@
           },
           {
             "type": "text",
-            "value": " 看原型链，跨 iframe 或改 prototype 会失效；基本类型无意义。"
+            "value": " 跨 iframe 或修改 prototype 后可能失效，基本类型无意义。"
           }
         ],
         [
           {
-            "type": "strong",
-            "value": "更稳："
+            "type": "text",
+            "value": "更稳妥："
           },
           {
             "type": "code",
@@ -237,7 +287,23 @@
           },
           {
             "type": "text",
-            "value": " 得 `[object Array]` 等；`Array.isArray(x)` 判数组。手写见 coding 章。"
+            "value": " 返回 "
+          },
+          {
+            "type": "code",
+            "value": "[object Array]"
+          },
+          {
+            "type": "text",
+            "value": " 等；数组优先 "
+          },
+          {
+            "type": "code",
+            "value": "Array.isArray(x)"
+          },
+          {
+            "type": "text",
+            "value": "。"
           }
         ],
         [
@@ -261,8 +327,38 @@
     {
       "id": "q-hoisting",
       "navLabel": "变量与函数提升",
-      "question": "var 和 function 声明是怎么“提升”的？和 let 的 TDZ 啥区别？",
+      "question": "var 与 function 声明如何提升？与 let/const 的暂时性死区（TDZ）有何区别？",
       "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "要点："
+          },
+          {
+            "type": "code",
+            "value": "var"
+          },
+          {
+            "type": "text",
+            "value": " 与函数声明会提升；"
+          },
+          {
+            "type": "code",
+            "value": "let"
+          },
+          {
+            "type": "text",
+            "value": " / "
+          },
+          {
+            "type": "code",
+            "value": "const"
+          },
+          {
+            "type": "text",
+            "value": " 虽提升但处于暂时性死区，声明前访问抛错。"
+          }
+        ],
         [
           {
             "type": "code",
@@ -270,7 +366,7 @@
           },
           {
             "type": "text",
-            "value": "：编译阶段提升声明，初始化为 "
+            "value": " 编译阶段提升声明并初始化为 "
           },
           {
             "type": "code",
@@ -284,7 +380,7 @@
         [
           {
             "type": "text",
-            "value": "函数声明整体提升（可先于声明调用）；函数表达式只提升变量名，值为 "
+            "value": "函数声明整体提升，可先于声明调用；函数表达式仅提升变量名，赋值为 "
           },
           {
             "type": "code",
@@ -292,7 +388,7 @@
           },
           {
             "type": "text",
-            "value": " 直到赋值。"
+            "value": " 直至赋值完成。"
           }
         ],
         [
@@ -310,7 +406,7 @@
           },
           {
             "type": "text",
-            "value": " 有提升但处于"
+            "value": " 处于"
           },
           {
             "type": "strong",
@@ -318,7 +414,15 @@
           },
           {
             "type": "text",
-            "value": "，声明前访问抛 ReferenceError，详见 ES6 章。"
+            "value": "，声明前访问抛 "
+          },
+          {
+            "type": "code",
+            "value": "ReferenceError"
+          },
+          {
+            "type": "text",
+            "value": "，详见 ES6 章。"
           }
         ]
       ]
@@ -326,26 +430,36 @@
     {
       "id": "q-execution-context",
       "navLabel": "执行上下文与作用域链",
-      "question": "执行上下文、作用域链和原型链分别管啥？",
+      "question": "执行上下文、作用域链与原型链分别承担什么职责？",
       "answer": [
         [
           {
             "type": "strong",
-            "value": "执行上下文"
+            "value": "要点："
           },
           {
             "type": "text",
-            "value": "：代码运行时的环境（变量、this、外层引用），调用栈一层一层压入弹出。"
+            "value": "执行上下文管理运行环境，作用域链解析标识符，原型链解析对象属性；三者职责不同，不宜混用。"
           }
         ],
         [
           {
             "type": "strong",
-            "value": "作用域链"
+            "value": "执行上下文："
           },
           {
             "type": "text",
-            "value": "：查找标识符时沿词法环境向外层找，和闭包、"
+            "value": "代码运行时的环境（变量、this、外层引用），调用栈逐层压入与弹出。"
+          }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "作用域链："
+          },
+          {
+            "type": "text",
+            "value": "查找标识符时沿词法环境向外层检索，与闭包、"
           },
           {
             "type": "code",
@@ -359,11 +473,27 @@
         [
           {
             "type": "strong",
-            "value": "原型链"
+            "value": "原型链："
           },
           {
             "type": "text",
-            "value": "：查找对象属性时沿 `[[Prototype]]` 向上，和 `new`、继承相关；别和作用域链混为一谈。"
+            "value": "查找对象属性时沿 "
+          },
+          {
+            "type": "code",
+            "value": "[[Prototype]]"
+          },
+          {
+            "type": "text",
+            "value": " 向上，与 "
+          },
+          {
+            "type": "code",
+            "value": "new"
+          },
+          {
+            "type": "text",
+            "value": "、继承相关，与作用域链无关。"
           }
         ]
       ]
@@ -371,12 +501,16 @@
     {
       "id": "q-closure",
       "navLabel": "闭包",
-      "question": "什么是闭包？有啥用？",
+      "question": "什么是闭包？有哪些典型应用场景？",
       "answer": [
         [
           {
+            "type": "strong",
+            "value": "要点："
+          },
+          {
             "type": "text",
-            "value": "内层函数引用外层词法环境中的变量；外层执行完毕后，只要内层仍被持有，该环境就不会被回收——这就是闭包。"
+            "value": "内层函数引用外层词法环境中的变量；外层执行完毕后，内层仍被持有时该环境不会被回收。"
           }
         ],
         [
@@ -386,74 +520,19 @@
           },
           {
             "type": "text",
-            "value": "模块级私有状态（外部无法直接访问 "
-          },
-          {
-            "type": "code",
-            "value": "count"
-          },
-          {
-            "type": "text",
-            "value": "）、防抖/节流工厂（闭包保存 timer）、柯里化与偏函数。"
+            "value": "模块级私有状态、防抖/节流工厂（闭包保存 timer）、柯里化与偏函数。"
           }
         ],
         [
           {
             "type": "text",
-            "value": "代价是延长引用链：大对象、DOM 节点、接口返回数据若一直被闭包引用，会推迟垃圾回收（对象无法被释放）。"
-          },
-          {
-            "type": "text",
-            "value": "组件卸载时清定时器、解绑监听、置空引用，是单页应用（SPA）里防内存泄漏的基本功。"
-          }
-        ]
-      ]
-    },
-    {
-      "id": "q-strict-mode",
-      "navLabel": "严格模式",
-      "question": "严格模式改了哪些行为？this 有啥不同？",
-      "answer": [
-        [
-          {
-            "type": "text",
-            "value": "文件或函数顶部 `"
-          },
-          {
-            "type": "code",
-            "value": "'use strict'"
-          },
-          {
-            "type": "text",
-            "value": "` 开启；禁止静默失败（未声明变量赋值抛错）、删除不可删属性等。"
+            "value": "代价是延长引用链：大对象、DOM 节点、接口数据若一直被闭包引用，会推迟垃圾回收。"
           }
         ],
         [
           {
             "type": "text",
-            "value": "独立调用的函数里 "
-          },
-          {
-            "type": "code",
-            "value": "this"
-          },
-          {
-            "type": "text",
-            "value": " 为 "
-          },
-          {
-            "type": "code",
-            "value": "undefined"
-          },
-          {
-            "type": "text",
-            "value": "（非严格常为全局对象）；箭头函数仍看词法 this。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "模块、class 方法体默认严格。"
+            "value": "组件卸载时清定时器、解绑监听、置空引用，是单页应用（SPA）防内存泄漏的基本操作。"
           }
         ]
       ]
@@ -461,8 +540,18 @@
     {
       "id": "q-new",
       "navLabel": "new 做了什么",
-      "question": "new 一个构造函数时发生了什么？",
+      "question": "使用 new 调用构造函数时，运行时依次执行哪些步骤？",
       "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "要点："
+          },
+          {
+            "type": "text",
+            "value": "new 依次创建对象、绑定 this 执行构造体、按返回值规则决定实例；class 构造器须用 new 调用。"
+          }
+        ],
         [
           {
             "type": "text",
@@ -479,6 +568,10 @@
           {
             "type": "code",
             "value": "prototype"
+          },
+          {
+            "type": "text",
+            "value": "。"
           }
         ],
         [
@@ -492,7 +585,7 @@
           },
           {
             "type": "text",
-            "value": " 执行构造函数体"
+            "value": " 执行构造函数体。"
           }
         ],
         [
@@ -524,7 +617,7 @@
           },
           {
             "type": "text",
-            "value": "；本质仍是原型链 + 上述三步，只是加了语法层约束。"
+            "value": "；本质仍是原型链加上述三步。"
           }
         ]
       ]
@@ -532,20 +625,16 @@
     {
       "id": "q-proto",
       "navLabel": "原型链",
-      "question": "说说原型链？",
+      "question": "请说明 JavaScript 中的原型链查找机制。",
       "answer": [
         [
           {
-            "type": "text",
-            "value": "访问 "
-          },
-          {
-            "type": "code",
-            "value": "obj.x"
+            "type": "strong",
+            "value": "要点："
           },
           {
             "type": "text",
-            "value": "：先查自有属性，没有则沿 "
+            "value": "访问属性时先查自有属性，未命中则沿 "
           },
           {
             "type": "code",
@@ -553,15 +642,7 @@
           },
           {
             "type": "text",
-            "value": "（调试时常写 "
-          },
-          {
-            "type": "code",
-            "value": "__proto__"
-          },
-          {
-            "type": "text",
-            "value": "）向上查找，直到 "
+            "value": " 向上直至 "
           },
           {
             "type": "code",
@@ -569,7 +650,7 @@
           },
           {
             "type": "text",
-            "value": " 结束，形成原型链。"
+            "value": "，形成原型链。"
           }
         ],
         [
@@ -591,7 +672,7 @@
           },
           {
             "type": "text",
-            "value": " 会把实例的 "
+            "value": " 将实例 "
           },
           {
             "type": "code",
@@ -607,7 +688,7 @@
           },
           {
             "type": "text",
-            "value": "。方法共享、节省内存，是继承的基础机制。"
+            "value": "，实现方法共享。"
           }
         ],
         [
@@ -637,7 +718,7 @@
           },
           {
             "type": "text",
-            "value": "。"
+            "value": "；"
           },
           {
             "type": "code",
@@ -651,7 +732,7 @@
         [
           {
             "type": "text",
-            "value": "别与作用域链混淆：作用域链解析标识符（词法环境），原型链解析对象属性。"
+            "value": "不宜与作用域链混淆：作用域链解析标识符，原型链解析对象属性。"
           }
         ]
       ]
@@ -659,20 +740,16 @@
     {
       "id": "q-call-bind",
       "navLabel": "call/apply/bind",
-      "question": "call、apply、bind 区别？",
+      "question": "call、apply、bind 有何区别？各自适用于哪些场景？",
       "answer": [
         [
           {
-            "type": "text",
-            "value": "三者都用于"
-          },
-          {
             "type": "strong",
-            "value": "显式指定函数执行时的 this"
+            "value": "要点："
           },
           {
             "type": "text",
-            "value": "，区别在调用时机与传参方式。"
+            "value": "三者均用于显式指定函数 this；call/apply 立即执行，bind 返回绑定后的新函数。"
           }
         ],
         [
@@ -683,14 +760,16 @@
           {
             "type": "text",
             "value": "：立即执行，参数逐个传入。"
-          },
+          }
+        ],
+        [
           {
             "type": "code",
             "value": "fn.apply(obj, [a, b])"
           },
           {
             "type": "text",
-            "value": "：立即执行，第二参为数组/类数组，适合参数个数不定（如 "
+            "value": "：立即执行，第二参为数组，适合参数个数不定（如 "
           },
           {
             "type": "code",
@@ -708,15 +787,7 @@
           },
           {
             "type": "text",
-            "value": "：返回"
-          },
-          {
-            "type": "strong",
-            "value": "新函数"
-          },
-          {
-            "type": "text",
-            "value": "，this 与部分参数被固化，常用于事件回调、"
+            "value": "：返回新函数，this 与部分参数被固化，常用于事件回调、"
           },
           {
             "type": "code",
@@ -738,7 +809,7 @@
           },
           {
             "type": "text",
-            "value": "：把 "
+            "value": "：将 "
           },
           {
             "type": "code",
@@ -754,7 +825,7 @@
           },
           {
             "type": "text",
-            "value": " 的临时属性上调用，执行后删除，用 "
+            "value": " 临时属性上调用，执行后删除；用 "
           },
           {
             "type": "code",
@@ -786,16 +857,22 @@
     {
       "id": "q-this",
       "navLabel": "this 指向",
-      "question": "this 到底指向谁？",
+      "question": "函数中的 this 由什么因素决定？",
       "answer": [
         [
           {
             "type": "strong",
-            "value": "普通函数："
+            "value": "要点："
           },
           {
             "type": "text",
-            "value": "由调用方式决定——"
+            "value": "普通函数 this 由调用方式决定；箭头函数继承定义处外层词法 this，不可被 call/apply/bind 修改。"
+          }
+        ],
+        [
+          {
+            "type": "strong",
+            "value": "普通函数："
           },
           {
             "type": "code",
@@ -811,7 +888,7 @@
           },
           {
             "type": "text",
-            "value": " 为 "
+            "value": " 指向 "
           },
           {
             "type": "code",
@@ -841,7 +918,7 @@
           },
           {
             "type": "text",
-            "value": " 常为全局对象（浏览器为 "
+            "value": " 常为 "
           },
           {
             "type": "code",
@@ -849,7 +926,7 @@
           },
           {
             "type": "text",
-            "value": "），严格模式为 "
+            "value": "，严格模式为 "
           },
           {
             "type": "code",
@@ -863,11 +940,11 @@
         [
           {
             "type": "strong",
-            "value": "箭头函数"
+            "value": "箭头函数："
           },
           {
             "type": "text",
-            "value": "：没有自己的 "
+            "value": "无自己的 "
           },
           {
             "type": "code",
@@ -899,23 +976,7 @@
           },
           {
             "type": "text",
-            "value": "（阮一峰原文），"
-          },
-          {
-            "type": "code",
-            "value": "this"
-          },
-          {
-            "type": "text",
-            "value": " 继承定义处外层词法绑定；"
-          },
-          {
-            "type": "code",
-            "value": "call/apply/bind"
-          },
-          {
-            "type": "text",
-            "value": " 改不了。需固定 this 用 "
+            "value": "；需固定 this 用 "
           },
           {
             "type": "code",
@@ -923,13 +984,13 @@
           },
           {
             "type": "text",
-            "value": " 或包一层箭头函数。"
+            "value": " 或外层箭头函数包裹。"
           }
         ],
         [
           {
             "type": "text",
-            "value": "经典坑："
+            "value": "常见陷阱："
           },
           {
             "type": "code",
@@ -937,34 +998,7 @@
           },
           {
             "type": "text",
-            "value": "、React 类组件把方法当 prop 传递导致 "
-          },
-          {
-            "type": "code",
-            "value": "this"
-          },
-          {
-            "type": "text",
-            "value": " 丢失——优先类字段箭头函数或 bind。"
-          }
-        ]
-      ]
-    },
-    {
-      "id": "q-single-thread",
-      "navLabel": "单线程模型",
-      "question": "为什么说 JavaScript 是单线程？和异步啥关系？",
-      "answer": [
-        [
-          {
-            "type": "text",
-            "value": "主线程一条调用栈，长时间同步任务会阻塞渲染与交互，所以 I/O、定时器交给宿主环境，完成后回调进任务队列。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "宏任务/微任务调度见「事件循环」题；重计算可放 Web Worker（browser 章）。"
+            "value": "、类组件方法作 prop 传递导致 this 丢失，优先类字段箭头或 bind。"
           }
         ]
       ]
@@ -972,36 +1006,16 @@
     {
       "id": "q-eventloop",
       "navLabel": "事件循环",
-      "question": "宏任务和微任务谁先执行？",
+      "question": "宏任务与微任务的执行顺序是怎样的？",
       "answer": [
         [
           {
-            "type": "text",
-            "value": "浏览器"
-          },
-          {
             "type": "strong",
-            "value": "事件循环（Event Loop）"
+            "value": "要点："
           },
           {
             "type": "text",
-            "value": "每一轮：先执行当前"
-          },
-          {
-            "type": "strong",
-            "value": "宏任务（Macro Task）"
-          },
-          {
-            "type": "text",
-            "value": "中的同步代码，再"
-          },
-          {
-            "type": "strong",
-            "value": "清空微任务（Micro Task）队列"
-          },
-          {
-            "type": "text",
-            "value": "，然后取下一个宏任务。"
+            "value": "每轮事件循环先执行当前宏任务同步代码，再清空微任务队列，然后取下一个宏任务。"
           }
         ],
         [
@@ -1031,7 +1045,7 @@
           },
           {
             "type": "text",
-            "value": " 等；执行过程中新入队的微任务会在本轮继续清完。"
+            "value": " 等；执行中新入队的微任务在本轮继续清完。"
           }
         ],
         [
@@ -1069,7 +1083,7 @@
           },
           {
             "type": "text",
-            "value": " 等。因此 "
+            "value": " 等，故 "
           },
           {
             "type": "code",
@@ -1099,7 +1113,7 @@
           },
           {
             "type": "text",
-            "value": " 优先于 Promise 微任务；浏览器无 nextTick。写异步题时先画「同步 → 微任务 → 宏任务」顺序即可。"
+            "value": " 优先于 Promise 微任务；浏览器无 nextTick。口述顺序：同步 → 微任务 → 宏任务。"
           }
         ],
         [
@@ -1123,24 +1137,26 @@
     {
       "id": "q-debounce",
       "navLabel": "防抖与节流",
-      "question": "防抖和节流啥区别？用在哪？",
+      "question": "防抖与节流有何区别？分别适用于哪些场景？",
       "answer": [
         [
           {
             "type": "strong",
-            "value": "防抖（debounce）"
+            "value": "要点："
           },
           {
             "type": "text",
-            "value": "：连续触发只认"
-          },
+            "value": "防抖在停顿后执行，节流在固定窗口内最多执行一次；前者减请求，后者保频率。"
+          }
+        ],
+        [
           {
             "type": "strong",
-            "value": "最后一次停下来的那一刻"
+            "value": "防抖（debounce）："
           },
           {
             "type": "text",
-            "value": "再执行。"
+            "value": "连续触发时，仅在最后一次停顿后执行回调。"
           }
         ],
         [
@@ -1162,35 +1178,23 @@
           },
           {
             "type": "text",
-            "value": " 结束后再量布局、重算图表。leading 选项可在首次立即触发，看产品需求。"
+            "value": " 结束后再量布局。leading 选项可在首次立即触发。"
           }
         ],
         [
           {
             "type": "strong",
-            "value": "节流（throttle）"
+            "value": "节流（throttle）："
           },
           {
             "type": "text",
-            "value": "：在固定时间窗口内"
-          },
-          {
-            "type": "strong",
-            "value": "最多执行一次"
-          },
-          {
-            "type": "text",
-            "value": "，保证高频事件下仍有稳定回调频率。"
+            "value": "在固定时间窗口内最多执行一次，保证高频事件下仍有稳定回调频率。"
           }
         ],
         [
           {
             "type": "text",
-            "value": "场景：滚动吸顶、拖拽跟手、按钮防连点。"
-          },
-          {
-            "type": "text",
-            "value": "与渲染帧对齐可用 "
+            "value": "场景：滚动吸顶、拖拽跟随、按钮防重复点击；与渲染帧对齐可用 "
           },
           {
             "type": "code",
@@ -1198,7 +1202,7 @@
           },
           {
             "type": "text",
-            "value": " 做 rAF 节流。可手写或用 lodash，注意取消防抖/节流里残留的 timer。"
+            "value": " 做 rAF 节流。"
           }
         ],
         [
@@ -1208,7 +1212,7 @@
           },
           {
             "type": "text",
-            "value": "防抖「停手再执行」骨架（完整版见编程题章）。"
+            "value": "防抖骨架（完整版见编程题章）。"
           }
         ],
         [
@@ -1222,18 +1226,46 @@
     {
       "id": "q-float-precision",
       "navLabel": "浮点数精度",
-      "question": "为什么 0.1 + 0.2 !== 0.3？怎么规避？",
+      "question": "为何 0.1 + 0.2 !== 0.3？应如何规避浮点误差？",
       "answer": [
         [
           {
+            "type": "strong",
+            "value": "要点："
+          },
+          {
             "type": "text",
-            "value": "JS 数字是 IEEE 754 双精度浮点，很多十进制小数无法精确表示，比较会出现误差。"
+            "value": "JavaScript 数字为 IEEE 754 双精度浮点，许多十进制小数无法精确表示，直接比较会出现误差。"
           }
         ],
         [
           {
             "type": "text",
-            "value": "金额等场景：用整数分存储，或 `decimal.js` / `big.js`；比较时用误差范围而非 `===`。"
+            "value": "金额等场景：用整数分存储，或借助 "
+          },
+          {
+            "type": "code",
+            "value": "decimal.js"
+          },
+          {
+            "type": "text",
+            "value": " / "
+          },
+          {
+            "type": "code",
+            "value": "big.js"
+          },
+          {
+            "type": "text",
+            "value": "；比较时用误差范围而非 "
+          },
+          {
+            "type": "code",
+            "value": "==="
+          },
+          {
+            "type": "text",
+            "value": "。"
           }
         ]
       ]
@@ -1241,26 +1273,30 @@
     {
       "id": "q-event-delegation",
       "navLabel": "事件委托",
-      "question": "事件委托是啥？适合什么场景？",
+      "question": "什么是事件委托？适用于哪些场景？",
       "answer": [
         [
           {
-            "type": "text",
-            "value": "把监听绑在父节点，利用"
-          },
-          {
             "type": "strong",
-            "value": "冒泡"
+            "value": "要点："
           },
           {
             "type": "text",
-            "value": "统一处理子节点（含后续动态插入）事件，少绑多个监听器。"
+            "value": "将监听绑在父节点，利用冒泡统一处理子节点事件，减少监听器数量并支持动态子元素。"
           }
         ],
         [
           {
             "type": "text",
-            "value": "用 `event.target` 区分真实点击源；捕获/冒泡顺序、阻止传播见 browser 章 DOM 事件题。"
+            "value": "用 "
+          },
+          {
+            "type": "code",
+            "value": "event.target"
+          },
+          {
+            "type": "text",
+            "value": " 区分真实点击源；捕获/冒泡顺序、阻止传播见 browser 章 DOM 事件题。"
           }
         ],
         [
@@ -1282,35 +1318,20 @@
       ]
     },
     {
-      "id": "q-json-limit",
-      "navLabel": "JSON 序列化局限",
-      "question": "JSON.stringify 有哪些坑？为啥不能当通用深拷贝？",
-      "answer": [
-        [
-          {
-            "type": "text",
-            "value": "会忽略 `undefined`、`function`、`Symbol`；`Date` 变字符串；`Map`/`Set` 等不能直接序列化。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "对象循环引用会抛错；不能处理 `RegExp` 等特殊类型。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "适合接口传输与简单数据持久化；可靠深拷贝见 coding 章或 `structuredClone`（注意环境支持）。"
-          }
-        ]
-      ]
-    },
-    {
       "id": "q-memory-leak",
       "navLabel": "常见内存泄漏",
-      "question": "前端常见内存泄漏有哪些？",
+      "question": "前端开发中有哪些常见的内存泄漏来源？",
       "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "要点："
+          },
+          {
+            "type": "text",
+            "value": "泄漏多因未清理的定时器、未解绑的监听、闭包长期引用大对象或已移除的 DOM 节点。"
+          }
+        ],
         [
           {
             "type": "strong",
@@ -1332,7 +1353,7 @@
         [
           {
             "type": "text",
-            "value": "闭包长期引用大段 DOM、接口返回的大数据；页面已移除的节点仍被 JS 变量持有；第三方图表/编辑器实例未销毁。"
+            "value": "闭包长期引用 DOM、接口大数据；第三方图表/编辑器实例未销毁亦常见。"
           }
         ],
         [
@@ -1350,7 +1371,7 @@
           },
           {
             "type": "text",
-            "value": " 请求；跟对象绑定的缓存用 WeakMap/WeakSet，键无其它引用时可被垃圾回收，不会一直占内存。"
+            "value": " 请求；跟对象绑定的缓存用 WeakMap/WeakSet，键无其它引用时可被回收。"
           }
         ]
       ]

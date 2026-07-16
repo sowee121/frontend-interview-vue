@@ -27,7 +27,7 @@
 
 | 特性 | 说明 |
 |------|------|
-| 18 个专题 | HTML/CSS、JavaScript、ES6、TypeScript、Vue 2、Vue 3、React、Node、小程序、Electron、浏览器、网络安全、工程化、性能、场景题、AI、Agent、编程手写题 |
+| 18 个专题 | HTML/CSS、JavaScript、ES6、TypeScript、Vue、React、Node、小程序、浏览器、网络安全、工程化、性能、场景题、AI、Agent、Electron、项目题、编程手写题 |
 | 章内目录 | 桌面端侧栏锚点 + sticky，点击跳转 `#question-id` |
 | 顶栏章节导航 | 顶栏可横向滑动的章节 tabs，跨章切换 |
 | 移动端 | ≤900px 隐藏侧栏；**左下** FAB 唤起底部章内目录，**右下** FAB 回到顶部 |

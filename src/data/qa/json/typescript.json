@@ -2,23 +2,23 @@
   "slug": "typescript",
   "title": "TypeScript",
   "documentTitle": "TypeScript",
-  "description": "常用 TypeScript 基础语法与高频考点，够面试口述即可。",
-  "lead": "基础语法与高频考点。",
+  "description": "基础类型、type/interface、any/unknown、泛型与工具类型，以及 strict 与声明文件。",
+  "lead": "说清类型怎么选、怎么收窄，以及工程里 strict 与 .d.ts 怎么用。",
   "items": [
     {
       "id": "q-why",
-      "navLabel": "为啥用 TS",
-      "question": "项目里为啥要上 TypeScript？",
-      "questionNote": "说清「编译期检查 + 编辑器补全」两大收益即可。",
+      "navLabel": "为何采用 TS",
+      "question": "请说明项目采用 TypeScript 的主要动机。",
+      "questionNote": "突出编译期类型检查与编辑器智能提示两大核心收益。",
       "answer": [
         [
           {
             "type": "strong",
-            "value": "一句话："
+            "value": "要点："
           },
           {
             "type": "text",
-            "value": "TypeScript 是 JavaScript 的超集，编译前帮你检查类型，改字段时能一次性找出引用处，编辑器补全和跳转也更准。"
+            "value": "TypeScript 是 JavaScript 的超集，在编译阶段进行类型检查；字段变更时可一次性定位引用，编辑器补全与跳转也更准确。"
           }
         ],
         [
@@ -28,7 +28,7 @@
           },
           {
             "type": "strong",
-            "value": "少写错"
+            "value": "编译期发现错误"
           },
           {
             "type": "text",
@@ -40,7 +40,7 @@
           },
           {
             "type": "text",
-            "value": " 改成 "
+            "value": " 改为 "
           },
           {
             "type": "code",
@@ -48,7 +48,7 @@
           },
           {
             "type": "text",
-            "value": "，类型一改，引用处编译报错，比运行才发现省很多。"
+            "value": " 后，类型变更会使引用处编译报错，优于运行时才暴露问题。"
           }
         ],
         [
@@ -58,11 +58,11 @@
           },
           {
             "type": "strong",
-            "value": "代价"
+            "value": "工程代价"
           },
           {
             "type": "text",
-            "value": "：多写类型声明；个别第三方库缺类型要补 "
+            "value": "：需编写类型声明；部分第三方库缺少类型时需补充 "
           },
           {
             "type": "code",
@@ -70,7 +70,7 @@
           },
           {
             "type": "text",
-            "value": "。整体利大于弊。"
+            "value": "。整体收益通常大于成本。"
           }
         ]
       ]
@@ -78,13 +78,13 @@
     {
       "id": "q-basic-types",
       "navLabel": "基础类型",
-      "question": "TypeScript 里常见基础类型有哪些？",
-      "questionNote": "先会写变量、数组、简单对象，再谈进阶语法。",
+      "question": "TypeScript 中常见的基础类型有哪些？",
+      "questionNote": "先掌握变量、数组与简单对象的类型标注，再学习进阶语法。",
       "answer": [
         [
           {
             "type": "strong",
-            "value": "一句话："
+            "value": "要点："
           },
           {
             "type": "text",
@@ -112,7 +112,7 @@
           },
           {
             "type": "text",
-            "value": "，以及数组和对象形状。"
+            "value": "，以及数组与对象形状。"
           }
         ],
         [
@@ -152,7 +152,7 @@
           },
           {
             "type": "text",
-            "value": "。类型写对，点属性时编辑器会提示，拼错字段编译也会报错。"
+            "value": "。类型标注正确时，属性访问有提示，拼写错误会在编译期报错。"
           }
         ]
       ]
@@ -160,17 +160,17 @@
     {
       "id": "q-type-interface",
       "navLabel": "type 和 interface",
-      "question": "type 和 interface 怎么选？",
-      "questionNote": "记一条简单规则就够，不必背性能差异。",
+      "question": "type 与 interface 应如何选择？",
+      "questionNote": "掌握一条选型规则即可，无需深究二者性能差异。",
       "answer": [
         [
           {
             "type": "strong",
-            "value": "一句话："
+            "value": "要点："
           },
           {
             "type": "text",
-            "value": "描述对象形状，"
+            "value": "描述对象形状时，"
           },
           {
             "type": "code",
@@ -178,7 +178,7 @@
           },
           {
             "type": "text",
-            "value": " 和 "
+            "value": " 与 "
           },
           {
             "type": "code",
@@ -186,7 +186,7 @@
           },
           {
             "type": "text",
-            "value": " 大多可以互换；要写联合类型（"
+            "value": " 大多可互换；需要联合类型（"
           },
           {
             "type": "code",
@@ -194,7 +194,7 @@
           },
           {
             "type": "text",
-            "value": "）时用 "
+            "value": "）时 "
           },
           {
             "type": "code",
@@ -202,7 +202,7 @@
           },
           {
             "type": "text",
-            "value": " 更方便。"
+            "value": " 更直接。"
           }
         ],
         [
@@ -212,7 +212,7 @@
           },
           {
             "type": "text",
-            "value": " 和 "
+            "value": " 与 "
           },
           {
             "type": "code",
@@ -220,7 +220,7 @@
           },
           {
             "type": "text",
-            "value": " 效果接近，团队选一种风格统一即可。"
+            "value": " 效果接近，团队选定一种风格并保持一致即可。"
           }
         ],
         [
@@ -230,7 +230,7 @@
           },
           {
             "type": "text",
-            "value": " 这种「可能是 A 或 B」的写法，"
+            "value": " 这类「A 或 B」的写法，"
           },
           {
             "type": "code",
@@ -238,7 +238,7 @@
           },
           {
             "type": "text",
-            "value": " 不好直接表达，用 "
+            "value": " 不便直接表达，应使用 "
           },
           {
             "type": "code",
@@ -254,13 +254,13 @@
     {
       "id": "q-any-unknown",
       "navLabel": "any 和 unknown",
-      "question": "any 和 unknown 区别？",
-      "questionNote": "先记住：unknown 比 any 更安全。",
+      "question": "any 与 unknown 有何区别？",
+      "questionNote": "记住 unknown 比 any 更安全，是处理外部数据的首选。",
       "answer": [
         [
           {
             "type": "strong",
-            "value": "一句话："
+            "value": "要点："
           },
           {
             "type": "code",
@@ -268,7 +268,7 @@
           },
           {
             "type": "text",
-            "value": " 几乎不检查，"
+            "value": " 几乎放弃类型检查，"
           },
           {
             "type": "code",
@@ -276,7 +276,7 @@
           },
           {
             "type": "text",
-            "value": " 表示「类型还不确定」，使用前必须先判断或收窄。"
+            "value": " 表示类型尚不确定，使用前必须先判断或收窄。"
           }
         ],
         [
@@ -286,7 +286,7 @@
           },
           {
             "type": "text",
-            "value": "：你能写 "
+            "value": "：可写 "
           },
           {
             "type": "code",
@@ -294,7 +294,7 @@
           },
           {
             "type": "text",
-            "value": "，编译器放行，运行时才可能报错。适合临时过渡，应尽快改成具体类型。"
+            "value": "，编译器放行，运行时才可能报错。适合临时过渡，应尽快改为具体类型。"
           }
         ],
         [
@@ -304,7 +304,7 @@
           },
           {
             "type": "text",
-            "value": "：不能直接访问属性，要先 "
+            "value": "：不能直接访问属性，需先 "
           },
           {
             "type": "code",
@@ -312,7 +312,7 @@
           },
           {
             "type": "text",
-            "value": " 等判断后再用。接 "
+            "value": " 等判断后再用。处理 "
           },
           {
             "type": "code",
@@ -320,7 +320,7 @@
           },
           {
             "type": "text",
-            "value": " 等外部数据，优先用 "
+            "value": " 等外部数据时，优先使用 "
           },
           {
             "type": "code",
@@ -338,7 +338,7 @@
           },
           {
             "type": "text",
-            "value": "unknown 必须先收窄才能用。"
+            "value": "unknown 必须先收窄才能使用。"
           }
         ],
         [
@@ -352,13 +352,13 @@
     {
       "id": "q-optional-union",
       "navLabel": "可选与联合",
-      "question": "可选属性（?）和联合类型（|）怎么用？",
-      "questionNote": "表单、接口返回值里这两类写法最常见。",
+      "question": "可选属性（?）与联合类型（|）分别如何运用？",
+      "questionNote": "表单字段与接口返回值中，这两类写法最为常见。",
       "answer": [
         [
           {
             "type": "strong",
-            "value": "一句话："
+            "value": "要点："
           },
           {
             "type": "code",
@@ -374,7 +374,7 @@
           },
           {
             "type": "text",
-            "value": " 表示值可能是几种类型之一。"
+            "value": " 表示值可能是若干类型之一。"
           }
         ],
         [
@@ -396,7 +396,7 @@
           },
           {
             "type": "text",
-            "value": " 可传可不传；访问前常用 "
+            "value": " 可传可不传；访问时常配合 "
           },
           {
             "type": "code",
@@ -418,7 +418,7 @@
           },
           {
             "type": "text",
-            "value": "，变量只能是列出的字面量之一；也常见 "
+            "value": "，变量只能是列出的字面量之一；"
           },
           {
             "type": "code",
@@ -426,7 +426,7 @@
           },
           {
             "type": "text",
-            "value": " 表示可能有空值。"
+            "value": " 则用于表示可能为空。"
           }
         ]
       ]
@@ -434,13 +434,13 @@
     {
       "id": "q-type-narrowing",
       "navLabel": "类型收窄",
-      "question": "TypeScript 类型收窄常见写法有哪些？",
-      "questionNote": "类型收窄 = 在分支里把宽类型缩成更具体的类型。",
+      "question": "TypeScript 中常见的类型收窄写法有哪些？",
+      "questionNote": "类型收窄指在分支中将宽类型缩小为更具体的类型。",
       "answer": [
         [
           {
             "type": "strong",
-            "value": "一句话："
+            "value": "要点："
           },
           {
             "type": "text",
@@ -452,7 +452,7 @@
           },
           {
             "type": "text",
-            "value": " 分支里做判断，TypeScript 会自动把类型收窄，之后访问属性才安全。"
+            "value": " 分支中做判断后，TypeScript 会自动收窄类型，此后访问属性才安全。"
           }
         ],
         [
@@ -496,7 +496,7 @@
           },
           {
             "type": "text",
-            "value": " 区分不同对象形态；联合类型靠 "
+            "value": " 可区分不同对象形态；联合类型也可通过 "
           },
           {
             "type": "code",
@@ -504,7 +504,7 @@
           },
           {
             "type": "text",
-            "value": " 也能逐分支收窄。"
+            "value": " 逐分支收窄。"
           }
         ]
       ]
@@ -512,17 +512,17 @@
     {
       "id": "q-generics",
       "navLabel": "泛型",
-      "question": "泛型是干啥的？举个栗子",
-      "questionNote": "理解「类型占位符，输入输出类型绑在一起」即可。",
+      "question": "请说明泛型的作用，并举例说明典型用法。",
+      "questionNote": "理解「类型占位符，使输入与输出类型保持一致」即可。",
       "answer": [
         [
           {
             "type": "strong",
-            "value": "一句话："
+            "value": "要点："
           },
           {
             "type": "text",
-            "value": "泛型是类型占位符，让函数或组件在复用时仍保留具体类型，避免退化成 "
+            "value": "泛型是类型占位符，使函数或组件在复用时仍保留具体类型，避免退化为 "
           },
           {
             "type": "code",
@@ -564,7 +564,7 @@
           },
           {
             "type": "text",
-            "value": "，返回值是 "
+            "value": "，返回 "
           },
           {
             "type": "code",
@@ -572,7 +572,7 @@
           },
           {
             "type": "text",
-            "value": "，而不是 "
+            "value": "，而非 "
           },
           {
             "type": "code",
@@ -586,7 +586,7 @@
         [
           {
             "type": "text",
-            "value": "组件里给 "
+            "value": "组件中为 "
           },
           {
             "type": "code",
@@ -594,7 +594,7 @@
           },
           {
             "type": "text",
-            "value": " 传泛型也是同理：列表项类型和 "
+            "value": " 声明泛型同理：列表项类型与 "
           },
           {
             "type": "code",
@@ -610,17 +610,17 @@
     {
       "id": "q-utility",
       "navLabel": "工具类型",
-      "question": "Partial 和 Pick 是干啥的？",
-      "questionNote": "内置工具类型在编译期变换已有类型，业务里很常用。",
+      "question": "Partial 与 Pick 工具类型各解决什么问题？",
+      "questionNote": "内置工具类型在编译期变换已有类型，业务中应用广泛。",
       "answer": [
         [
           {
             "type": "strong",
-            "value": "一句话："
+            "value": "要点："
           },
           {
             "type": "text",
-            "value": "在已有类型上「改一改」得到新类型，不用手写第二份重复定义。"
+            "value": "在已有类型上派生新类型，无需手写第二份重复定义。"
           }
         ],
         [
@@ -630,7 +630,7 @@
           },
           {
             "type": "text",
-            "value": "：所有字段变可选，适合表单草稿、局部更新接口入参。"
+            "value": "：所有字段变为可选，适用于表单草稿、局部更新接口入参。"
           }
         ],
         [
@@ -640,7 +640,7 @@
           },
           {
             "type": "text",
-            "value": "：只保留指定字段，适合列表页只展示部分列、下拉选项只要 id 和名称。"
+            "value": "：仅保留指定字段，适用于列表页展示部分列、下拉选项等场景。"
           }
         ],
         [
@@ -662,101 +662,15 @@
       ]
     },
     {
-      "id": "q-enum",
-      "navLabel": "枚举写法",
-      "question": "TS 里 enum 推荐用吗？",
-      "questionNote": "很多团队更常用 as const 对象，运行时零开销。",
-      "answer": [
-        [
-          {
-            "type": "strong",
-            "value": "一句话："
-          },
-          {
-            "type": "text",
-            "value": "能用 "
-          },
-          {
-            "type": "code",
-            "value": "as const"
-          },
-          {
-            "type": "text",
-            "value": " 对象 + 类型别名替代 "
-          },
-          {
-            "type": "code",
-            "value": "enum"
-          },
-          {
-            "type": "text",
-            "value": " 时，优先前者；与后端生成代码自带 enum 则按项目约定走。"
-          }
-        ],
-        [
-          {
-            "type": "code",
-            "value": "const Status = { Pending: \"pending\", Done: \"done\" } as const"
-          },
-          {
-            "type": "text",
-            "value": "，"
-          },
-          {
-            "type": "code",
-            "value": "type Status = typeof Status[keyof typeof Status]"
-          },
-          {
-            "type": "text",
-            "value": "，值和类型同源，编译后就是普通对象。"
-          }
-        ],
-        [
-          {
-            "type": "code",
-            "value": "as const"
-          },
-          {
-            "type": "text",
-            "value": " 还会把字面量收窄，例如 "
-          },
-          {
-            "type": "code",
-            "value": "[1, 2] as const"
-          },
-          {
-            "type": "text",
-            "value": " 推断为 "
-          },
-          {
-            "type": "code",
-            "value": "readonly [1, 2]"
-          },
-          {
-            "type": "text",
-            "value": "，而不是宽化的 "
-          },
-          {
-            "type": "code",
-            "value": "number[]"
-          },
-          {
-            "type": "text",
-            "value": "。"
-          }
-        ]
-      ]
-    },
-    {
       "id": "q-strict-config",
       "navLabel": "tsconfig strict",
-      "question": "tsconfig 里 strict 打开后常见报错有哪些？",
-      "questionNote": "strict 是一组子开关的合集，先认识最常见的两个即可。",
+      "question": "开启 tsconfig strict 后，常见编译报错有哪些？",
+      "questionNote": "strict 是一组子开关的合集，先熟悉最常见的两项即可。",
       "answer": [
         [
           {
             "type": "strong",
-            "value": "一句话："
+            "value": "要点："
           },
           {
             "type": "code",
@@ -764,7 +678,7 @@
           },
           {
             "type": "text",
-            "value": " 打开后，以前 JS 里「能跑」的写法会在编译期被拦下来。"
+            "value": " 开启后，以往在 JavaScript 中「能运行」的写法会在编译期被拦截。"
           }
         ],
         [
@@ -798,7 +712,7 @@
           },
           {
             "type": "text",
-            "value": " 等类型，要用联合类型 "
+            "value": " 等类型，需用 "
           },
           {
             "type": "code",
@@ -832,7 +746,7 @@
           },
           {
             "type": "text",
-            "value": "，需要补上类型注解。可按目录逐步开 "
+            "value": "，需补充类型注解。可按目录逐步开启 "
           },
           {
             "type": "code",
@@ -840,7 +754,7 @@
           },
           {
             "type": "text",
-            "value": "，不必一次全仓改完。"
+            "value": "，无需一次改完全仓。"
           }
         ]
       ]
@@ -848,13 +762,23 @@
     {
       "id": "q-module-declare",
       "navLabel": "declare 与 .d.ts",
-      "question": "没有类型的 npm 包怎么在 TS 里用？",
+      "question": "缺少类型声明的 npm 包应如何在 TypeScript 中使用？",
       "questionNote": "优先级：官方 @types → 自建 .d.ts → 临时压制报错。",
       "answer": [
         [
           {
+            "type": "strong",
+            "value": "要点："
+          },
+          {
             "type": "text",
-            "value": "1）优先装 "
+            "value": "按优先级依次尝试：社区类型包、自建声明文件、单行压制。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "1）优先安装 "
           },
           {
             "type": "code",
@@ -876,7 +800,7 @@
         [
           {
             "type": "text",
-            "value": "2）没有则自建 "
+            "value": "2）若无官方类型，自建 "
           },
           {
             "type": "code",
@@ -898,7 +822,7 @@
         [
           {
             "type": "text",
-            "value": "3）临时方案用 "
+            "value": "3）临时方案可用 "
           },
           {
             "type": "code",
@@ -906,7 +830,7 @@
           },
           {
             "type": "text",
-            "value": " 压住单行并写清原因；长期仍应补类型，别用 "
+            "value": " 压制单行并注明原因；长期仍应补充类型，不宜以 "
           },
           {
             "type": "code",
@@ -914,7 +838,7 @@
           },
           {
             "type": "text",
-            "value": " 糊弄过去。"
+            "value": " 敷衍处理。"
           }
         ]
       ]

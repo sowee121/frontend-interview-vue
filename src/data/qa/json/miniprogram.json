@@ -2,23 +2,23 @@
   "slug": "miniprogram",
   "title": "小程序",
   "documentTitle": "小程序",
-  "description": "微信等小程序高频面试：架构、生命周期、setData、登录、分包与性能，偏前端已有 Vue/React 基础的视角。",
-  "lead": "默认你会写 H5；本章说明小程序和网页的关键差异，以及面试常问的「为什么这样设计」。",
+  "description": "双线程架构、生命周期与路由、setData 与登录请求，以及分包、性能与跨端框架选型。",
+  "lead": "默认你会写 H5；重点在双线程、setData、登录域名与分包体积。",
   "items": [
     {
       "id": "q-mp-vs-h5",
       "navLabel": "小程序 vs H5",
-      "question": "小程序、H5、原生 App 有啥区别？为什么要有小程序？",
-      "questionNote": "先讲清三端定位，再记微信的实现特点。",
+      "question": "小程序、H5 与原生 App 有何区别？为何需要小程序这一形态？",
+      "questionNote": "作答时先区分三端（小程序/H5/原生 App）定位，再补充微信侧实现约束。",
       "answer": [
         [
           {
             "type": "strong",
-            "value": "一句话："
+            "value": "要点："
           },
           {
             "type": "text",
-            "value": "小程序跑在微信里，体验接近原生，又能用前端技术栈，但受平台能力和审核规则约束。"
+            "value": "小程序运行于微信宿主环境，体验接近原生应用，可复用前端技术栈，但受平台能力与审核规则约束。"
           }
         ],
         [
@@ -28,13 +28,13 @@
           },
           {
             "type": "text",
-            "value": "H5 是网页，能力受浏览器限制；原生 App 性能最好、能力最全，但开发和分发成本高。"
+            "value": "H5 为浏览器内网页，能力受 WebView 限制；原生 App 性能与系统能力最全，但开发与分发成本较高。"
           }
         ],
         [
           {
             "type": "text",
-            "value": "小程序：安装即用、可获取微信登录与支付、分享传播方便；代码包有大小限制，API 需用微信提供的 "
+            "value": "小程序支持免安装即用，可接入微信登录与支付、便于社交分享；代码包有体积上限，API 须调用微信提供的 "
           },
           {
             "type": "code",
@@ -48,11 +48,11 @@
         [
           {
             "type": "strong",
-            "value": "面试点："
+            "value": "实现特点："
           },
           {
             "type": "text",
-            "value": "不是「在 WebView 里随便写网页」，而是双线程 + 定制组件 + 宿主环境。"
+            "value": "并非在 WebView 中任意编写网页，而是采用双线程架构、定制组件与宿主环境协同运行。"
           }
         ]
       ]
@@ -61,16 +61,16 @@
       "id": "q-mp-architecture",
       "navLabel": "双线程架构",
       "question": "小程序的双线程架构是什么？",
-      "questionNote": "逻辑层与渲染层分离是高频题。",
+      "questionNote": "侧重逻辑层与渲染层分离及 Native 桥通信机制。",
       "answer": [
         [
           {
             "type": "strong",
-            "value": "一句话："
+            "value": "要点："
           },
           {
             "type": "text",
-            "value": "渲染层用 WebView 展示 WXML；逻辑层在独立线程跑 JS，通过 Native 桥通信。"
+            "value": "渲染层以 WebView 展示 WXML；逻辑层在独立线程运行 JS，经 Native 桥与渲染层通信。"
           }
         ],
         [
@@ -80,7 +80,7 @@
           },
           {
             "type": "text",
-            "value": "WXML + WXSS 类似 HTML + CSS，由多个 WebView 渲染各页面（控制包体积与隔离）。"
+            "value": "WXML 与 WXSS 分别对应 HTML 与 CSS，由多个 WebView 分页面渲染，便于控制包体积与页面隔离。"
           }
         ],
         [
@@ -90,7 +90,7 @@
           },
           {
             "type": "text",
-            "value": "你的业务 JS（含 "
+            "value": "业务 JS（含 "
           },
           {
             "type": "code",
@@ -98,17 +98,17 @@
           },
           {
             "type": "text",
-            "value": "）在 JSCore 等环境执行，不能直接操作 DOM。"
+            "value": "）在 JSCore 等运行时执行，逻辑层无法直接操作 DOM。"
           }
         ],
         [
           {
             "type": "strong",
-            "value": "为什么："
+            "value": "设计原因："
           },
           {
             "type": "text",
-            "value": "避免逻辑阻塞页面绘制；"
+            "value": "避免业务逻辑阻塞页面绘制；"
           },
           {
             "type": "code",
@@ -116,7 +116,7 @@
           },
           {
             "type": "text",
-            "value": " 跨线程传数据，数据量大或过于频繁会卡。"
+            "value": " 跨线程同步数据，数据量过大或调用过频会导致渲染卡顿。"
           }
         ]
       ]
@@ -124,8 +124,18 @@
     {
       "id": "q-mp-lifecycle",
       "navLabel": "生命周期",
-      "question": "App、Page、Component 生命周期分别有哪些？",
+      "question": "App、Page、Component 的生命周期分别有哪些？",
       "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "要点："
+          },
+          {
+            "type": "text",
+            "value": "App 管理全局前后台；Page 管理页面入栈与展示；Component 管理组件挂载与卸载，层次划分与 Vue 类似。"
+          }
+        ],
         [
           {
             "type": "strong",
@@ -229,13 +239,37 @@
           },
           {
             "type": "text",
-            "value": "，类似 Vue 的挂载与卸载。"
+            "value": "，对应挂载、就绪与卸载阶段。"
           }
         ],
         [
           {
             "type": "text",
-            "value": "口述技巧：页面展示用 onShow 拉数据；onLoad 里拿路由参数；离开页在 onUnload 清定时器。"
+            "value": "实践建议：页面每次可见时在 "
+          },
+          {
+            "type": "code",
+            "value": "onShow"
+          },
+          {
+            "type": "text",
+            "value": " 拉取数据；在 "
+          },
+          {
+            "type": "code",
+            "value": "onLoad"
+          },
+          {
+            "type": "text",
+            "value": " 读取路由参数；"
+          },
+          {
+            "type": "code",
+            "value": "onUnload"
+          },
+          {
+            "type": "text",
+            "value": " 清理定时器与订阅。"
           }
         ],
         [
@@ -259,8 +293,18 @@
     {
       "id": "q-mp-routing",
       "navLabel": "路由与页面栈",
-      "question": "小程序路由怎么跳转？页面栈是什么？",
+      "question": "小程序路由如何跳转？页面栈是什么？",
       "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "要点："
+          },
+          {
+            "type": "text",
+            "value": "不同跳转 API 分别对应压栈、替换当前页、切换 Tab 或重启应用；页面栈深度有上限，须合理选型。"
+          }
+        ],
         [
           {
             "type": "strong",
@@ -310,7 +354,7 @@
         [
           {
             "type": "text",
-            "value": "页面栈最多十层左右（平台可能调整）；"
+            "value": "页面栈深度上限约十层（以平台当前规则为准）；"
           },
           {
             "type": "code",
@@ -318,13 +362,29 @@
           },
           {
             "type": "text",
-            "value": " 可读栈深度，过深用 redirect/reLaunch 避免栈满。"
+            "value": " 可读当前栈深度，过深时宜用 redirectTo 或 reLaunch 避免栈溢出。"
           }
         ],
         [
           {
             "type": "text",
-            "value": "tabBar 页面必须用 switchTab，不能 navigateTo 进 tab 页。"
+            "value": "tabBar 页面必须用 "
+          },
+          {
+            "type": "code",
+            "value": "switchTab"
+          },
+          {
+            "type": "text",
+            "value": "，不能通过 "
+          },
+          {
+            "type": "code",
+            "value": "navigateTo"
+          },
+          {
+            "type": "text",
+            "value": " 进入 tab 页。"
           }
         ]
       ]
@@ -332,17 +392,17 @@
     {
       "id": "q-mp-setdata",
       "navLabel": "setData",
-      "question": "setData 是干啥的？为什么不能太频繁、数据不能太大？",
-      "questionNote": "和 Vue/React 的 setState 对比着记。",
+      "question": "setData 的作用是什么？为何不宜频繁调用或传入过大数据？",
+      "questionNote": "可对照 Vue/React 状态更新机制，理解跨线程同步开销。",
       "answer": [
         [
           {
             "type": "strong",
-            "value": "一句话："
+            "value": "要点："
           },
           {
             "type": "text",
-            "value": "逻辑层改 "
+            "value": "逻辑层修改 "
           },
           {
             "type": "code",
@@ -350,25 +410,33 @@
           },
           {
             "type": "text",
-            "value": "，经 Native 序列化到渲染层更新视图，类似单向数据流。"
+            "value": "，经 Native 序列化后同步至渲染层更新视图，机制类似单向数据流。"
           }
         ],
         [
           {
             "type": "text",
-            "value": "1）只传变化字段，别把整个大对象每次全量拷贝。"
+            "value": "1）仅传递变更字段，避免每次全量拷贝整个大对象。"
           }
         ],
         [
           {
             "type": "text",
-            "value": "2）合并多次更新：能放在同一 tick 的尽量一次 setData。"
+            "value": "2）合并同屏多次更新：同一事件循环内可合并的尽量合并为一次 "
+          },
+          {
+            "type": "code",
+            "value": "setData"
+          },
+          {
+            "type": "text",
+            "value": "。"
           }
         ],
         [
           {
             "type": "text",
-            "value": "3）列表用稳定 "
+            "value": "3）列表须设置稳定 "
           },
           {
             "type": "code",
@@ -376,13 +444,13 @@
           },
           {
             "type": "text",
-            "value": "；超长列表用分包、虚拟列表组件或自定义渲染优化。"
+            "value": "；超长列表宜采用分包渲染、虚拟列表组件或自定义渲染方案。"
           }
         ],
         [
           {
             "type": "text",
-            "value": "原因：跨线程通信有成本，频繁/大数据会掉帧、交互发粘。"
+            "value": "原因：跨线程通信存在序列化与调度开销，频繁调用或单次数据过大会导致掉帧与交互迟滞。"
           }
         ],
         [
@@ -406,12 +474,12 @@
     {
       "id": "q-mp-component",
       "navLabel": "自定义组件",
-      "question": "如何封装自定义组件？properties 和 data 区别？",
+      "question": "如何封装自定义组件？properties 与 data 有何区别？",
       "answer": [
         [
           {
             "type": "strong",
-            "value": "结构："
+            "value": "要点："
           },
           {
             "type": "text",
@@ -423,7 +491,7 @@
           },
           {
             "type": "text",
-            "value": " 里写 "
+            "value": " 中定义 "
           },
           {
             "type": "code",
@@ -431,7 +499,7 @@
           },
           {
             "type": "text",
-            "value": "（外部传入）、"
+            "value": "（外部入参）、"
           },
           {
             "type": "code",
@@ -439,29 +507,13 @@
           },
           {
             "type": "text",
-            "value": "（内部状态）、"
-          },
-          {
-            "type": "code",
-            "value": "methods"
-          },
-          {
-            "type": "text",
-            "value": "、"
-          },
-          {
-            "type": "code",
-            "value": "lifetimes"
-          },
-          {
-            "type": "text",
-            "value": "。"
+            "value": "（内部状态）及方法与生命周期。"
           }
         ],
         [
           {
             "type": "text",
-            "value": "properties 类似 props，可设 type、value、observer；"
+            "value": "properties 对应外部入参，可配置 type、value、observer；"
           },
           {
             "type": "code",
@@ -483,7 +535,7 @@
           },
           {
             "type": "text",
-            "value": "；需要穿透用 externalClasses 或 :host。"
+            "value": "；需要样式穿透时使用 externalClasses 或 :host 选择器。"
           }
         ],
         [
@@ -507,12 +559,12 @@
     {
       "id": "q-mp-login",
       "navLabel": "微信登录",
-      "question": "小程序登录流程大概怎样？code 能直接当前端凭证吗？",
+      "question": "小程序登录流程是怎样的？code 能否作为前端长期凭证？",
       "answer": [
         [
           {
             "type": "strong",
-            "value": "标准流程："
+            "value": "要点："
           },
           {
             "type": "code",
@@ -520,7 +572,7 @@
           },
           {
             "type": "text",
-            "value": " 得临时 "
+            "value": " 获取临时授权码 "
           },
           {
             "type": "code",
@@ -528,7 +580,7 @@
           },
           {
             "type": "text",
-            "value": "（短期、一次性）→ 发给自家后端 → 后端用 code 调微信接口换 "
+            "value": "，由服务端换取 "
           },
           {
             "type": "code",
@@ -544,7 +596,7 @@
           },
           {
             "type": "text",
-            "value": " → 后端发业务 token 给小程序。"
+            "value": "，再向客户端下发业务 token。"
           }
         ],
         [
@@ -554,7 +606,7 @@
           },
           {
             "type": "text",
-            "value": "code、session_key 不能当前端长期凭证；"
+            "value": "code、session_key 不得作为前端长期凭证；"
           },
           {
             "type": "code",
@@ -562,13 +614,13 @@
           },
           {
             "type": "text",
-            "value": " 勿下发前端。token 放 header，过期重新 login。"
+            "value": " 禁止下发至客户端。token 置于请求头，过期后须重新发起 login。"
           }
         ],
         [
           {
             "type": "text",
-            "value": "获取用户信息需 "
+            "value": "获取用户信息须通过 "
           },
           {
             "type": "code",
@@ -576,7 +628,7 @@
           },
           {
             "type": "text",
-            "value": " 等合规接口，不能静默拿头像昵称。"
+            "value": " 等合规接口主动授权，不得静默获取头像与昵称。"
           }
         ]
       ]
@@ -584,26 +636,22 @@
     {
       "id": "q-mp-request",
       "navLabel": "请求与域名",
-      "question": "wx.request 和浏览器 fetch 有啥不同？配域名要注意啥？",
+      "question": "wx.request 与浏览器 fetch 有何不同？配置域名时需注意什么？",
       "answer": [
         [
           {
-            "type": "text",
-            "value": "需在小程序后台配置 "
-          },
-          {
             "type": "strong",
-            "value": "request 合法域名"
+            "value": "要点："
           },
           {
             "type": "text",
-            "value": "（HTTPS），开发工具可勾选「不校验合法域名」仅用于本地调试。"
+            "value": "须在小程序管理后台配置 request 合法域名（HTTPS）；不存在浏览器式跨域，由客户端校验域名白名单。"
           }
         ],
         [
           {
             "type": "text",
-            "value": "不支持浏览器里随意的跨域概念，由微信客户端校验白名单；Cookie 行为与 H5 不同，登录态多用 header token。"
+            "value": "开发者工具可勾选「不校验合法域名」仅用于本地调试；Cookie 行为与 H5 不同，登录态通常通过 header 传递 token。"
           }
         ],
         [
@@ -617,7 +665,7 @@
           },
           {
             "type": "text",
-            "value": " 等；上传下载用 "
+            "value": " 等；上传下载分别使用 "
           },
           {
             "type": "code",
@@ -641,12 +689,22 @@
     {
       "id": "q-mp-storage",
       "navLabel": "本地存储",
-      "question": "wx.setStorage 和 localStorage 一样吗？",
+      "question": "wx.setStorage 与 localStorage 是否相同？",
       "answer": [
         [
           {
+            "type": "strong",
+            "value": "要点："
+          },
+          {
             "type": "text",
-            "value": "都是持久化键值存储，但 API 为异步 "
+            "value": "均为持久化键值存储；小程序 API 为异步调用，且有容量上限（约 10MB，以官方文档为准）。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "使用 "
           },
           {
             "type": "code",
@@ -662,13 +720,13 @@
           },
           {
             "type": "text",
-            "value": "，有容量上限（约 10MB 级，以文档为准）。"
+            "value": " 读写数据；敏感信息（如 token）宜设置较短有效期并由服务端刷新。"
           }
         ],
         [
           {
             "type": "text",
-            "value": "敏感数据（token）仍建议短有效期 + 服务端刷新；可配合 "
+            "value": "可配合 "
           },
           {
             "type": "code",
@@ -676,7 +734,7 @@
           },
           {
             "type": "text",
-            "value": " 简化代码（注意主线程阻塞）。"
+            "value": " 简化调用，但同步 API 可能阻塞逻辑层主线程，须控制调用频率。"
           }
         ]
       ]
@@ -684,17 +742,17 @@
     {
       "id": "q-mp-subpackage",
       "navLabel": "分包加载",
-      "question": "什么是分包？主包、分包、独立分包区别？",
-      "questionNote": "包体积与首屏是常考点。",
+      "question": "什么是分包？主包、分包与独立分包有何区别？",
+      "questionNote": "包体积限制与首屏加载时间为常见考点。",
       "answer": [
         [
           {
             "type": "strong",
-            "value": "动机："
+            "value": "要点："
           },
           {
             "type": "text",
-            "value": "主包过大影响首次启动；按功能拆 "
+            "value": "主包体积过大将影响首次启动；按功能模块拆分 "
           },
           {
             "type": "code",
@@ -702,7 +760,7 @@
           },
           {
             "type": "text",
-            "value": "，用户进入对应页面再下载分包。"
+            "value": "，用户进入对应路由时再按需下载分包。"
           }
         ],
         [
@@ -712,29 +770,33 @@
           },
           {
             "type": "text",
-            "value": "默认包含 tabBar 页与公共资源；"
-          },
+            "value": "默认包含 tabBar 页面与公共资源。"
+          }
+        ],
+        [
           {
             "type": "strong",
             "value": "分包："
           },
           {
             "type": "text",
-            "value": "按需加载的子包；"
-          },
+            "value": "按需加载的子包，进入对应路由时下载。"
+          }
+        ],
+        [
           {
             "type": "strong",
             "value": "独立分包："
           },
           {
             "type": "text",
-            "value": "可不依赖主包直接启动（适合活动页）。"
+            "value": "可不依赖主包独立启动，适用于活动页等独立入口场景。"
           }
         ],
         [
           {
             "type": "text",
-            "value": "配置在 "
+            "value": "配置写在 "
           },
           {
             "type": "code",
@@ -742,7 +804,7 @@
           },
           {
             "type": "text",
-            "value": "；注意公共组件、图片放主包或分包合理规划，避免主包超 2MB 等限制（以平台当前规则为准）。"
+            "value": "；公共组件与静态资源须合理规划归属，避免主包超出 2MB 等平台限制（以当前规则为准）。"
           }
         ]
       ]
@@ -750,30 +812,64 @@
     {
       "id": "q-mp-performance",
       "navLabel": "性能优化",
-      "question": "小程序性能优化你一般从哪几方面说？",
+      "question": "小程序性能优化通常从哪些方面展开？",
       "answer": [
         [
           {
+            "type": "strong",
+            "value": "要点："
+          },
+          {
             "type": "text",
-            "value": "1）启动：减主包体积、分包、图片压缩、避免 onLaunch 重活。"
+            "value": "从启动、渲染、网络请求与监控四个维度系统作答，每点给出可落地的工程措施。"
           }
         ],
         [
           {
             "type": "text",
-            "value": "2）渲染：setData 减量、key 正确、长列表优化。"
+            "value": "1）启动：压缩主包体积、启用分包、优化图片资源，避免在 "
+          },
+          {
+            "type": "code",
+            "value": "onLaunch"
+          },
+          {
+            "type": "text",
+            "value": " 执行重计算任务。"
           }
         ],
         [
           {
             "type": "text",
-            "value": "3）请求：并行必要接口、缓存、骨架屏。"
+            "value": "2）渲染：控制 "
+          },
+          {
+            "type": "code",
+            "value": "setData"
+          },
+          {
+            "type": "text",
+            "value": " 数据量、保证 "
+          },
+          {
+            "type": "code",
+            "value": "wx:key"
+          },
+          {
+            "type": "text",
+            "value": " 配置正确、优化长列表渲染性能。"
           }
         ],
         [
           {
             "type": "text",
-            "value": "4）监控："
+            "value": "3）网络：并行请求必要接口、合理使用缓存策略、展示骨架屏降低白屏感知。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "4）监控：使用 "
           },
           {
             "type": "code",
@@ -781,7 +877,7 @@
           },
           {
             "type": "text",
-            "value": "、体验分；必要时开 "
+            "value": "、关注体验评分；必要时启用 "
           },
           {
             "type": "code",
@@ -797,7 +893,7 @@
           },
           {
             "type": "text",
-            "value": "（基础库版本相关）。"
+            "value": "（与基础库版本相关）。"
           }
         ]
       ]
@@ -805,12 +901,16 @@
     {
       "id": "q-mp-share",
       "navLabel": "分享与转发",
-      "question": "onShareAppMessage 怎么用？如何自定义分享卡片？",
+      "question": "onShareAppMessage 如何使用？如何自定义分享卡片？",
       "answer": [
         [
           {
+            "type": "strong",
+            "value": "要点："
+          },
+          {
             "type": "text",
-            "value": "在 Page 定义 "
+            "value": "在 Page 中定义 "
           },
           {
             "type": "code",
@@ -834,7 +934,7 @@
           },
           {
             "type": "text",
-            "value": "（带 query）、"
+            "value": "（含 query）与 "
           },
           {
             "type": "code",
@@ -864,7 +964,7 @@
           },
           {
             "type": "text",
-            "value": " 要写清楚落地页参数，方便统计与还原场景。"
+            "value": " 应写明落地页参数，便于统计与还原分享场景。"
           }
         ],
         [
@@ -888,9 +988,19 @@
     {
       "id": "q-mp-taro-uni",
       "navLabel": "Taro / uni-app",
-      "question": "Taro、uni-app 和原生小程序开发怎么选？",
-      "questionNote": "了解即可，说明「编译到多端」。",
+      "question": "Taro、uni-app 与原生小程序开发应如何选择？",
+      "questionNote": "说明跨端编译方案的能力边界与选型依据即可。",
       "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "要点："
+          },
+          {
+            "type": "text",
+            "value": "按团队技术栈、目标平台数量与官方能力跟进节奏综合选型。"
+          }
+        ],
         [
           {
             "type": "strong",
@@ -898,7 +1008,7 @@
           },
           {
             "type": "text",
-            "value": "WXML/WXSS + "
+            "value": "WXML/WXSS 配合 "
           },
           {
             "type": "code",
@@ -906,7 +1016,7 @@
           },
           {
             "type": "text",
-            "value": " API，学习成本最低、官方能力跟进最快。"
+            "value": " API，学习成本最低，官方新能力跟进最及时。"
           }
         ],
         [
@@ -916,7 +1026,7 @@
           },
           {
             "type": "text",
-            "value": "React 语法为主，编译到微信/支付宝等多端；适合团队已是 React。"
+            "value": "以 React 语法编写，编译输出至微信、支付宝等多端；适合 React 技术栈团队。"
           }
         ],
         [
@@ -926,165 +1036,13 @@
           },
           {
             "type": "text",
-            "value": "Vue 语法为主，多端一套代码；生态插件多。"
+            "value": "以 Vue 语法编写，一套代码多端发布；生态插件与社区方案较丰富。"
           }
         ],
         [
           {
             "type": "text",
-            "value": "面试答法：业务只要微信，可用原生或 uni；要多端且团队 React 选 Taro。注意各端 API 差异与条件编译。"
-          }
-        ]
-      ]
-    },
-    {
-      "id": "q-mp-setdata-path",
-      "navLabel": "setData 路径更新",
-      "question": "小程序 setData 除了少传数据，路径更新还能怎么优化？",
-      "questionNote": "在已有 setData 题上加深：路径写法与合并更新。",
-      "answer": [
-        [
-          {
-            "type": "strong",
-            "value": "一句话："
-          },
-          {
-            "type": "text",
-            "value": "用路径只改树上一枝，并合并同屏多次更新，减少逻辑层到视图层的通信量。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "1）"
-          },
-          {
-            "type": "text",
-            "value": "路径更新如 "
-          },
-          {
-            "type": "code",
-            "value": "'list[3].status'"
-          },
-          {
-            "type": "text",
-            "value": "，避免每次把整个 "
-          },
-          {
-            "type": "code",
-            "value": "list"
-          },
-          {
-            "type": "text",
-            "value": " 序列化过去。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "2）"
-          },
-          {
-            "type": "text",
-            "value": "同一次用户操作能合并的字段放一次 "
-          },
-          {
-            "type": "code",
-            "value": "setData"
-          },
-          {
-            "type": "text",
-            "value": "；输入类配合防抖。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "3）"
-          },
-          {
-            "type": "text",
-            "value": "超大列表优先虚拟列表或分页，而不是指望「偷偷 patch 框架」；自定义优化要能量化证明。"
-          }
-        ],
-        [
-          {
-            "type": "strong",
-            "value": "示例："
-          },
-          {
-            "type": "text",
-            "value": "合并同屏多次更新。"
-          }
-        ],
-        [
-          {
-            "type": "code",
-            "value": "this.setData({\n  'form.name': name,\n  'form.phone': phone,\n}) // 一次通信多字段"
-          }
-        ]
-      ]
-    },
-    {
-      "id": "q-mp-ci-publish",
-      "navLabel": "小程序 CI 发布",
-      "question": "小程序多环境与自动化上传发布一般怎么做？",
-      "questionNote": "env 脚本切配置；miniprogram-ci 一类工具上传；混淆放流水线。",
-      "answer": [
-        [
-          {
-            "type": "strong",
-            "value": "一句话："
-          },
-          {
-            "type": "text",
-            "value": "用脚本切换环境变量与 appid 配置，CI 里安装依赖后调用官方上传接口提体验版/提交审核。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "1）"
-          },
-          {
-            "type": "text",
-            "value": "本地："
-          },
-          {
-            "type": "code",
-            "value": "env sit|prod"
-          },
-          {
-            "type": "text",
-            "value": " 一类命令写入接口域名、埋点开关等，避免手改配置漏提测。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "2）"
-          },
-          {
-            "type": "text",
-            "value": "流水线：密钥放 CI 密钥库；"
-          },
-          {
-            "type": "code",
-            "value": "miniprogram-ci"
-          },
-          {
-            "type": "text",
-            "value": "（或平台等价工具）上传，失败阻断。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "3）"
-          },
-          {
-            "type": "text",
-            "value": "代码混淆、掉 console 建议只在发布流水线开，本地调试保持可读。"
+            "value": "业务仅面向微信时可选用原生或 uni-app；需覆盖多端且团队以 React 为主时选 Taro。须关注各端 API 差异与条件编译。"
           }
         ]
       ]

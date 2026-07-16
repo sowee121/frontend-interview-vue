@@ -12,13 +12,13 @@ import javascript from './json/javascript.json'
 import network from './json/network.json'
 import node from './json/node.json'
 import performance from './json/performance.json'
+import project from './json/project.json'
 import react from './json/react.json'
 import miniprogram from './json/miniprogram.json'
 import electron from './json/electron.json'
 import scenario from './json/scenario.json'
 import typescript from './json/typescript.json'
-import vue2 from './json/vue2.json'
-import vue3 from './json/vue3.json'
+import vue from './json/vue.json'
 
 /** 各章正文与题目：直接维护同目录 json；import 进包，勿手写 HTML 片段 */
 export const chapterPayloads: Record<ChapterSlug, ChapterPayload> = {
@@ -35,9 +35,9 @@ export const chapterPayloads: Record<ChapterSlug, ChapterPayload> = {
   react: react as ChapterPayload,
   miniprogram: miniprogram as ChapterPayload,
   electron: electron as ChapterPayload,
-  vue2: vue2 as ChapterPayload,
-  vue3: vue3 as ChapterPayload,
+  vue: vue as ChapterPayload,
   scenario: scenario as ChapterPayload,
   ai: ai as ChapterPayload,
   agent: agent as ChapterPayload,
+  project: project as ChapterPayload,
 }

@@ -2,35 +2,39 @@
   "slug": "engineering",
   "title": "工程化",
   "documentTitle": "工程化",
-  "description": "把模块化、打包构建、摇树优化、缓存与协作规范串成一线前端日常能落地的工程化答案。",
-  "lead": "工程化聊的是：怎么构建、怎么规范、怎么在团队里协作发布。",
+  "description": "模块化与 Vite/Webpack、Tree-shaking、Monorepo 与 CI，以及 husky、微前端与转译工具。",
+  "lead": "构建选型与协作门禁为主；Monorepo/微前端按有无经历深挖。",
   "items": [
     {
       "id": "q-module",
       "navLabel": "模块化",
-      "question": "CommonJS 和 ES Module 区别？",
-      "questionNote": "CJS 运行时 require；ES 模块（ESM）静态结构利于摇树；互操作知道即可。",
+      "question": "CommonJS 与 ES Module 有何区别？",
+      "questionNote": "CommonJS 运行时 require；ES 模块（ESM）静态结构利于摇树；互操作了解基本原理即可。",
       "answer": [
         [
           {
             "type": "strong",
-            "value": "CommonJS（CJS）："
-          },
-          {
-            "type": "code",
-            "value": "require()"
+            "value": "要点："
           },
           {
             "type": "text",
-            "value": " 运行时解析路径；"
+            "value": "CJS 用 "
           },
           {
             "type": "code",
-            "value": "module.exports"
+            "value": "require/module.exports"
           },
           {
             "type": "text",
-            "value": " 是对象引用。"
+            "value": " 运行时解析；ESM 用 "
+          },
+          {
+            "type": "code",
+            "value": "import/export"
+          },
+          {
+            "type": "text",
+            "value": " 编译期静态分析，导入为 live binding，更利于摇树优化。"
           }
         ],
         [
@@ -52,7 +56,7 @@
           },
           {
             "type": "text",
-            "value": " 混用会踩坑，面试能举例即可。"
+            "value": " 混用易导致导出异常，面试可结合实例说明。"
           }
         ],
         [
@@ -66,7 +70,7 @@
           },
           {
             "type": "text",
-            "value": " 在编译阶段静态分析；导入导出为动态引用（live binding，阮一峰 Module 一章）。"
+            "value": " 在编译阶段静态分析；导入导出为动态绑定（live binding）。"
           }
         ],
         [
@@ -100,7 +104,7 @@
         [
           {
             "type": "text",
-            "value": "互操作：打包器常把 CJS 预构建成 ESM；循环依赖项目里靠拆模块规避，不必背完整规范。"
+            "value": "互操作：打包器常将 CJS 预构建为 ESM；循环依赖宜通过拆分模块规避，无需熟记完整规范。"
           }
         ],
         [
@@ -138,17 +142,17 @@
     {
       "id": "q-vite-webpack",
       "navLabel": "Vite 和 Webpack",
-      "question": "Vite 为啥开发时比 Webpack 快？",
-      "questionNote": "开发态 ESM 按需编译 vs 整图打包；生产别绝对化「谁更快」。",
+      "question": "Vite 为何在开发模式下比 Webpack 更快？",
+      "questionNote": "开发态 ESM 按需编译 vs 整图打包；生产构建速度不宜绝对化比较。",
       "answer": [
         [
           {
             "type": "strong",
-            "value": "开发态："
+            "value": "要点："
           },
           {
             "type": "text",
-            "value": "Vite 把源码当原生 ES 模块（ESM）提供，浏览器请求哪个模块再让 esbuild 转那个文件，"
+            "value": "开发态 Vite 以原生 ESM 提供源码，按需编译单文件，"
           },
           {
             "type": "strong",
@@ -156,7 +160,7 @@
           },
           {
             "type": "text",
-            "value": "。"
+            "value": "；Webpack 开发常先打内存 bundle 再热模块替换（HMR）。"
           }
         ],
         [
@@ -168,13 +172,13 @@
         [
           {
             "type": "text",
-            "value": "2）Webpack 开发常先打出内存 bundle 再热模块替换（HMR），入口一多就慢；但复杂 loader、微前端、Legacy 生态更全。"
+            "value": "2）Webpack 入口增多时开发构建更慢；但复杂 loader、微前端与 Legacy 生态更成熟。"
           }
         ],
         [
           {
             "type": "text",
-            "value": "3）生产环境 Vite 用 Rollup 打摇树后的 bundle，是否更快要看项目体积与配置，别一刀切。"
+            "value": "3）生产环境 Vite 用 Rollup 产出摇树后的 bundle，速度取决于项目体积与配置，不宜一概而论。"
           }
         ]
       ]
@@ -182,13 +186,13 @@
     {
       "id": "q-tree-shaking",
       "navLabel": "Tree-shaking",
-      "question": "Tree-shaking 是什么？",
+      "question": "什么是 Tree-shaking？",
       "questionNote": "静态 ESM + 无副作用声明；lodash 整包导入是经典反例。",
       "answer": [
         [
           {
             "type": "strong",
-            "value": "定义："
+            "value": "要点："
           },
           {
             "type": "text",
@@ -268,13 +272,13 @@
     {
       "id": "q-env-mode",
       "navLabel": "环境变量",
-      "question": "Vite 里环境变量 VITE_ 前缀为啥要有？",
+      "question": "Vite 中环境变量为何要求 VITE_ 前缀？",
       "questionNote": "防止服务端密钥打进浏览器；运行时配置另说。",
       "answer": [
         [
           {
             "type": "strong",
-            "value": "安全边界："
+            "value": "要点："
           },
           {
             "type": "text",
@@ -354,17 +358,17 @@
     {
       "id": "q-sourcemap",
       "navLabel": "Source Map",
-      "question": "生产环境 source map 怎么开才安全？",
-      "questionNote": "map 给排错用，别公开完整源码；hidden-source-map + 鉴权上传常见。",
+      "question": "生产环境应如何安全地配置 source map？",
+      "questionNote": "map 给排错用，避免公开完整源码；hidden-source-map + 鉴权上传常见。",
       "answer": [
         [
           {
             "type": "strong",
-            "value": "目标："
+            "value": "要点："
           },
           {
             "type": "text",
-            "value": "线上栈能映射回源码，但不要把完整 .map 公开挂在静态目录。"
+            "value": "线上栈能映射回源码，但应避免将完整 .map 公开挂载于静态目录。"
           }
         ],
         [
@@ -392,7 +396,7 @@
         [
           {
             "type": "text",
-            "value": "2）浏览器别暴露生产 map URL；Nginx 对 "
+            "value": "2）浏览器侧应避免暴露生产 map URL；Nginx 对 "
           },
           {
             "type": "code",
@@ -408,13 +412,13 @@
     {
       "id": "q-pnpm",
       "navLabel": "pnpm 特点",
-      "question": "pnpm 相对 npm/yarn 经典版有啥不一样？",
+      "question": "pnpm 相比 npm/yarn 经典版有哪些差异？",
       "questionNote": "内容寻址 store + 非扁平 node_modules；幽灵依赖是常考点。",
       "answer": [
         [
           {
             "type": "strong",
-            "value": "磁盘："
+            "value": "要点："
           },
           {
             "type": "text",
@@ -470,13 +474,13 @@
     {
       "id": "q-monorepo",
       "navLabel": "Monorepo",
-      "question": "Monorepo 是啥？前端能捞到什么好处？",
-      "questionNote": "单仓多包 + 任务编排；要说清 CI 增量与发布流成本。",
+      "question": "什么是 Monorepo？前端采用它能获得哪些收益？",
+      "questionNote": "单仓多包与任务编排；须说明 CI 增量策略与发布流成本。",
       "answer": [
         [
           {
             "type": "strong",
-            "value": "定义："
+            "value": "要点："
           },
           {
             "type": "text",
@@ -522,51 +526,7 @@
         [
           {
             "type": "text",
-            "value": "3）代价：持续集成（CI）要按受影响包增量跑，发布流设计不好会一挂全红。"
-          }
-        ]
-      ]
-    },
-    {
-      "id": "q-turborepo-cache",
-      "navLabel": "Turborepo 与缓存",
-      "question": "Turborepo（或 Nx）在 monorepo 里主要解决啥？远程缓存是啥？",
-      "questionNote": "任务 DAG 与增量；远程缓存是团队共享构建产物，注意秘文隔离。",
-      "answer": [
-        [
-          {
-            "type": "strong",
-            "value": "分工："
-          },
-          {
-            "type": "text",
-            "value": "workspace 管依赖链接；Turborepo/Nx 管任务编排与增量。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "1）按包依赖图并行跑 build/test/lint，没改动的包跳过。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "2）"
-          },
-          {
-            "type": "strong",
-            "value": "远程缓存"
-          },
-          {
-            "type": "text",
-            "value": "：任务输出哈希由锁文件、源码、环境输入决定，命中后直接拉产物，main 编过的包在 feature 分支也能秒过。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "3）注意密钥与缓存隔离，别把带秘文的构建产物进公共缓存。"
+            "value": "3）代价：持续集成（CI）须按受影响包增量执行，发布流设计不当易引发全量构建失败。"
           }
         ]
       ]
@@ -574,13 +534,13 @@
     {
       "id": "q-husky",
       "navLabel": "husky 与 lint-staged",
-      "question": "husky + lint-staged 一般怎么配？",
+      "question": "husky 与 lint-staged 通常如何配置？",
       "questionNote": "只 lint 暂存区提速；hook 可被 --no-verify 跳过，CI 才是准绳。",
       "answer": [
         [
           {
             "type": "strong",
-            "value": "做法："
+            "value": "要点："
           },
           {
             "type": "code",
@@ -588,7 +548,7 @@
           },
           {
             "type": "text",
-            "value": " 里跑 "
+            "value": " 钩子中执行 "
           },
           {
             "type": "code",
@@ -648,13 +608,13 @@
     {
       "id": "q-ci-quality",
       "navLabel": "CI 与质量门禁",
-      "question": "PR 合并前你们会跑哪些检查？",
+      "question": "PR 合并前通常需要执行哪些质量检查？",
       "questionNote": "lint、类型检查、测试、体积预算；本地 hook 与 CI 互补关系要说清。",
       "answer": [
         [
           {
             "type": "strong",
-            "value": "典型门禁："
+            "value": "要点："
           },
           {
             "type": "code",
@@ -690,13 +650,13 @@
     {
       "id": "q-micro",
       "navLabel": "微前端",
-      "question": "微前端了解吗？一句话怎么说？",
+      "question": "请简述微前端的概念、实现方式与常见挑战。",
       "questionNote": "子应用独立发布 + 基座统一壳；要能列 iframe/qiankun/模块联邦取舍与痛点。",
       "answer": [
         [
           {
             "type": "strong",
-            "value": "一句话："
+            "value": "要点："
           },
           {
             "type": "text",
@@ -750,13 +710,13 @@
     {
       "id": "q-babel-swc",
       "navLabel": "Babel 与 SWC",
-      "question": "Babel 和 SWC/esbuild 在工程里各干什么？",
+      "question": "Babel 与 SWC/esbuild 在工程中各自承担什么职责？",
       "questionNote": "语法降级与转换；类型检查仍靠 tsc；摇树在 bundler 阶段。",
       "answer": [
         [
           {
             "type": "strong",
-            "value": "共性："
+            "value": "要点："
           },
           {
             "type": "text",
@@ -819,104 +779,6 @@
           {
             "type": "text",
             "value": "；生产摇树在 bundler，不是 Babel 单独完成。"
-          }
-        ]
-      ]
-    },
-    {
-      "id": "q-monorepo-shared-pkg",
-      "navLabel": "共享包构建顺序",
-      "question": "Monorepo 里改了 packages 共享包，应用跑起来却像没生效，常见原因？",
-      "questionNote": "加深 monorepo：workspace 链接 + Turbo ^build + 消费方式。",
-      "answer": [
-        [
-          {
-            "type": "strong",
-            "value": "一句话："
-          },
-          {
-            "type": "text",
-            "value": "多数是共享包产物没重建，或应用吃的是旧构建缓存/错误的入口字段。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "1）"
-          },
-          {
-            "type": "text",
-            "value": "pnpm "
-          },
-          {
-            "type": "code",
-            "value": "workspace:*"
-          },
-          {
-            "type": "text",
-            "value": " 只保证依赖链接；若包 exports 指向 "
-          },
-          {
-            "type": "code",
-            "value": "dist"
-          },
-          {
-            "type": "text",
-            "value": "，改源码后要先 build 该包。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "2）"
-          },
-          {
-            "type": "text",
-            "value": "Turbo/Nx 配 "
-          },
-          {
-            "type": "code",
-            "value": "dependsOn: ['^build']"
-          },
-          {
-            "type": "text",
-            "value": "，构建应用前自动构建依赖包；开发可对库开 watch。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "3）"
-          },
-          {
-            "type": "text",
-            "value": "用 "
-          },
-          {
-            "type": "code",
-            "value": "--filter"
-          },
-          {
-            "type": "text",
-            "value": " 只编受影响子图；清缓存前先确认哈希输入是否该变。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "4）"
-          },
-          {
-            "type": "text",
-            "value": "边界：共享请求/组件包勿循环依赖；类型与运行时入口（"
-          },
-          {
-            "type": "code",
-            "value": "main/module/exports"
-          },
-          {
-            "type": "text",
-            "value": "）要一致。"
           }
         ]
       ]

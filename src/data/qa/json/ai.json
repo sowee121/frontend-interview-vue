@@ -2,19 +2,19 @@
   "slug": "ai",
   "title": "AI",
   "documentTitle": "AI",
-  "description": "AI 对话全流程：SSE 流式协议、大模型对接、思考块、Markdown 多格式渲染、历史落库、会话缓存与切换、重新生成、主题与停止/空闲等核心实现。",
-  "lead": "按「怎么做一个可停、可切、可重生、能渲染推理与 Markdown 的流式对话」组织。",
+  "description": "流式对话 SSE 链路、停止生成与多轮会话，以及思考块、流式 Markdown 与滚动体验。",
+  "lead": "有流式对话经历时按「链路 → 停止 → 多轮 → 展示」准备；实现细节见各题。",
   "items": [
     {
       "id": "q-ai-chat-e2e",
       "navLabel": "对话全流程",
-      "question": "从用户点发送到气泡里出现完整回答，流式 AI 对话前后端一般怎么串起来？",
+      "question": "从用户发送到气泡展示完整回答，流式 AI 对话前后端如何衔接？",
       "questionNote": "乐观插入 → POST SSE → meta/delta/done → 落库/路由；停生成走 abort。",
       "answer": [
         [
           {
             "type": "strong",
-            "value": "一句话："
+            "value": "要点："
           },
           {
             "type": "text",
@@ -264,17 +264,17 @@
     {
       "id": "q-ai-stream-why-sse",
       "navLabel": "为何用 SSE",
-      "question": "做 AI 流式对话，为啥常用 SSE 而不是一次性 JSON 或 WebSocket？",
-      "questionNote": "单向推 token、走 HTTP、代理友好；对比一锤子返回和全双工场景。",
+      "question": "实现 AI 流式对话时，为何常用 SSE 而非一次性 JSON 或 WebSocket？",
+      "questionNote": "单向推 token、走 HTTP、代理友好；对比一次性整包返回和全双工场景。",
       "answer": [
         [
           {
             "type": "strong",
-            "value": "一句话："
+            "value": "要点："
           },
           {
             "type": "text",
-            "value": "对话是「服务端持续吐字」，SSE 正好单向推流；不必为回包再开 WebSocket，也比等整段 JSON 体验好。"
+            "value": "对话为「服务端持续输出 token」，SSE 适合单向推流；无需为回包另开 WebSocket，体验亦优于等待整段 JSON。"
           }
         ],
         [
@@ -340,13 +340,13 @@
     {
       "id": "q-ai-stream-post-sse",
       "navLabel": "POST SSE",
-      "question": "带对话上下文的流式接口，前端为啥往往不用原生 EventSource？怎么发起？",
+      "question": "带对话上下文的流式接口，前端为何通常不用原生 EventSource？应如何发起？",
       "questionNote": "EventSource 仅 GET；工程常用 fetch-event-source 做 POST + signal。",
       "answer": [
         [
           {
             "type": "strong",
-            "value": "一句话："
+            "value": "要点："
           },
           {
             "type": "text",
@@ -476,13 +476,13 @@
     {
       "id": "q-ai-stream-protocol",
       "navLabel": "前后端事件协议",
-      "question": "自建 AI 流式对话时，前后端 SSE 事件一般怎么设计？",
-      "questionNote": "推荐 meta/delta/done/error；别强行让前端直接吃各家模型原始帧。",
+      "question": "自建 AI 流式对话时，前后端 SSE 事件应如何设计？",
+      "questionNote": "推荐 meta/delta/done/error；勿强行让前端直接消费各家模型原始帧。",
       "answer": [
         [
           {
             "type": "strong",
-            "value": "一句话："
+            "value": "要点："
           },
           {
             "type": "text",
@@ -604,383 +604,15 @@
       ]
     },
     {
-      "id": "q-ai-stream-backend",
-      "navLabel": "服务端怎么推",
-      "question": "服务端接到流式聊天请求后，怎么从模型推到浏览器？",
-      "questionNote": "设 SSE 头、写 event/data、监听连接关闭以 abort 上游。",
-      "answer": [
-        [
-          {
-            "type": "strong",
-            "value": "一句话："
-          },
-          {
-            "type": "text",
-            "value": "响应头标明 event-stream；循环读模型 chunk，按约定事件 flush；客户端断开就停上游。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "1）"
-          },
-          {
-            "type": "text",
-            "value": "响应头："
-          },
-          {
-            "type": "code",
-            "value": "Content-Type: text/event-stream"
-          },
-          {
-            "type": "text",
-            "value": "、"
-          },
-          {
-            "type": "code",
-            "value": "Cache-Control: no-cache"
-          },
-          {
-            "type": "text",
-            "value": "，按需禁用缓冲。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "2）"
-          },
-          {
-            "type": "text",
-            "value": "调用模型 SDK "
-          },
-          {
-            "type": "code",
-            "value": "stream: true"
-          },
-          {
-            "type": "text",
-            "value": "，把 token 映射成 "
-          },
-          {
-            "type": "code",
-            "value": "delta"
-          },
-          {
-            "type": "text",
-            "value": " 写出；结束发 "
-          },
-          {
-            "type": "code",
-            "value": "done"
-          },
-          {
-            "type": "text",
-            "value": "。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "3）"
-          },
-          {
-            "type": "text",
-            "value": "监听 request/response "
-          },
-          {
-            "type": "code",
-            "value": "close"
-          },
-          {
-            "type": "text",
-            "value": "："
-          },
-          {
-            "type": "code",
-            "value": "AbortController.abort()"
-          },
-          {
-            "type": "text",
-            "value": " 打断模型，避免用户已停仍计费。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "4）"
-          },
-          {
-            "type": "text",
-            "value": "可选：空闲超时（长时间无 chunk）、部分结果落库（用户中途停止也留痕）。"
-          }
-        ],
-        [
-          {
-            "type": "strong",
-            "value": "示例："
-          },
-          {
-            "type": "text",
-            "value": "写出一帧。"
-          }
-        ],
-        [
-          {
-            "type": "code",
-            "value": "function send(res, event, data) {\n  res.write(`event: ${event}\\ndata: ${JSON.stringify(data)}\\n\\n`)\n}\n// reply.raw.on('close', () => upstreamAbort.abort())"
-          }
-        ]
-      ]
-    },
-    {
-      "id": "q-ai-llm-provider",
-      "navLabel": "大模型对接",
-      "question": "聊天产品里 Mock / OpenAI 兼容端点怎么抽象？请求里如何带 system、历史与动态模型？",
-      "questionNote": "统一 StreamChunk 产出；环境变量优先；模型列表另拉 /v1/models。",
-      "answer": [
-        [
-          {
-            "type": "strong",
-            "value": "一句话："
-          },
-          {
-            "type": "text",
-            "value": "Provider 统一成「可 abort 的 AsyncGenerator / 流」，产出 reasoning|text；业务路由不感知具体厂商。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "1）"
-          },
-          {
-            "type": "strong",
-            "value": "抽象："
-          },
-          {
-            "type": "text",
-            "value": "如"
-          },
-          {
-            "type": "code",
-            "value": "getProvider(name)"
-          },
-          {
-            "type": "text",
-            "value": " →"
-          },
-          {
-            "type": "code",
-            "value": "mock"
-          },
-          {
-            "type": "text",
-            "value": "/"
-          },
-          {
-            "type": "code",
-            "value": "openai"
-          },
-          {
-            "type": "text",
-            "value": "，入参"
-          },
-          {
-            "type": "code",
-            "value": "query"
-          },
-          {
-            "type": "text",
-            "value": "、"
-          },
-          {
-            "type": "code",
-            "value": "messages"
-          },
-          {
-            "type": "text",
-            "value": "、"
-          },
-          {
-            "type": "code",
-            "value": "model"
-          },
-          {
-            "type": "text",
-            "value": "、"
-          },
-          {
-            "type": "code",
-            "value": "signal"
-          },
-          {
-            "type": "text",
-            "value": "，出"
-          },
-          {
-            "type": "code",
-            "value": "{ type, content }"
-          },
-          {
-            "type": "text",
-            "value": "。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "2）"
-          },
-          {
-            "type": "strong",
-            "value": "拼消息："
-          },
-          {
-            "type": "text",
-            "value": ""
-          },
-          {
-            "type": "code",
-            "value": "[system, ...history, user(query)]"
-          },
-          {
-            "type": "text",
-            "value": "。system 来自配置或默认提示（表格/Mermaid 半角等约束可写进 system）。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "3）"
-          },
-          {
-            "type": "strong",
-            "value": "兼容协议："
-          },
-          {
-            "type": "text",
-            "value": "用 OpenAI SDK"
-          },
-          {
-            "type": "code",
-            "value": "chat.completions.create({ stream: true })"
-          },
-          {
-            "type": "text",
-            "value": "，换"
-          },
-          {
-            "type": "code",
-            "value": "baseURL"
-          },
-          {
-            "type": "text",
-            "value": "可接 DeepSeek/通义/智谱等；"
-          },
-          {
-            "type": "code",
-            "value": "apiKey/baseURL/model"
-          },
-          {
-            "type": "text",
-            "value": "优先读环境变量再读本地配置。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "4）"
-          },
-          {
-            "type": "strong",
-            "value": "动态模型："
-          },
-          {
-            "type": "text",
-            "value": "Header 下拉请求"
-          },
-          {
-            "type": "code",
-            "value": "GET /models"
-          },
-          {
-            "type": "text",
-            "value": "（代理上游"
-          },
-          {
-            "type": "code",
-            "value": "/v1/models"
-          },
-          {
-            "type": "text",
-            "value": "），前端只持久化当前"
-          },
-          {
-            "type": "code",
-            "value": "provider"
-          },
-          {
-            "type": "text",
-            "value": "/"
-          },
-          {
-            "type": "code",
-            "value": "model"
-          },
-          {
-            "type": "text",
-            "value": "；流式中禁用切换防半截换模。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "5）"
-          },
-          {
-            "type": "strong",
-            "value": "Mock："
-          },
-          {
-            "type": "text",
-            "value": "按关键词吐代码/表格/图/思考片段 + sleep 分片，方便无 Key 联调 SSE 与渲染。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "6）"
-          },
-          {
-            "type": "strong",
-            "value": "错误："
-          },
-          {
-            "type": "text",
-            "value": "上游异常归一成中文大类 + 可选明细，经 SSE"
-          },
-          {
-            "type": "code",
-            "value": "error"
-          },
-          {
-            "type": "text",
-            "value": "给前端，不要把堆栈直接甩 UI。"
-          }
-        ]
-      ]
-    },
-    {
       "id": "q-ai-stream-chat",
       "navLabel": "流式对话输出",
-      "question": "大模型对话里的「逐字输出」，前后端各自做了什么？",
+      "question": "大模型对话的「逐字输出」，前后端各自承担什么职责？",
       "questionNote": "服务端推流 + 前端 POST SSE 增量拼接；细节协议见同章「前后端事件协议」「POST SSE」。",
       "answer": [
         [
           {
             "type": "strong",
-            "value": "一句话："
+            "value": "要点："
           },
           {
             "type": "text",
@@ -1162,7 +794,7 @@
           },
           {
             "type": "text",
-            "value": "。切会话或停止后用序号丢弃迟到回调，防串流。"
+            "value": "。切会话或停止后用序号丢弃迟到回调，防状态错乱。"
           }
         ],
         [
@@ -1208,13 +840,13 @@
     {
       "id": "q-ai-stream-append",
       "navLabel": "前端状态机",
-      "question": "前端收到 delta 后状态怎么维护？如何避免两路流串台？",
-      "questionNote": "当前助手消息累加；streamSeq / 会话切换丢弃旧回调。",
+      "question": "前端收到 delta 后应如何维护状态？如何避免两路流式响应状态错乱？",
+      "questionNote": "当前助手消息累加；streamSeq / 会话切换时丢弃旧回调。",
       "answer": [
         [
           {
             "type": "strong",
-            "value": "一句话："
+            "value": "要点："
           },
           {
             "type": "text",
@@ -1322,7 +954,7 @@
           },
           {
             "type": "text",
-            "value": " 在 stop / 切路由时执行；回调首行比对序号防串写。"
+            "value": " 在 stop / 切路由时执行；回调首行比对序号防状态错乱。"
           }
         ],
         [
@@ -1332,7 +964,7 @@
           },
           {
             "type": "text",
-            "value": "防串流。"
+            "value": "防状态错乱。"
           }
         ],
         [
@@ -1346,13 +978,13 @@
     {
       "id": "q-ai-reasoning-block",
       "navLabel": "思考块实现",
-      "question": "大模型「思考过程」和正文怎么分通道？流式半标签、历史展示、是否回传上游要注意什么？",
+      "question": "大模型「思考过程」与正文如何分通道？流式半标签、历史展示与是否回传上游应注意什么？",
       "questionNote": "字段通道 vs content 内 <think>；UI 折叠；reasoning 不进下一轮 messages。",
       "answer": [
         [
           {
             "type": "strong",
-            "value": "一句话："
+            "value": "要点："
           },
           {
             "type": "text",
@@ -1526,13 +1158,13 @@
     {
       "id": "q-ai-markdown-stream",
       "navLabel": "流式 Markdown",
-      "question": "助手消息用 Markdown（代码 / 表格 / 公式 / Mermaid）流式渲染，怎么选型？未闭合 fence 与失败怎么兜底？",
+      "question": "助手消息以 Markdown（代码 / 表格 / 公式 / Mermaid）流式渲染，如何选型？未闭合 fence 与渲染失败如何兜底？",
       "questionNote": "流式友好组件 + 插件；失败降级源码；主题跟 CSS 变量。",
       "answer": [
         [
           {
             "type": "strong",
-            "value": "一句话："
+            "value": "要点："
           },
           {
             "type": "text",
@@ -1646,13 +1278,13 @@
     {
       "id": "q-ai-stream-stop",
       "navLabel": "停止生成实现",
-      "question": "用户点「停止生成」时，前后端各自会发生什么？",
+      "question": "用户点击「停止生成」时，前后端分别会发生什么？",
       "questionNote": "前端 abort；后端感知 close 停模型；未必有独立 stop 接口。",
       "answer": [
         [
           {
             "type": "strong",
-            "value": "一句话："
+            "value": "要点："
           },
           {
             "type": "text",
@@ -1758,137 +1390,15 @@
       ]
     },
     {
-      "id": "q-ai-stop-persist",
-      "navLabel": "停止后落库",
-      "question": "用户点「停止生成」后，前后端如何保证历史里仍能看到半截回答或「已停止」提示？",
-      "questionNote": "前端本地写 status；服务端 close 落 partial；通常不发 done。",
-      "answer": [
-        [
-          {
-            "type": "strong",
-            "value": "一句话："
-          },
-          {
-            "type": "text",
-            "value": "abort 断开后两端都要处理部分结果：有文本/推理就落库，全空写统一「已停止生成」文案。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "1）"
-          },
-          {
-            "type": "strong",
-            "value": "前端："
-          },
-          {
-            "type": "text",
-            "value": ""
-          },
-          {
-            "type": "code",
-            "value": "abort"
-          },
-          {
-            "type": "text",
-            "value": "+ bump"
-          },
-          {
-            "type": "code",
-            "value": "streamSeq"
-          },
-          {
-            "type": "text",
-            "value": "；若助手仍空但有 reasoning，补仅推理占位；全空写"
-          },
-          {
-            "type": "code",
-            "value": "statusMessage"
-          },
-          {
-            "type": "text",
-            "value": "。abort 错误勿当业务失败弹红条。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "2）"
-          },
-          {
-            "type": "strong",
-            "value": "服务端："
-          },
-          {
-            "type": "text",
-            "value": ""
-          },
-          {
-            "type": "code",
-            "value": "raw.on(\"close\")"
-          },
-          {
-            "type": "text",
-            "value": " → abort 上游；catch Abort 后"
-          },
-          {
-            "type": "code",
-            "value": "persist"
-          },
-          {
-            "type": "text",
-            "value": " partial；无产出写相同软提示；"
-          },
-          {
-            "type": "strong",
-            "value": "一般不再发 done/error"
-          },
-          {
-            "type": "text",
-            "value": "。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "3）"
-          },
-          {
-            "type": "strong",
-            "value": "刷新一致："
-          },
-          {
-            "type": "text",
-            "value": "下次打开会话从 DB 读到同一半截或软提示，与停止瞬间 UI 对齐。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "4）"
-          },
-          {
-            "type": "strong",
-            "value": "下一轮："
-          },
-          {
-            "type": "text",
-            "value": "过滤掉「仅 status、无 content」的助手行，避免把「已停止」喂给模型。"
-          }
-        ]
-      ]
-    },
-    {
       "id": "q-ai-stream-idle",
       "navLabel": "空闲与重连",
-      "question": "流式对话里空闲超时和自动重连要注意什么？",
+      "question": "流式对话中空闲超时与自动重连应注意什么？",
       "questionNote": "对话流不宜默认无限重连；长时间无事件应主动失败。",
       "answer": [
         [
           {
             "type": "strong",
-            "value": "一句话："
+            "value": "要点："
           },
           {
             "type": "text",
@@ -1954,13 +1464,13 @@
     {
       "id": "q-ai-stream-session",
       "navLabel": "会话与多轮",
-      "question": "流式多轮对话里，sessionCode 和 messages 一般怎么配合？",
+      "question": "流式多轮对话中，sessionCode 与 messages 通常如何配合？",
       "questionNote": "新会话先占位再被 meta 换真码；多轮把历史消息放 body。",
       "answer": [
         [
           {
             "type": "strong",
-            "value": "一句话："
+            "value": "要点："
           },
           {
             "type": "text",
@@ -1990,7 +1500,7 @@
           },
           {
             "type": "text",
-            "value": " 由服务端拼上下文——两者择一为主，别双源打架。"
+            "value": " 由服务端拼上下文——两者择一为主，避免双源冲突。"
           }
         ],
         [
@@ -2018,24 +1528,6 @@
           },
           {
             "type": "text",
-            "value": "重新生成：可带 "
-          },
-          {
-            "type": "code",
-            "value": "regenerate"
-          },
-          {
-            "type": "text",
-            "value": " 标记，服务端决定丢弃尾条助手再写。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "4）"
-          },
-          {
-            "type": "text",
             "value": "会话 404：停止写入并引导回列表，勿把错误当普通 delta。"
           }
         ]
@@ -2044,13 +1536,13 @@
     {
       "id": "q-ai-context-filter",
       "navLabel": "多轮上下文过滤",
-      "question": "发给大模型的 messages 要从前端/历史里丢掉哪些内容？为什么 reasoning 不能原样回传？",
+      "question": "发给大模型的 messages 应从前端/历史中过滤哪些内容？为何 reasoning 不宜原样回传？",
       "questionNote": "只要干净 role+content；错/停/占位/空助手剔除。",
       "answer": [
         [
           {
             "type": "strong",
-            "value": "一句话："
+            "value": "要点："
           },
           {
             "type": "text",
@@ -2142,7 +1634,7 @@
           },
           {
             "type": "text",
-            "value": "仍可再拼 system；以客户端过滤后的 history + 本轮 query 为准，避免双源「前端一套、DB 一套」不一致——重生时尤其依赖同一套过滤。"
+            "value": "仍可再拼 system；以客户端过滤后的 history + 本轮 query 为准，避免双源「前端一套、DB 一套」不一致。"
           }
         ],
         [
@@ -2164,657 +1656,15 @@
       ]
     },
     {
-      "id": "q-ai-history-store",
-      "navLabel": "历史对话落库",
-      "question": "流式聊天的会话与消息如何持久化？什么时候写库？会话不存在时要不要静默新建？",
-      "questionNote": "sessions + messages；abort/错误也要尽量落部分结果；404 勿建空壳。",
-      "answer": [
-        [
-          {
-            "type": "strong",
-            "value": "一句话："
-          },
-          {
-            "type": "text",
-            "value": "会话表 + 消息表；发问先落 user，流结束/中断/出错再落助手（含 reasoning/error/status）。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "1）"
-          },
-          {
-            "type": "strong",
-            "value": "表结构："
-          },
-          {
-            "type": "text",
-            "value": ""
-          },
-          {
-            "type": "code",
-            "value": "sessions(session_code, title, …)"
-          },
-          {
-            "type": "text",
-            "value": "；"
-          },
-          {
-            "type": "code",
-            "value": "messages(session_code, role, content, reasoning, error_*, status_message, ts)"
-          },
-          {
-            "type": "text",
-            "value": "。本地可用 SQLite WAL。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "2）"
-          },
-          {
-            "type": "strong",
-            "value": "写入时机："
-          },
-          {
-            "type": "text",
-            "value": "请求进来"
-          },
-          {
-            "type": "code",
-            "value": "ensureSession"
-          },
-          {
-            "type": "text",
-            "value": "+ append user；正常"
-          },
-          {
-            "type": "code",
-            "value": "done"
-          },
-          {
-            "type": "text",
-            "value": "落完整助手；用户 abort：有 partial 落库，全空可写「已停止生成」软状态；业务错误落 error 字段保留用户轮次。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "3）"
-          },
-          {
-            "type": "strong",
-            "value": "ensure 语义："
-          },
-          {
-            "type": "text",
-            "value": "无 code → 新建 UUID + 用 query 截标题；"
-          },
-          {
-            "type": "strong",
-            "value": "有 code 但不存在 → 404"
-          },
-          {
-            "type": "text",
-            "value": "，不要静默建空壳，避免「删了还能聊」的脏数据。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "4）"
-          },
-          {
-            "type": "strong",
-            "value": "API："
-          },
-          {
-            "type": "text",
-            "value": "列表 / 详情 / 删除 / 批量删；前端 404 文案走 Toast + 回首页，别当生成失败红条。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "5）"
-          },
-          {
-            "type": "strong",
-            "value": "多轮正文："
-          },
-          {
-            "type": "text",
-            "value": "下一轮只回传干净"
-          },
-          {
-            "type": "code",
-            "value": "content"
-          },
-          {
-            "type": "text",
-            "value": "，reasoning/status/error 仅展示用。"
-          }
-        ]
-      ]
-    },
-    {
-      "id": "q-ai-session-cache",
-      "navLabel": "会话缓存与 pending",
-      "question": "侧栏切换历史会话时，如何做到不重复拉详情、不丢滚动位置？首条发送还没拿到 sessionCode 怎么办？",
-      "questionNote": "内存消息缓存 + Keep-Alive 多面板；pending 占位不进 URL。",
-      "answer": [
-        [
-          {
-            "type": "strong",
-            "value": "一句话："
-          },
-          {
-            "type": "text",
-            "value": "内存"
-          },
-          {
-            "type": "code",
-            "value": "sessionMessagesCache"
-          },
-          {
-            "type": "text",
-            "value": "复用消息对象；"
-          },
-          {
-            "type": "code",
-            "value": "mountedSessionCodes"
-          },
-          {
-            "type": "text",
-            "value": " Keep-Alive 隐藏DOM；首条用 pending 码占位，meta 后再换真码。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "1）"
-          },
-          {
-            "type": "strong",
-            "value": "pending："
-          },
-          {
-            "type": "text",
-            "value": "如"
-          },
-          {
-            "type": "code",
-            "value": "__pending__"
-          },
-          {
-            "type": "text",
-            "value": "仅本地挂载，"
-          },
-          {
-            "type": "strong",
-            "value": "禁止进路由"
-          },
-          {
-            "type": "text",
-            "value": "；收到"
-          },
-          {
-            "type": "code",
-            "value": "meta.sessionCode"
-          },
-          {
-            "type": "text",
-            "value": "替换挂载并"
-          },
-          {
-            "type": "code",
-            "value": "replace"
-          },
-          {
-            "type": "text",
-            "value": "到"
-          },
-          {
-            "type": "code",
-            "value": "/chat/:code"
-          },
-          {
-            "type": "text",
-            "value": "。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "2）"
-          },
-          {
-            "type": "strong",
-            "value": "消息缓存："
-          },
-          {
-            "type": "text",
-            "value": "切走时"
-          },
-          {
-            "type": "code",
-            "value": "syncSessionCache"
-          },
-          {
-            "type": "text",
-            "value": "；切回命中则直接设 messages（对象相等可复用，减少 Markdown/图片闪动），未命中再"
-          },
-          {
-            "type": "code",
-            "value": "GET /history/:code"
-          },
-          {
-            "type": "text",
-            "value": "。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "3）"
-          },
-          {
-            "type": "strong",
-            "value": "Keep-Alive："
-          },
-          {
-            "type": "text",
-            "value": "多个 MessageList 同时挂载，非当前隐藏不卸载，滚动位置留在 DOM；LRU 上限（如 10）淘汰非当前面板。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "4）"
-          },
-          {
-            "type": "strong",
-            "value": "竞态："
-          },
-          {
-            "type": "text",
-            "value": ""
-          },
-          {
-            "type": "code",
-            "value": "routeLoadSeq"
-          },
-          {
-            "type": "text",
-            "value": "/"
-          },
-          {
-            "type": "code",
-            "value": "streamSeq"
-          },
-          {
-            "type": "text",
-            "value": "丢弃过期 openSession 与迟到 delta；切会话必 abort 在途流。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "5）"
-          },
-          {
-            "type": "strong",
-            "value": "持久化边界："
-          },
-          {
-            "type": "text",
-            "value": "localStorage 通常只存 provider/model；消息以服务端为准，内存缓存是体验层。"
-          }
-        ]
-      ]
-    },
-    {
-      "id": "q-ai-regenerate",
-      "navLabel": "重新生成",
-      "question": "任意一条助手「重新生成」前后端怎么约定？为什么要 keepMessageCount？",
-      "questionNote": "截断该助手及后续；不重复 append user；与前端本地截断对齐。",
-      "answer": [
-        [
-          {
-            "type": "strong",
-            "value": "一句话："
-          },
-          {
-            "type": "text",
-            "value": "以前一条 user 为锚，丢掉该助手及之后所有轮次，带"
-          },
-          {
-            "type": "code",
-            "value": "regenerate + keepMessageCount"
-          },
-          {
-            "type": "text",
-            "value": "重拉，服务端 truncate 后不再 append user。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "1）"
-          },
-          {
-            "type": "strong",
-            "value": "前端："
-          },
-          {
-            "type": "text",
-            "value": "校验目标是 assistant 且前一条是 user；"
-          },
-          {
-            "type": "code",
-            "value": "base = messages.slice(0, idx)"
-          },
-          {
-            "type": "text",
-            "value": "；本地换成"
-          },
-          {
-            "type": "code",
-            "value": "[...base, 空assistant]"
-          },
-          {
-            "type": "text",
-            "value": "；"
-          },
-          {
-            "type": "code",
-            "value": "query = prev.content"
-          },
-          {
-            "type": "text",
-            "value": "；"
-          },
-          {
-            "type": "code",
-            "value": "keepMessageCount = base.length"
-          },
-          {
-            "type": "text",
-            "value": "。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "2）"
-          },
-          {
-            "type": "strong",
-            "value": "服务端："
-          },
-          {
-            "type": "text",
-            "value": "要求已有"
-          },
-          {
-            "type": "code",
-            "value": "sessionCode"
-          },
-          {
-            "type": "text",
-            "value": "+ 数字"
-          },
-          {
-            "type": "code",
-            "value": "keepMessageCount"
-          },
-          {
-            "type": "text",
-            "value": "；"
-          },
-          {
-            "type": "code",
-            "value": "truncateMessagesAfter"
-          },
-          {
-            "type": "text",
-            "value": "删掉该条及后续；"
-          },
-          {
-            "type": "strong",
-            "value": "不再 append user"
-          },
-          {
-            "type": "text",
-            "value": "，直接按 query 流式。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "3）"
-          },
-          {
-            "type": "strong",
-            "value": "为何计数："
-          },
-          {
-            "type": "text",
-            "value": "可重生中间某条助手，而不只是「最后一条」；前后端用同一截断点对齐 DB 与 UI。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "4）"
-          },
-          {
-            "type": "strong",
-            "value": "禁用："
-          },
-          {
-            "type": "text",
-            "value": "生成中、pending 无真会话、配对不合法时直接 return，避免半截历史。"
-          }
-        ],
-        [
-          {
-            "type": "strong",
-            "value": "示例："
-          },
-          {
-            "type": "text",
-            "value": "请求体关键字段。"
-          }
-        ],
-        [
-          {
-            "type": "code",
-            "value": "{\n  \"query\": \"上一轮用户原文\",\n  \"sessionCode\": \"…\",\n  \"regenerate\": true,\n  \"keepMessageCount\": 3,\n  \"messages\": [/* 截断后的干净历史 */]\n}"
-          }
-        ]
-      ]
-    },
-    {
-      "id": "q-ai-session-switch",
-      "navLabel": "会话切换",
-      "question": "URL 与会话状态怎么同步？切换会话时在途流式请求怎么处理才不会串台？",
-      "questionNote": "openSession abort + seq；缓存优先；404 清幽灵会话。",
-      "answer": [
-        [
-          {
-            "type": "strong",
-            "value": "一句话："
-          },
-          {
-            "type": "text",
-            "value": ""
-          },
-          {
-            "type": "code",
-            "value": "/"
-          },
-          {
-            "type": "text",
-            "value": "新对话、"
-          },
-          {
-            "type": "code",
-            "value": "/chat/:sessionCode"
-          },
-          {
-            "type": "text",
-            "value": "进历史；切换先 abort 并 bump"
-          },
-          {
-            "type": "code",
-            "value": "streamSeq"
-          },
-          {
-            "type": "text",
-            "value": "，再读缓存或详情。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "1）"
-          },
-          {
-            "type": "strong",
-            "value": "路由同步："
-          },
-          {
-            "type": "text",
-            "value": "URL →"
-          },
-          {
-            "type": "code",
-            "value": "openSession"
-          },
-          {
-            "type": "text",
-            "value": "；首页首条拿到真码后"
-          },
-          {
-            "type": "code",
-            "value": "navigate(replace)"
-          },
-          {
-            "type": "text",
-            "value": "；会话已删序号上涨则回"
-          },
-          {
-            "type": "code",
-            "value": "/"
-          },
-          {
-            "type": "text",
-            "value": "。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "2）"
-          },
-          {
-            "type": "strong",
-            "value": "切走必停流："
-          },
-          {
-            "type": "text",
-            "value": ""
-          },
-          {
-            "type": "code",
-            "value": "abort"
-          },
-          {
-            "type": "text",
-            "value": "+"
-          },
-          {
-            "type": "code",
-            "value": "streamSeq++"
-          },
-          {
-            "type": "text",
-            "value": "，迟到"
-          },
-          {
-            "type": "code",
-            "value": "onDelta"
-          },
-          {
-            "type": "text",
-            "value": "比对 token 直接丢；旧面板若 Keep-Alive 则冻结在停止点。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "3）"
-          },
-          {
-            "type": "strong",
-            "value": "加载："
-          },
-          {
-            "type": "text",
-            "value": "缓存命中免请求；未命中清空再拉，用"
-          },
-          {
-            "type": "code",
-            "value": "routeLoadSeq"
-          },
-          {
-            "type": "text",
-            "value": "丢弃慢请求回来的旧详情。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "4）"
-          },
-          {
-            "type": "strong",
-            "value": "404："
-          },
-          {
-            "type": "text",
-            "value": "Toast「对话不存在或已删除」、剔除侧栏幽灵项、回首页；勿继续往当前气泡写。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "5）"
-          },
-          {
-            "type": "strong",
-            "value": "骨架："
-          },
-          {
-            "type": "text",
-            "value": "仅切换已有会话可出蒙层骨架；首页首条 / pending→真码 / 流式中跳过，避免闪白。"
-          }
-        ]
-      ]
-    },
-    {
       "id": "q-ai-stream-ux",
       "navLabel": "流式打断与滚动",
-      "question": "AI 对话流式输出时，停止生成和消息区自动滚动你会怎么做？",
+      "question": "AI 对话流式输出时，停止生成与消息区自动滚动应如何实现？",
       "questionNote": "停止优先 Abort 断连接（服务端感知 close 停上游）；滚动用贴底开关，上滑不追。",
       "answer": [
         [
           {
             "type": "strong",
-            "value": "一句话："
+            "value": "要点："
           },
           {
             "type": "text",
@@ -2910,7 +1760,7 @@
           },
           {
             "type": "text",
-            "value": " 做流式观感。停生成后立刻落定已收到文本，别卡在半截动画。"
+            "value": " 做流式观感。停止生成后须立即落定已收到文本，勿停留在半截动画。"
           }
         ],
         [
@@ -2987,144 +1837,6 @@
           {
             "type": "code",
             "value": "// 停止\nctrl.abort()\nstreamSeq++  // 旧流回调里 if (seq !== streamSeq) return\n\n// 贴底才跟随\nconst NEAR = 80\nconst distance = el.scrollHeight - el.scrollTop - el.clientHeight\nif (distance <= NEAR) follow = true\nelse follow = false  // 用户上滑\n\nif (follow) el.scrollTop = el.scrollHeight"
-          }
-        ]
-      ]
-    },
-    {
-      "id": "q-ai-theme-toggle",
-      "navLabel": "亮暗主题",
-      "question": "聊天页亮暗主题一般怎么接？Markdown / Mermaid 要不要单独切主题 API？",
-      "questionNote": "class 策略跟 CSS 变量；勿与业务状态混存；流式中通常不必重挂载。",
-      "answer": [
-        [
-          {
-            "type": "strong",
-            "value": "一句话："
-          },
-          {
-            "type": "text",
-            "value": ""
-          },
-          {
-            "type": "code",
-            "value": "next-themes"
-          },
-          {
-            "type": "text",
-            "value": "（或同类）给"
-          },
-          {
-            "type": "code",
-            "value": "html"
-          },
-          {
-            "type": "text",
-            "value": "打"
-          },
-          {
-            "type": "code",
-            "value": "class=\"dark\""
-          },
-          {
-            "type": "text",
-            "value": "，UI 与 Markdown 跟设计 token；Mermaid 多半跟 CSS，不必再调一套独立 theme API。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "1）"
-          },
-          {
-            "type": "strong",
-            "value": "接入："
-          },
-          {
-            "type": "text",
-            "value": ""
-          },
-          {
-            "type": "code",
-            "value": "attribute=\"class\""
-          },
-          {
-            "type": "text",
-            "value": "、"
-          },
-          {
-            "type": "code",
-            "value": "defaultTheme=\"system\""
-          },
-          {
-            "type": "text",
-            "value": "、"
-          },
-          {
-            "type": "code",
-            "value": "enableSystem"
-          },
-          {
-            "type": "text",
-            "value": "；切换 light/dark/system。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "2）"
-          },
-          {
-            "type": "strong",
-            "value": "样式："
-          },
-          {
-            "type": "text",
-            "value": "气泡、侧栏、代码块用"
-          },
-          {
-            "type": "code",
-            "value": "bg-background"
-          },
-          {
-            "type": "text",
-            "value": "/"
-          },
-          {
-            "type": "code",
-            "value": "muted"
-          },
-          {
-            "type": "text",
-            "value": "等变量；Streamdown 块级卡片同样吃 token。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "3）"
-          },
-          {
-            "type": "strong",
-            "value": "持久化："
-          },
-          {
-            "type": "text",
-            "value": "主题交给主题库本地存；业务 persist 只存 provider/model，别揉进一个大 store。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "4）"
-          },
-          {
-            "type": "strong",
-            "value": "边界："
-          },
-          {
-            "type": "text",
-            "value": "切主题通常重绘颜色即可；若某图表库写死配色再考虑 remount。流式中允许跟着变色，不必中断生成。"
           }
         ]
       ]

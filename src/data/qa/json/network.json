@@ -2,79 +2,25 @@
   "slug": "network",
   "title": "网络安全",
   "documentTitle": "网络安全",
-  "description": "覆盖建连、HTTP 演进、缓存与跨域，以及鉴权与 XSS/CSRF/CSP 等前端必知的安全机制。",
-  "lead": "聚焦接口交互、鉴权选型与常见攻击面的防护思路。",
+  "description": "HTTP 缓存与版本差异、HTTPS 与跨域预检，以及 JWT、XSS/CSRF/CSP 与请求取消。",
+  "lead": "站在浏览器与业务请求一侧：缓存、跨域、鉴权存放与页面安全，少背纯计网。",
   "items": [
-    {
-      "id": "q-tcp-handshake",
-      "navLabel": "TCP 三次握手",
-      "question": "TCP 三次握手在干啥？",
-      "questionNote": "前端点到「双方确认收发能力、同步序列号」即可；深挖 RTT、半连接队列交给后端。",
-      "answer": [
-        [
-          {
-            "type": "text",
-            "value": "1）客户端发 "
-          },
-          {
-            "type": "strong",
-            "value": "同步报文 SYN"
-          },
-          {
-            "type": "text",
-            "value": "，携带初始序列号。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "2）服务端回 "
-          },
-          {
-            "type": "code",
-            "value": "SYN-ACK"
-          },
-          {
-            "type": "text",
-            "value": "，确认客户端序号并带上自己的序号。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "3）客户端发 "
-          },
-          {
-            "type": "strong",
-            "value": "确认 ACK"
-          },
-          {
-            "type": "text",
-            "value": "，双方确认收发能力，连接进入 "
-          },
-          {
-            "type": "code",
-            "value": "ESTABLISHED"
-          },
-          {
-            "type": "text",
-            "value": "。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "两次不够：防历史滞留连接被误认；三次让双方同步初始序列号，可靠传输才有基础。"
-          }
-        ]
-      ]
-    },
     {
       "id": "q-dns",
       "navLabel": "DNS 与建连",
-      "question": "前端能怎么减少 DNS 和 TLS 耗时？",
+      "question": "前端如何减少 DNS 与 TLS 耗时？",
       "questionNote": "资源提示（Resource Hints）是前端可直接落地的优化；HTTP/2 下域名分片反效果。",
       "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "要点："
+          },
+          {
+            "type": "text",
+            "value": "用 dns-prefetch 提前解析、preconnect 预建连；静态资源同站部署，避免 HTTP/2 下过度域名分片。"
+          }
+        ],
         [
           {
             "type": "code",
@@ -102,7 +48,7 @@
         [
           {
             "type": "text",
-            "value": "HTTP/3 QUIC 首包建连更快，属基础设施选型；页面侧把 "
+            "value": "HTTP/3 基于 QUIC/UDP 首包建连更快，属基础设施选型；页面侧把 "
           },
           {
             "type": "code",
@@ -118,9 +64,19 @@
     {
       "id": "q-http-versions",
       "navLabel": "HTTP/1 和 2",
-      "question": "HTTP/1.1 和 HTTP/2 主要差在哪？",
-      "questionNote": "理解差异才能解释「为什么 HTTP/2 后少做域名分片、雪碧图」等历史优化。",
+      "question": "HTTP/1.1 与 HTTP/2 的主要差异有哪些？",
+      "questionNote": "从前端资源加载角度理解即可：为何少做域名分片、雪碧图等历史优化。",
       "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "要点："
+          },
+          {
+            "type": "text",
+            "value": "HTTP/1.1 受并发连接限制需域名分片；HTTP/2 单连接多路复用并压缩头部。"
+          }
+        ],
         [
           {
             "type": "text",
@@ -180,67 +136,75 @@
     {
       "id": "q-https",
       "navLabel": "HTTPS",
-      "question": "HTTPS 为啥比 HTTP 安全？",
-      "questionNote": "TLS 解决机密性与完整性；证书链校验防中间人——前端应知道 HSTS 等配套。",
+      "question": "HTTPS 相比 HTTP 为何更安全？前端侧通常还要配合什么？",
+      "questionNote": "掌握加密与证书防中间人即可；握手细节不必背。前端侧关注 HSTS、混合内容与 Cookie Secure。",
       "answer": [
         [
           {
-            "type": "text",
-            "value": "HTTP 明文，链路任一点抓包可见 body。HTTPS = HTTP + "
-          },
-          {
             "type": "strong",
-            "value": "TLS"
+            "value": "要点："
           },
           {
             "type": "text",
-            "value": "。"
+            "value": "HTTPS 在 HTTP 上叠加 TLS：传输加密、防篡改，并用证书校验站点身份，降低中间人风险。"
           }
         ],
         [
           {
             "type": "text",
-            "value": "握手阶段用非对称加密协商 "
+            "value": "1）"
           },
           {
             "type": "strong",
-            "value": "对称会话密钥"
+            "value": "相对 HTTP："
           },
           {
             "type": "text",
-            "value": "，之后数据对称加密传输。"
-          }
-        ],
-        [
-          {
-            "type": "strong",
-            "value": "证书链"
-          },
-          {
-            "type": "text",
-            "value": "由客户端校验域名、有效期与吊销状态，防中间人冒充。"
+            "value": "明文可被链路窃听；HTTPS 协商会话密钥后对称加密传数据，证书链校验域名与有效期。"
           }
         ],
         [
           {
             "type": "text",
-            "value": "顺带提 "
+            "value": "2）"
+          },
+          {
+            "type": "strong",
+            "value": "前端配合："
+          },
+          {
+            "type": "text",
+            "value": "全站 HTTPS、避免混合内容；敏感 Cookie 配 "
           },
           {
             "type": "code",
-            "value": "HSTS"
+            "value": "Secure"
           },
           {
             "type": "text",
-            "value": " 强制 HTTPS；"
+            "value": " / "
           },
           {
             "type": "code",
-            "value": "HPKP"
+            "value": "HttpOnly"
           },
           {
             "type": "text",
-            "value": " 已废弃，不必再背。"
+            "value": "；可用 HSTS 强制跳转 HTTPS。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3）"
+          },
+          {
+            "type": "strong",
+            "value": "边界："
+          },
+          {
+            "type": "text",
+            "value": "证书申请与续期多在运维/网关；前端重点是不降级明文、不引入不安全第三方脚本。"
           }
         ]
       ]
@@ -248,9 +212,19 @@
     {
       "id": "q-get-post",
       "navLabel": "GET 与 POST",
-      "question": "GET 和 POST 区别？POST 一定更安全吗？",
+      "question": "GET 与 POST 有何区别？POST 是否一定更安全？",
       "questionNote": "语义与缓存行为是重点；「POST 更安全」是常见误区。",
       "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "要点："
+          },
+          {
+            "type": "text",
+            "value": "GET 幂等、参数在 URL；POST 常用于提交 body；HTTPS 下两者均加密，POST 并非更安全。"
+          }
+        ],
         [
           {
             "type": "code",
@@ -288,73 +262,7 @@
         [
           {
             "type": "text",
-            "value": "敏感信息别放 URL，防泄露在日志、Referer 与浏览器历史里。"
-          }
-        ]
-      ]
-    },
-    {
-      "id": "q-rest",
-      "navLabel": "RESTful",
-      "question": "啥叫 RESTful？和 GraphQL 对比一句？",
-      "questionNote": "REST 是资源+动词语义；现实项目常有 RPC 风格，不必教条。",
-      "answer": [
-        [
-          {
-            "type": "text",
-            "value": "用 "
-          },
-          {
-            "type": "code",
-            "value": "HTTP 方法 + 资源名词 URL"
-          },
-          {
-            "type": "text",
-            "value": " 表达操作："
-          },
-          {
-            "type": "code",
-            "value": "GET /users/1"
-          },
-          {
-            "type": "text",
-            "value": " 查、"
-          },
-          {
-            "type": "code",
-            "value": "POST /users"
-          },
-          {
-            "type": "text",
-            "value": " 建。"
-          }
-        ],
-        [
-          {
-            "type": "code",
-            "value": "PUT/PATCH"
-          },
-          {
-            "type": "text",
-            "value": " 改、"
-          },
-          {
-            "type": "code",
-            "value": "DELETE"
-          },
-          {
-            "type": "text",
-            "value": " 删；状态码表达结果。实际接口常有 RPC 风格，按团队约定即可。"
-          }
-        ],
-        [
-          {
-            "type": "code",
-            "value": "GraphQL"
-          },
-          {
-            "type": "text",
-            "value": "：单端点按需取字段，减少 over-fetching；代价是缓存、复杂度与 N+1 需服务端治理。"
+            "value": "敏感信息勿放 URL，防泄露在日志、Referer 与浏览器历史里。"
           }
         ]
       ]
@@ -362,9 +270,19 @@
     {
       "id": "q-cache",
       "navLabel": "缓存",
-      "question": "浏览器缓存怎么说清楚？",
+      "question": "浏览器缓存机制应如何阐述？",
       "questionNote": "强缓存 vs 协商缓存决定 Network 面板是否发请求；静态资源常配合 contenthash。",
       "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "要点："
+          },
+          {
+            "type": "text",
+            "value": "强缓存未过期则不发请求；过期后协商缓存向服务端确认是否仍可用。"
+          }
+        ],
         [
           {
             "type": "strong",
@@ -472,61 +390,21 @@
       ]
     },
     {
-      "id": "q-compression",
-      "navLabel": "压缩",
-      "question": "gzip 和 Brotli 在前端侧要了解啥？",
-      "questionNote": "压缩由服务端返回 Content-Encoding；前端主要确保构建产物可被压缩且体积合理。",
-      "answer": [
-        [
-          {
-            "type": "text",
-            "value": "服务端返回 "
-          },
-          {
-            "type": "code",
-            "value": "Content-Encoding: gzip / br"
-          },
-          {
-            "type": "text",
-            "value": "，浏览器自动解压；"
-          },
-          {
-            "type": "code",
-            "value": "br"
-          },
-          {
-            "type": "text",
-            "value": " 文本压缩率通常优于 gzip。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "需 CDN/Nginx 开启并与 "
-          },
-          {
-            "type": "code",
-            "value": "Accept-Encoding"
-          },
-          {
-            "type": "text",
-            "value": " 协商；构建侧 tree-shaking、拆包决定可压缩文本量。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "jpeg/png/webp 等已压缩格式再 gzip 收益小；小文件可能因字典开销不划算，可设阈值。"
-          }
-        ]
-      ]
-    },
-    {
       "id": "q-cors",
       "navLabel": "跨域",
-      "question": "跨域是啥？怎么解决？",
+      "question": "什么是跨域？有哪些常见解决方案？",
       "questionNote": "CORS 是浏览器对 JS 读响应的限制；curl/服务端互调不受此限。",
       "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "要点："
+          },
+          {
+            "type": "text",
+            "value": "协议/主机/端口任一不同即为跨源；浏览器限制 JS 读取跨源响应，需 CORS 或服务端代理。"
+          }
+        ],
         [
           {
             "type": "text",
@@ -644,9 +522,19 @@
     {
       "id": "q-preflight",
       "navLabel": "预检请求",
-      "question": "啥样的请求会触发 CORS 预检？",
+      "question": "哪些请求会触发 CORS 预检？",
       "questionNote": "「所有 POST 都预检」是误区；看方法、头与 Content-Type 是否属于简单请求。",
       "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "要点："
+          },
+          {
+            "type": "text",
+            "value": "简单请求不预检；带 Authorization、application/json 等非简单特征时先发 OPTIONS。"
+          }
+        ],
         [
           {
             "type": "text",
@@ -738,69 +626,59 @@
     {
       "id": "q-jwt-basics",
       "navLabel": "JWT 结构",
-      "question": "JWT 三段分别是啥？前端能信 payload 吗？",
-      "questionNote": "payload 仅 Base64URL 编码非加密；鉴权结论以服务端验签为准。",
+      "question": "JWT 三段分别是什么？前端使用时有哪些注意点？",
+      "questionNote": "payload 可解码但不可信；验签与吊销在服务端。前端关心存放位置与过期处理。",
       "answer": [
         [
           {
-            "type": "text",
-            "value": "Header.Payload.Signature：前两段 Base64URL 解码为 JSON，"
-          },
-          {
             "type": "strong",
-            "value": "签名防篡改"
+            "value": "要点："
           },
           {
             "type": "text",
-            "value": "，密钥只在服务端。"
-          }
-        ],
-        [
-          {
-            "type": "code",
-            "value": "payload"
-          },
-          {
-            "type": "text",
-            "value": " 里 "
-          },
-          {
-            "type": "code",
-            "value": "exp"
-          },
-          {
-            "type": "text",
-            "value": "、用户 id 可被任何人解码，"
-          },
-          {
-            "type": "strong",
-            "value": "不能放密码"
-          },
-          {
-            "type": "text",
-            "value": "；前端不可据此单独判定登录态。"
+            "value": "Header.Payload.Signature；payload 仅编码非加密，鉴权结论以服务端验签为准。"
           }
         ],
         [
           {
             "type": "text",
-            "value": "存 "
+            "value": "1）"
           },
           {
-            "type": "code",
-            "value": "localStorage"
-          },
-          {
-            "type": "text",
-            "value": " 的 JWT 怕跨站脚本（XSS）；"
-          },
-          {
-            "type": "code",
-            "value": "HttpOnly Cookie"
+            "type": "strong",
+            "value": "结构："
           },
           {
             "type": "text",
-            "value": " 装 session id 仍是常见折中。"
+            "value": "前两段 Base64URL 可解码查看；签名防篡改，密钥只在服务端，前端无法「自己验过就算登录」。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2）"
+          },
+          {
+            "type": "strong",
+            "value": "存放："
+          },
+          {
+            "type": "text",
+            "value": "localStorage 易被 XSS 读；Cookie 需防 CSRF（SameSite 等）。按威胁模型选型，敏感操作可配合短时 token。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3）"
+          },
+          {
+            "type": "strong",
+            "value": "前端职责："
+          },
+          {
+            "type": "text",
+            "value": "请求带上凭证、处理过期与刷新竞态；勿在前端存密钥，勿把可解码的 payload 当机密。"
           }
         ]
       ]
@@ -808,9 +686,19 @@
     {
       "id": "q-xss-csrf",
       "navLabel": "XSS 与 CSRF",
-      "question": "XSS 和 CSRF 区别？怎么防？",
-      "questionNote": "XSS 是脚本进页面上下文；CSRF 是浏览器自动带 Cookie 发恶意请求——攻击面不同。",
+      "question": "XSS 与 CSRF 有何区别？如何防护？",
+      "questionNote": "跨站脚本是脚本进入页面上下文；跨站请求伪造是浏览器自动携带 Cookie 发起恶意请求，攻击面不同。",
       "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "要点："
+          },
+          {
+            "type": "text",
+            "value": "XSS 是恶意脚本进入页面上下文；CSRF 是浏览器自动携带 Cookie 发状态改变请求。"
+          }
+        ],
         [
           {
             "type": "strong",
@@ -920,9 +808,19 @@
     {
       "id": "q-csp",
       "navLabel": "CSP",
-      "question": "Content-Security-Policy 是干啥的？怎么配才不至于全站挂？",
+      "question": "Content-Security-Policy 的作用是什么？如何配置才不至于全站异常？",
       "questionNote": "CSP 从加载源收紧 XSS 面；上线先用 Report-Only 收集违规再 enforce。",
       "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "要点："
+          },
+          {
+            "type": "text",
+            "value": "响应头声明可加载的脚本、样式、图片、接口来源，收紧 XSS 攻击面；上线先用 Report-Only。"
+          }
+        ],
         [
           {
             "type": "text",
@@ -1040,9 +938,19 @@
     {
       "id": "q-fetch-abort",
       "navLabel": "AbortController",
-      "question": "fetch 怎么取消请求？竞态怎么处理？",
+      "question": "fetch 如何取消请求？竞态应如何处理？",
       "questionNote": "搜索框、路由切换是典型竞态场景；Strict Mode 双挂载要注意清理。",
       "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "要点："
+          },
+          {
+            "type": "text",
+            "value": "AbortController 取消 fetch；竞态场景在新请求前 abort 旧请求，或用 requestId 比对。"
+          }
+        ],
         [
           {
             "type": "code",
@@ -1084,17 +992,17 @@
     {
       "id": "q-websocket-basics",
       "navLabel": "WebSocket 基础",
-      "question": "WebSocket 和 HTTP 是什么关系？",
+      "question": "WebSocket 与 HTTP 是什么关系？",
       "questionNote": "握手走 HTTP 升级；全双工长连接；重连与 SSE 选型见场景题。",
       "answer": [
         [
           {
             "type": "strong",
-            "value": "一句话："
+            "value": "要点："
           },
           {
             "type": "text",
-            "value": "先 HTTP 协议升级（Upgrade），再在同一条 TCP 上双向传帧，不是短连接一问一答。"
+            "value": "先经 HTTP 协议升级（Upgrade），再在同一条 TCP 上双向传帧，非短连接一问一答。"
           }
         ],
         [
@@ -1142,127 +1050,37 @@
       ]
     },
     {
-      "id": "q-anti-replay",
-      "navLabel": "防重放",
-      "question": "接口防重放一般怎么做？前端对称加密「签名」靠谱吗？",
-      "questionNote": "时间戳 + nonce + 服务端验签；说清前端密钥的局限。",
-      "answer": [
-        [
-          {
-            "type": "strong",
-            "value": "一句话："
-          },
-          {
-            "type": "text",
-            "value": "客户端带时间窗与一次性随机串，服务端校验时效、nonce 不复用，并用只有服务端掌握的密钥验签。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "1）"
-          },
-          {
-            "type": "text",
-            "value": "常见载荷：时间戳（防过期重放）+ "
-          },
-          {
-            "type": "code",
-            "value": "nonce"
-          },
-          {
-            "type": "text",
-            "value": "（防短时重复）+ 签名；过期请求直接拒。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "2）"
-          },
-          {
-            "type": "text",
-            "value": "签名应用 "
-          },
-          {
-            "type": "code",
-            "value": "HMAC"
-          },
-          {
-            "type": "text",
-            "value": " 或非对称私钥在服务端验；密钥不能指望藏在前端包里。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "3）"
-          },
-          {
-            "type": "strong",
-            "value": "前端 AES「签名」"
-          },
-          {
-            "type": "text",
-            "value": "：最多增加抓包拼请求成本，不能当防伪造；真正防伪靠服务端密钥与权限。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "4）"
-          },
-          {
-            "type": "text",
-            "value": "和 JWT/HTTPS：传输保密靠 HTTPS；身份靠 token；防重放是另一层，别混成一件事。"
-          }
-        ]
-      ]
-    },
-    {
       "id": "q-biz-login-code",
       "navLabel": "业务登录失效码",
-      "question": "登录失效除了 HTTP 401，业务错误码踢登录要注意啥？",
+      "question": "登录失效除 HTTP 401 外，业务错误码踢登录需注意什么？",
       "questionNote": "HTTP 层与业务层两套路径要统一清会话，避免只处理一种。",
       "answer": [
         [
           {
             "type": "strong",
-            "value": "一句话："
+            "value": "要点："
           },
           {
             "type": "text",
-            "value": "有的系统用业务 code 表示会话失效；拦截器要同时覆盖 HTTP 状态与约定业务码，并单飞处理跳转。"
+            "value": "拦截器须同时覆盖 HTTP 状态与约定业务码，统一清会话并单飞处理跳转。"
           }
         ],
         [
           {
             "type": "text",
-            "value": "1）"
-          },
-          {
-            "type": "text",
-            "value": "401/403：走统一未授权处理；业务码如「登录失效」同样清 token 并跳登录。"
+            "value": "1）401/403：走统一未授权处理；业务码如「登录失效」同样清 token 并跳登录。"
           }
         ],
         [
           {
             "type": "text",
-            "value": "2）"
-          },
-          {
-            "type": "text",
-            "value": "多请求同时失效：只弹一次登录、只清一次态，避免连环 toast；可与 refresh 单飞队列配合。"
+            "value": "2）多请求同时失效：只弹一次登录、只清一次态，避免连环 toast；可与 refresh 单飞队列配合。"
           }
         ],
         [
           {
             "type": "text",
-            "value": "3）"
-          },
-          {
-            "type": "text",
-            "value": "区分「无权限」与「未登录」：前者 403 页，后者回登录，别一律踢回首页。"
+            "value": "3）区分「无权限」与「未登录」：前者 403 页，后者回登录，勿一律踢回首页。"
           }
         ]
       ]

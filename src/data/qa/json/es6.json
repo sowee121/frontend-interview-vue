@@ -2,8 +2,8 @@
   "slug": "es6",
   "title": "ES6",
   "documentTitle": "ES6",
-  "description": "ES6 语法与内置对象面试必考，专有名词对齐阮一峰《ES6 入门》。",
-  "lead": "按教程章节对照复习：",
+  "description": "let/const、解构与箭头函数、Promise/async、Class 与 Proxy，以及 Set/Map 与可选链。",
+  "lead": "按语法点过一遍即可；Promise 与异步、Class/Proxy 是追问重点。",
   "leadLink": {
     "href": "https://es6.ruanyifeng.com",
     "label": "阮一峰《ES6 入门》"
@@ -12,8 +12,18 @@
     {
       "id": "q-let-const-tdz",
       "navLabel": "let/const 与 TDZ",
-      "question": "var、let、const 区别？啥是暂时性死区？",
+      "question": "var、let、const 有何区别？什么是暂时性死区（TDZ）？",
       "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "要点："
+          },
+          {
+            "type": "text",
+            "value": "var 函数作用域可重复声明；let/const 块级作用域，声明前处于暂时性死区（TDZ）。"
+          }
+        ],
         [
           {
             "type": "code",
@@ -95,7 +105,7 @@
         [
           {
             "type": "text",
-            "value": "经典题："
+            "value": "典型示例："
           },
           {
             "type": "code",
@@ -143,8 +153,18 @@
     {
       "id": "q-destructuring",
       "navLabel": "解构赋值",
-      "question": "解构赋值能解哪些结构？剩余参数和展开运算符啥关系？",
+      "question": "解构赋值支持哪些数据结构？剩余参数与展开运算符有何关系？",
       "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "要点："
+          },
+          {
+            "type": "text",
+            "value": "解构可从数组、对象、函数参数按模式取值；剩余运算符收集，展开运算符展开，互为逆操作。"
+          }
+        ],
         [
           {
             "type": "text",
@@ -216,7 +236,7 @@
           },
           {
             "type": "text",
-            "value": " 是「收拢」；字面量/调用里的 "
+            "value": " 是「收集」；字面量/调用里的 "
           },
           {
             "type": "code",
@@ -232,8 +252,18 @@
     {
       "id": "q-arrow-and-params",
       "navLabel": "箭头函数与默认参数",
-      "question": "箭头函数和普通函数有啥区别？默认参数怎么用？",
+      "question": "箭头函数与普通函数有何区别？默认参数应如何使用？",
       "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "要点："
+          },
+          {
+            "type": "text",
+            "value": "箭头函数无自己的 this，不可作构造器；默认参数在形参列表声明，未传或传 undefined 时生效。"
+          }
+        ],
         [
           {
             "type": "strong",
@@ -321,50 +351,7 @@
         [
           {
             "type": "code",
-            "value": "const obj = {\n  n: 1,\n  // 错：箭头拿不到 obj 当 this\n  bad: () => this.n,\n  // 对：普通方法\n  ok() { return this.n },\n  // 默认参数\n  add(x, y = 1) { return x + y },\n}"
-          }
-        ]
-      ]
-    },
-    {
-      "id": "q-template-literal",
-      "navLabel": "模板字符串",
-      "question": "模板字符串比字符串拼接强在哪？标签模板了解吗？",
-      "answer": [
-        [
-          {
-            "type": "text",
-            "value": "反引号 `` ` `` 包裹的"
-          },
-          {
-            "type": "strong",
-            "value": "模板字符串"
-          },
-          {
-            "type": "text",
-            "value": "支持多行、嵌入 "
-          },
-          {
-            "type": "code",
-            "value": "${expr}"
-          },
-          {
-            "type": "text",
-            "value": " 插值，可读性优于 `+` 拼接。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "标签模板："
-          },
-          {
-            "type": "code",
-            "value": "tag`hello ${name}`"
-          },
-          {
-            "type": "text",
-            "value": " 把字符串片段数组与插值传给函数，用于 styled-components、i18n 等；面试知道概念即可。"
+            "value": "const obj = {\n  n: 1,\n  // 不推荐：箭头拿不到 obj 当 this\n  bad: () => this.n,\n  // 推荐：普通方法\n  ok() { return this.n },\n  // 默认参数\n  add(x, y = 1) { return x + y },\n}"
           }
         ]
       ]
@@ -372,7 +359,7 @@
     {
       "id": "q-symbol",
       "navLabel": "Symbol",
-      "question": "Symbol 解决什么问题？和字符串属性名有啥区别？",
+      "question": "Symbol 解决什么问题？与字符串属性名有何区别？",
       "answer": [
         [
           {
@@ -385,7 +372,7 @@
           },
           {
             "type": "text",
-            "value": " 是唯一、不可变的基本类型，常用作对象「不会撞名」的键（如内置遍历器 "
+            "value": " 是唯一、不可变的基本类型，常用作对象「避免键名冲突」的键（如内置遍历器 "
           },
           {
             "type": "code",
@@ -435,8 +422,18 @@
     {
       "id": "q-set-map",
       "navLabel": "Set 与 Map",
-      "question": "Set / Map 和数组、对象有啥区别？什么时候用？",
+      "question": "Set / Map 与数组、普通对象有何区别？分别适用于哪些场景？",
       "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "要点："
+          },
+          {
+            "type": "text",
+            "value": "Set 值唯一，适合去重；Map 键可为任意类型，频繁增删键值对时优于普通对象。"
+          }
+        ],
         [
           {
             "type": "code",
@@ -480,8 +477,18 @@
     {
       "id": "q-weakmap",
       "navLabel": "WeakMap / WeakSet",
-      "question": "WeakMap 和 Map 有啥区别？典型用途？",
+      "question": "WeakMap 与 Map 有何区别？有哪些典型用途？",
       "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "要点："
+          },
+          {
+            "type": "text",
+            "value": "WeakMap 键须为对象且弱引用，键无其他引用时可被回收；适合绑定对象生命周期的私有元数据。"
+          }
+        ],
         [
           {
             "type": "text",
@@ -581,8 +588,18 @@
     {
       "id": "q-copy",
       "navLabel": "深浅拷贝",
-      "question": "浅拷贝和深拷贝区别？常用写法？",
+      "question": "浅拷贝与深拷贝有何区别？有哪些常用实现方式？",
       "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "要点："
+          },
+          {
+            "type": "text",
+            "value": "浅拷贝仅复制第一层，深拷贝递归或序列化整棵结构；状态更新更常做不可变浅拷贝。"
+          }
+        ],
         [
           {
             "type": "strong",
@@ -626,7 +643,7 @@
           },
           {
             "type": "text",
-            "value": " 等够用且性能好，状态更新里最常见。"
+            "value": " 等性能足够且好，状态更新里最常见。"
           }
         ],
         [
@@ -714,8 +731,18 @@
     {
       "id": "q-for-in-of",
       "navLabel": "for-in 与 for-of",
-      "question": "for...in 和 for...of 区别？",
+      "question": "for...in 与 for...of 有何区别？",
       "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "要点："
+          },
+          {
+            "type": "text",
+            "value": "for...in 遍历可枚举属性键名，for...of 消费可遍历结构的值；数组遍历优先 for...of。"
+          }
+        ],
         [
           {
             "type": "code",
@@ -865,8 +892,18 @@
     {
       "id": "q-promise",
       "navLabel": "Promise 组合方法",
-      "question": "Promise.all / race / allSettled / any 区别？什么时候用？",
+      "question": "Promise.all / race / allSettled / any 有何区别？分别适用于哪些场景？",
       "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "要点："
+          },
+          {
+            "type": "text",
+            "value": "Promise 状态落定后不变；all/race/allSettled/any 分别对应全成功、竞速、全落定、任一成功。"
+          }
+        ],
         [
           {
             "type": "text",
@@ -978,7 +1015,7 @@
           },
           {
             "type": "text",
-            "value": "。适合批量上报、多源拉取——单项 rejected 也不拖垮整体。"
+            "value": "。适合批量上报、多源拉取——单项 rejected 不影响其余结果汇总。"
           }
         ],
         [
@@ -1020,7 +1057,7 @@
         [
           {
             "type": "code",
-            "value": "const ps = [Promise.resolve(1), Promise.reject('e')]\n\nPromise.all(ps)        // 一挂全挂\nPromise.allSettled(ps) // 等全部落定，带 status\nPromise.race(ps)       // 谁先完成用谁（成功或失败）\nPromise.any(ps)        // 谁先成功用谁；全失败才 AggregateError"
+            "value": "const ps = [Promise.resolve(1), Promise.reject('e')]\n\nPromise.all(ps)        // 一项失败则整体失败\nPromise.allSettled(ps) // 等全部落定，带 status\nPromise.race(ps)       // 谁先完成用谁（成功或失败）\nPromise.any(ps)        // 谁先成功用谁；全失败才 AggregateError"
           }
         ]
       ]
@@ -1028,12 +1065,12 @@
     {
       "id": "q-promise-chain-error",
       "navLabel": "Promise 链式与错误冒泡",
-      "question": "Promise.then 为什么能链式调用？错误怎么“冒泡”？",
+      "question": "Promise.then 为何能链式调用？错误如何沿链传播？",
       "answer": [
         [
           {
             "type": "strong",
-            "value": "链式根源："
+            "value": "要点："
           },
           {
             "type": "code",
@@ -1127,7 +1164,7 @@
         [
           {
             "type": "text",
-            "value": "面试把「返回新 Promise + 返回值/异常如何改状态」讲清即可；线上记得链尾 "
+            "value": "应说明「返回新 Promise 及返回值/异常如何改变状态」；线上宜在链尾添加 "
           },
           {
             "type": "code",
@@ -1135,7 +1172,7 @@
           },
           {
             "type": "text",
-            "value": "，避免未处理的 Promise 失败（unhandled rejection）。"
+            "value": "，避免未处理的 Promise 拒绝（unhandled rejection）。"
           }
         ]
       ]
@@ -1143,8 +1180,18 @@
     {
       "id": "q-async-await",
       "navLabel": "async/await",
-      "question": "async/await 和 Promise 啥关系？",
+      "question": "async/await 与 Promise 有何关系？",
       "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "要点："
+          },
+          {
+            "type": "text",
+            "value": "async 函数一定返回 Promise，await 暂停执行直至 Promise 落定；错误用 try/catch 捕获。"
+          }
+        ],
         [
           {
             "type": "code",
@@ -1304,7 +1351,7 @@
           },
           {
             "type": "text",
-            "value": "，避免循环里无脑串行 "
+            "value": "，避免循环里盲目串行 "
           },
           {
             "type": "code",
@@ -1318,55 +1365,20 @@
       ]
     },
     {
-      "id": "q-generator",
-      "navLabel": "Generator",
-      "question": "Generator 函数是干啥的？和 Iterator 啥关系？",
-      "answer": [
-        [
-          {
-            "type": "code",
-            "value": "function*"
-          },
-          {
-            "type": "text",
-            "value": " 定义 "
-          },
-          {
-            "type": "strong",
-            "value": "Generator 函数"
-          },
-          {
-            "type": "text",
-            "value": "，执行返回遍历器对象，通过 "
-          },
-          {
-            "type": "code",
-            "value": "yield"
-          },
-          {
-            "type": "text",
-            "value": " 暂停/产出值。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "自带 Iterator 接口：`next()` 返回 `{ value, done }`；可配合 `for...of` 遍历。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "场景：惰性序列、可控异步流程（早期 co 风格）；现代业务多用 async/await，但面试仍会问与 Promise、迭代协议的关系。"
-          }
-        ]
-      ]
-    },
-    {
       "id": "q-class",
       "navLabel": "Class 语法",
-      "question": "ES6 class 和构造函数有啥区别？继承怎么写？",
+      "question": "ES6 class 与构造函数有何区别？继承应如何编写？",
       "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "要点："
+          },
+          {
+            "type": "text",
+            "value": "class 多为语法糖，底层仍基于原型；extends + super() 实现继承。"
+          }
+        ],
         [
           {
             "type": "text",
@@ -1402,27 +1414,11 @@
         [
           {
             "type": "strong",
-            "value": "示例："
-          },
-          {
-            "type": "text",
-            "value": "extends + super 最小继承。"
-          }
-        ],
-        [
-          {
-            "type": "code",
-            "value": "class Animal {\n  constructor(name) { this.name = name }\n  speak() { return this.name }\n}\nclass Dog extends Animal {\n  constructor(name, age) {\n    super(name)\n    this.age = age\n  }\n}"
-          }
-        ],
-        [
-          {
-            "type": "strong",
             "value": "对比 ES5："
           },
           {
             "type": "text",
-            "value": "以前常用「寄生组合」——"
+            "value": "传统「寄生组合」通过 "
           },
           {
             "type": "code",
@@ -1430,7 +1426,7 @@
           },
           {
             "type": "text",
-            "value": " 拿实例字段，"
+            "value": " 初始化实例字段，"
           },
           {
             "type": "code",
@@ -1438,7 +1434,13 @@
           },
           {
             "type": "text",
-            "value": " 接原型；class 是同套路的语法糖，面试点到即可。"
+            "value": " 连接原型；class 是同一机制的语法糖，掌握核心即可。"
+          }
+        ],
+        [
+          {
+            "type": "code",
+            "value": "class Animal {\n  constructor(name) { this.name = name }\n  speak() { return this.name }\n}\nclass Dog extends Animal {\n  constructor(name, age) {\n    super(name)\n    this.age = age\n  }\n}"
           }
         ]
       ]
@@ -1446,8 +1448,18 @@
     {
       "id": "q-proxy-reflect",
       "navLabel": "Proxy 与 Reflect",
-      "question": "Proxy 能拦截哪些操作？Reflect 干啥用？",
+      "question": "Proxy 可拦截哪些操作？Reflect 有何用途？",
       "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "要点："
+          },
+          {
+            "type": "text",
+            "value": "Proxy 在目标对象前架设拦截；Reflect 方法与默认操作一一对应，trap 内转发可保证 this 正确。"
+          }
+        ],
         [
           {
             "type": "code",
@@ -1575,8 +1587,18 @@
     {
       "id": "q-dynamic-import",
       "navLabel": "动态 import",
-      "question": "import() 动态导入返回什么？和静态 import 区别？",
+      "question": "import() 动态导入返回什么？与静态 import 有何区别？",
       "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "要点："
+          },
+          {
+            "type": "text",
+            "value": "import() 返回 Promise，resolve 为模块命名空间；静态 import 利于摇树，动态 import 利于分包懒加载。"
+          }
+        ],
         [
           {
             "type": "code",
@@ -1652,8 +1674,18 @@
     {
       "id": "q-optional-nullish",
       "navLabel": "可选链与 ??（ES2020）",
-      "question": "可选链 ?. 和空值合并 ?? 和 || 有啥区别？",
+      "question": "可选链 ?.、空值合并 ?? 与逻辑或 || 有何区别？",
       "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "要点："
+          },
+          {
+            "type": "text",
+            "value": "可选链 ?. 在 null/undefined 时短路；?? 仅对 null/undefined 取默认值，保留 0 与空字符串。"
+          }
+        ],
         [
           {
             "type": "code",

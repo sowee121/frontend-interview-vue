@@ -2,207 +2,19 @@
   "slug": "performance",
   "title": "性能",
   "documentTitle": "性能",
-  "description": "围绕核心体验指标、加载与资源、长列表和线上监控，说清「量什么、怎么改、怎么验」。",
-  "lead": "先定指标，再动刀，最后用真实用户数据验收。",
+  "description": "优化维度与白屏首屏、拆包懒加载与长列表，以及主线程卡顿、图片优化与性能监控。",
+  "lead": "用白屏/首屏/卡顿等业务说法组织答案，配合拆包、懒加载与监控验收。",
   "items": [
     {
-      "id": "q-vitals",
-      "navLabel": "Web Vitals",
-      "question": "常说的 Web Vitals 是啥？",
-      "questionNote": "Google 主推的体验指标集；能口述 LCP、INP、CLS 含义与采集方式即可。",
-      "answer": [
-        [
-          {
-            "type": "strong",
-            "value": "一句话："
-          },
-          {
-            "type": "text",
-            "value": "Google 定义的"
-          },
-          {
-            "type": "strong",
-            "value": "用户体验指标"
-          },
-          {
-            "type": "text",
-            "value": "，用来衡量真实用户眼里的快慢与稳定。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "1）"
-          },
-          {
-            "type": "strong",
-            "value": "最大内容绘制（LCP）"
-          },
-          {
-            "type": "text",
-            "value": "：视口里最大可见块何时画完，常见是首图或主标题。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "2）"
-          },
-          {
-            "type": "strong",
-            "value": "交互到下一帧绘制（INP）"
-          },
-          {
-            "type": "text",
-            "value": "：取代首次输入延迟（FID），看整页交互里最慢那次输入到下一帧的延迟。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "3）"
-          },
-          {
-            "type": "strong",
-            "value": "累积布局偏移（CLS）"
-          },
-          {
-            "type": "text",
-            "value": "：布局意外跳动，如广告或图片无占位把正文顶下去。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "采集可用 Chrome Lighthouse、"
-          },
-          {
-            "type": "code",
-            "value": "web-vitals"
-          },
-          {
-            "type": "text",
-            "value": " SDK、"
-          },
-          {
-            "type": "code",
-            "value": "PerformanceObserver"
-          },
-          {
-            "type": "text",
-            "value": "；对比优化效果看第 75/95 百分位（P75/P95），比只看平均值更贴近长尾用户。"
-          }
-        ]
-      ]
-    },
-    {
-      "id": "q-inp-optimize",
-      "navLabel": "INP 优化",
-      "question": "INP（Interaction to Next Paint）差一般怎么排查和优化？",
-      "questionNote": "INP 看「最慢那次交互」；结合 Performance 长任务与主线程占用讲清即可。",
-      "answer": [
-        [
-          {
-            "type": "strong",
-            "value": "结论："
-          },
-          {
-            "type": "text",
-            "value": "INP 差通常是主线程被长任务、同步重渲染或第三方脚本占满。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "1）"
-          },
-          {
-            "type": "strong",
-            "value": "怎么量"
-          },
-          {
-            "type": "text",
-            "value": "：Performance 面板录点击/输入，找超过 50ms 的"
-          },
-          {
-            "type": "code",
-            "value": "Long Task"
-          },
-          {
-            "type": "text",
-            "value": " 与样式重算、布局占比。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "2）"
-          },
-          {
-            "type": "strong",
-            "value": "怎么定位"
-          },
-          {
-            "type": "text",
-            "value": "：线上用 "
-          },
-          {
-            "type": "code",
-            "value": "web-vitals"
-          },
-          {
-            "type": "text",
-            "value": " 上报 attribution，看是哪个节点、哪段脚本拖慢。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "3）"
-          },
-          {
-            "type": "strong",
-            "value": "怎么改"
-          },
-          {
-            "type": "text",
-            "value": "：React 里用 "
-          },
-          {
-            "type": "code",
-            "value": "startTransition"
-          },
-          {
-            "type": "text",
-            "value": " 拆非紧急更新；长列表虚拟化；重计算进 Web Worker 或分片。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "有 "
-          },
-          {
-            "type": "code",
-            "value": "scheduler.postTask"
-          },
-          {
-            "type": "text",
-            "value": " 时可降优先级、主动让出主线程；统计/广告脚本延后或分区加载。"
-          }
-        ]
-      ]
-    },
-    {
       "id": "q-longtask",
-      "navLabel": "长任务",
-      "question": "主线程长任务怎么发现？怎么拆？",
-      "questionNote": "长任务会阻塞输入与绘制；要能说出监听手段和「分片/下沉」两类手段。",
+      "navLabel": "主线程卡顿",
+      "question": "页面操作卡顿、滚动掉帧时，如何定位主线程耗时并优化？",
+      "questionNote": "长任务/掉帧的业务说法；拆分计算、减渲染、Web Worker 等。",
       "answer": [
         [
           {
             "type": "strong",
-            "value": "发现："
+            "value": "要点："
           },
           {
             "type": "code",
@@ -262,7 +74,7 @@
           },
           {
             "type": "text",
-            "value": "：重计算丢进 "
+            "value": "：重计算宜迁移至 "
           },
           {
             "type": "code",
@@ -298,99 +110,15 @@
       ]
     },
     {
-      "id": "q-compositor",
-      "navLabel": "合成层",
-      "question": "合成层（Compositor）和主线程啥关系？",
-      "questionNote": "分清主线程布局绘制与合成线程独立动画；别滥用提层 hack。",
-      "answer": [
-        [
-          {
-            "type": "strong",
-            "value": "分工："
-          },
-          {
-            "type": "text",
-            "value": "主线程算样式、布局、绘制命令；"
-          },
-          {
-            "type": "strong",
-            "value": "合成线程"
-          },
-          {
-            "type": "text",
-            "value": "可独立做滚动、"
-          },
-          {
-            "type": "code",
-            "value": "transform/opacity"
-          },
-          {
-            "type": "text",
-            "value": " 动画，不抢 JavaScript 执行。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "1）动画尽量只动 "
-          },
-          {
-            "type": "code",
-            "value": "transform"
-          },
-          {
-            "type": "text",
-            "value": " 与 "
-          },
-          {
-            "type": "code",
-            "value": "opacity"
-          },
-          {
-            "type": "text",
-            "value": "，走合成层，减少重排重绘。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "2）滥用 "
-          },
-          {
-            "type": "code",
-            "value": "will-change"
-          },
-          {
-            "type": "text",
-            "value": " 或 "
-          },
-          {
-            "type": "code",
-            "value": "translateZ(0)"
-          },
-          {
-            "type": "text",
-            "value": " 强行提层会吃显存；滚动回调里别塞重逻辑。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "面试点到「动画走合成、逻辑别绑 scroll」即可，不必背层数公式。"
-          }
-        ]
-      ]
-    },
-    {
       "id": "q-image",
       "navLabel": "图片优化",
-      "question": "图片怎么优化？",
+      "question": "前端图片资源应如何优化？",
       "questionNote": "格式、尺寸、传输、占位四块；LCP 图可提优先级。",
       "answer": [
         [
           {
             "type": "strong",
-            "value": "结论："
+            "value": "要点："
           },
           {
             "type": "text",
@@ -446,7 +174,7 @@
           },
           {
             "type": "text",
-            "value": " 按设备像素比与槽宽切档，别在 400px 槽里塞 4000px 原图。"
+            "value": " 按设备像素比与槽宽切档，避免在小尺寸容器内加载超大原图。"
           }
         ],
         [
@@ -496,79 +224,15 @@
       ]
     },
     {
-      "id": "q-font-opt",
-      "navLabel": "字体与 FOIT",
-      "question": "Web 字体加载怎么减轻阻塞和闪烁？",
-      "questionNote": "字体阻塞显示（FOIT）/字体闪烁（FOUT）与 font-display、preload 策略相关。",
-      "answer": [
-        [
-          {
-            "type": "strong",
-            "value": "策略："
-          },
-          {
-            "type": "code",
-            "value": "font-display: swap"
-          },
-          {
-            "type": "text",
-            "value": " 先系统字再换 webfont，可读优先，可能闪一下。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "1）弱网可用 "
-          },
-          {
-            "type": "code",
-            "value": "font-display: optional"
-          },
-          {
-            "type": "text",
-            "value": "，超时就不换字，减轻字体闪烁（FOUT）。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "2）关键字体 "
-          },
-          {
-            "type": "code",
-            "value": "preload"
-          },
-          {
-            "type": "text",
-            "value": " woff2，并做子集化减体积。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "3）可变字体用 "
-          },
-          {
-            "type": "code",
-            "value": "font-variation-settings"
-          },
-          {
-            "type": "text",
-            "value": " 一文件多字重；注意版权与许可。"
-          }
-        ]
-      ]
-    },
-    {
       "id": "q-code-split",
       "navLabel": "代码分割",
-      "question": "前端怎么做代码分割？",
+      "question": "前端应如何实现代码分割？",
       "questionNote": "路由级与组件级动态 import；打包工具 manualChunks 配合验证首包。",
       "answer": [
         [
           {
             "type": "strong",
-            "value": "结论："
+            "value": "要点："
           },
           {
             "type": "text",
@@ -670,17 +334,17 @@
     {
       "id": "q-long-list",
       "navLabel": "长列表",
-      "question": "列表特别长怎么搞？",
-      "questionNote": "虚拟列表是标准答案；简单场景可分页或无限滚动。",
+      "question": "超长列表应如何优化渲染性能？",
+      "questionNote": "虚拟列表是标准方案；简单场景可采用分页或无限滚动。",
       "answer": [
         [
           {
             "type": "strong",
-            "value": "首选：虚拟列表"
+            "value": "要点："
           },
           {
             "type": "text",
-            "value": "，只渲染可视区上下各多几十条缓冲，滚动时复用 DOM。"
+            "value": "优先采用虚拟列表，仅渲染可视区及缓冲区 DOM，滚动时复用节点。"
           }
         ],
         [
@@ -808,13 +472,13 @@
     {
       "id": "q-monitor",
       "navLabel": "性能监控",
-      "question": "线上性能监控一般在干啥？",
+      "question": "线上性能监控通常关注哪些方面？",
       "questionNote": "真实用户监控（RUM）与实验室 Lighthouse 互补；强调分位与维度切片。",
       "answer": [
         [
           {
             "type": "strong",
-            "value": "目标："
+            "value": "要点："
           },
           {
             "type": "text",
@@ -868,7 +532,7 @@
           },
           {
             "type": "text",
-            "value": " 尽量把队列发出去；与单次 Lighthouse 跑分互补，别只信实验室。"
+            "value": " 尽量把队列发出去；与单次 Lighthouse 跑分互补，不宜仅依赖实验室数据。"
           }
         ]
       ]
@@ -1028,19 +692,19 @@
       ]
     },
     {
-      "id": "q-table-virtual",
-      "navLabel": "表格虚拟滚动",
-      "question": "大数据表格卡顿时，虚拟滚动要注意哪些点？",
-      "questionNote": "相对普通长列表：列多、行高可变、单元格控件更重。",
+      "id": "q-perf-overview",
+      "navLabel": "优化从哪说",
+      "question": "面试被问「你做过哪些性能优化」时，一般从哪些维度展开？",
+      "questionNote": "加载、运行时、网络与缓存、监控验收；结合项目举 1～2 个落地点。",
       "answer": [
         [
           {
             "type": "strong",
-            "value": "一句话："
+            "value": "要点："
           },
           {
             "type": "text",
-            "value": "只挂可视行 DOM；表格还要管列渲染成本、动态行高与卸载清理。"
+            "value": "按「加载变快、交互更顺、可量化验收」组织，避免只背零散技巧。"
           }
         ],
         [
@@ -1049,16 +713,12 @@
             "value": "1）"
           },
           {
-            "type": "text",
-            "value": "行虚拟化按 "
-          },
-          {
-            "type": "code",
-            "value": "scrollTop"
+            "type": "strong",
+            "value": "加载："
           },
           {
             "type": "text",
-            "value": " 算可视区间；列很多时避免每格都挂重型编辑器，按需进入编辑态。"
+            "value": "路由/组件拆包、压缩与 Tree-shaking、图片体积与格式、关键请求并行与缓存。"
           }
         ],
         [
@@ -1067,8 +727,12 @@
             "value": "2）"
           },
           {
+            "type": "strong",
+            "value": "运行时："
+          },
+          {
             "type": "text",
-            "value": "动态行高要估算或测量缓存，否则滚动跳动；固定行高实现更稳。"
+            "value": "减少无效渲染、长列表虚拟化、主线程耗时任务拆分、合理防抖节流。"
           }
         ],
         [
@@ -1077,8 +741,12 @@
             "value": "3）"
           },
           {
+            "type": "strong",
+            "value": "网络："
+          },
+          {
             "type": "text",
-            "value": "配合服务端分页：虚拟滚动管「这一页内」渲染，不是一次拉全量十万行。"
+            "value": "CDN、缓存策略、合并或减少请求、避免阻塞渲染的脚本。"
           }
         ],
         [
@@ -1087,50 +755,30 @@
             "value": "4）"
           },
           {
+            "type": "strong",
+            "value": "验收："
+          },
+          {
             "type": "text",
-            "value": "路由离开销毁表格实例与数据缓存，防泄漏与残留监听。"
+            "value": "看白屏/首屏时间、卡顿与接口耗时；有监控或前后对比数据更有说服力。"
           }
         ]
       ]
     },
     {
-      "id": "q-echarts-lifecycle",
-      "navLabel": "ECharts 生命周期",
-      "question": "封装 ECharts 时，初始化和销毁要注意啥？",
-      "questionNote": "init、setOption、resize、dispose；主题切换别叠多个实例。",
+      "id": "q-white-screen",
+      "navLabel": "白屏与首屏",
+      "question": "页面白屏时间长、首屏慢，通常如何排查与优化？",
+      "questionNote": "与场景题「首屏优化」互补：本处偏性能手段清单。",
       "answer": [
         [
           {
             "type": "strong",
-            "value": "一句话："
+            "value": "要点："
           },
           {
             "type": "text",
-            "value": "容器有尺寸再 "
-          },
-          {
-            "type": "code",
-            "value": "echarts.init"
-          },
-          {
-            "type": "text",
-            "value": "；卸载必须 "
-          },
-          {
-            "type": "code",
-            "value": "dispose"
-          },
-          {
-            "type": "text",
-            "value": "；窗口变化听 "
-          },
-          {
-            "type": "code",
-            "value": "resize"
-          },
-          {
-            "type": "text",
-            "value": "。"
+            "value": "先分清慢在资源下载、JS 执行，还是接口；再对症减体积、并行与骨架屏。"
           }
         ],
         [
@@ -1139,16 +787,12 @@
             "value": "1）"
           },
           {
-            "type": "text",
-            "value": "数据更新优先 "
-          },
-          {
-            "type": "code",
-            "value": "setOption"
+            "type": "strong",
+            "value": "排查："
           },
           {
             "type": "text",
-            "value": "，避免反复 init 叠实例。"
+            "value": "看首包体积、阻塞脚本、关键接口耗时；本地 Performance / Network 对照环境差异。"
           }
         ],
         [
@@ -1157,8 +801,12 @@
             "value": "2）"
           },
           {
+            "type": "strong",
+            "value": "手段："
+          },
+          {
             "type": "text",
-            "value": "按需引入图表与组件，减小首包；弹窗里的图等可见后再 init。"
+            "value": "代码分割、压缩、图片优化、服务端或边缘缓存、SSR/骨架屏减少白屏感。"
           }
         ],
         [
@@ -1167,24 +815,104 @@
             "value": "3）"
           },
           {
-            "type": "text",
-            "value": "主题或深色切换：换 option/theme 或重建一次，并清掉旧实例。"
-          }
-        ],
-        [
-          {
             "type": "strong",
-            "value": "示例："
+            "value": "渲染："
           },
           {
             "type": "text",
-            "value": "init / 更新 / 销毁。"
+            "value": "避免首屏同步超大 JSON 解析与长任务；非关键模块延后执行。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-lazyload",
+      "navLabel": "懒加载",
+      "question": "图片懒加载与路由懒加载分别解决什么问题？如何实现？",
+      "questionNote": "加载优化高频；说明进入视口再请求、路由级拆包即可。",
+      "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "要点："
+          },
+          {
+            "type": "text",
+            "value": "图片懒加载推迟非首屏资源；路由懒加载按页拆包，降低首包体积。"
           }
         ],
         [
           {
+            "type": "text",
+            "value": "1）"
+          },
+          {
+            "type": "strong",
+            "value": "图片："
+          },
+          {
+            "type": "text",
+            "value": "进入视口再赋"
+          },
+          {
             "type": "code",
-            "value": "const chart = echarts.init(el)\nchart.setOption(option)\nwindow.addEventListener('resize', () => chart.resize())\n// 卸载\nchart.dispose()"
+            "value": "src"
+          },
+          {
+            "type": "text",
+            "value": "，可用"
+          },
+          {
+            "type": "code",
+            "value": "IntersectionObserver"
+          },
+          {
+            "type": "text",
+            "value": "或"
+          },
+          {
+            "type": "code",
+            "value": "loading=\"lazy\""
+          },
+          {
+            "type": "text",
+            "value": "；注意占位高度防布局抖动。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2）"
+          },
+          {
+            "type": "strong",
+            "value": "路由："
+          },
+          {
+            "type": "text",
+            "value": ""
+          },
+          {
+            "type": "code",
+            "value": "() => import(\"./Page\")"
+          },
+          {
+            "type": "text",
+            "value": " 一类动态导入，配合构建拆 chunk；首屏路由仍应优先加载。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3）"
+          },
+          {
+            "type": "strong",
+            "value": "边界："
+          },
+          {
+            "type": "text",
+            "value": "首屏关键图不宜懒加载；拆包过细会增加请求次数，需结合首屏路径权衡。"
           }
         ]
       ]
