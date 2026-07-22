@@ -2,14 +2,14 @@
   "slug": "project",
   "title": "项目题",
   "documentTitle": "项目题",
-  "description": "中后台权限与表格、打印与 Hybrid，以及小程序工程化、SaaS 多租户与自助终端落地。",
-  "lead": "通用系统词表述，不出现具体产品名；结合自身项目讲机制与取舍。",
+  "description": "对照简历职责的项目深挖题：小程序/Hybrid、ERP、SaaS、自助终端、客服会话与在线考试。",
+  "lead": "用通用系统词表述；按机制、取舍与边界口述，不背诵项目说明文案。",
   "items": [
     {
-      "id": "q-proj-rbac",
-      "navLabel": "动态权限分工",
-      "question": "后台管理系统中，动态路由、动态菜单与按钮权限应如何分工？",
-      "questionNote": "结合项目经历展开：权限数据从哪来、前端如何落地、刷新后如何保持一致。",
+      "id": "q-proj-mp-subpackage",
+      "navLabel": "分包与冷启动",
+      "question": "小程序如何通过分包与构建优化改善冷启动？",
+      "questionNote": "对应职责：主包/分包策略、压缩混淆、冷启动。",
       "answer": [
         [
           {
@@ -18,7 +18,7 @@
           },
           {
             "type": "text",
-            "value": "后端返回权限码；路由管页面可达，菜单管导航展示，按钮管操作粒度，三者数据源一致、校验分层。"
+            "value": "主包只留启动与核心链路；低频进分包；生产压缩混淆；用体积与启动耗时做回归。"
           }
         ],
         [
@@ -28,19 +28,79 @@
           },
           {
             "type": "strong",
-            "value": "动态路由"
+            "value": "主包"
           },
           {
             "type": "text",
-            "value": "：登录后拉权限树，按角色过滤路由表再 "
+            "value": "：首页、下单、订单列表等首达页进主包；大图 CDN，工具库按需，给主包留余量。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2）"
+          },
+          {
+            "type": "strong",
+            "value": "分包"
+          },
+          {
+            "type": "text",
+            "value": "：按业务域拆包；活动页可独立分包；常用分包可预下载，减轻首次点击等待。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3）"
+          },
+          {
+            "type": "strong",
+            "value": "构建"
+          },
+          {
+            "type": "text",
+            "value": "：生产压缩、去掉调试日志；核心逻辑可混淆；发布前核对主包体积与冷启动指标。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-proj-mp-setdata",
+      "navLabel": "setData 优化",
+      "question": "小程序页面因 setData 卡顿时，你会怎么优化？",
+      "questionNote": "对应职责：优化 setData，降低通信与渲染开销。",
+      "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "要点："
+          },
+          {
+            "type": "text",
+            "value": "少传、少次、局部更新；能路径更新就别整表替换；长列表分页或虚拟化。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "1）"
+          },
+          {
+            "type": "strong",
+            "value": "减小载荷"
+          },
+          {
+            "type": "text",
+            "value": "：只传变更字段，如 "
           },
           {
             "type": "code",
-            "value": "addRoute"
+            "value": "setData({ 'list[i].checked': true })"
           },
           {
             "type": "text",
-            "value": "；未授权路由直接 404 或重定向。"
+            "value": "，避免大对象反复同步。"
           }
         ],
         [
@@ -50,11 +110,11 @@
           },
           {
             "type": "strong",
-            "value": "动态菜单"
+            "value": "合并与节流"
           },
           {
             "type": "text",
-            "value": "：由同一权限树生成侧栏，隐藏无权限项；菜单仅控制展示，不能替代路由守卫。"
+            "value": "：同帧多次变更合并一次；滚动等高频事件节流后再 setData。"
           }
         ],
         [
@@ -64,20 +124,20 @@
           },
           {
             "type": "strong",
-            "value": "按钮权限"
+            "value": "拆分"
           },
           {
             "type": "text",
-            "value": "：页面内用权限码控制按钮/字段显隐；接口仍须后端二次校验，前端只做体验层拦截。"
+            "value": "：复杂区块拆自定义组件做局部更新；若封装了增量 Diff，数组场景要验证是否真刷新。"
           }
         ]
       ]
     },
     {
-      "id": "q-proj-virtual-table",
-      "navLabel": "虚拟表格",
-      "question": "ERP 类大数据表格做虚拟滚动时，有哪些关键注意点？",
-      "questionNote": "结合项目经历展开：行高固定还是动态、横向滚动与列冻结如何处理。",
+      "id": "q-proj-hybrid-login",
+      "navLabel": "内嵌 H5 登录态",
+      "question": "小程序或 App 内嵌 H5 时，登录态怎么打通更稳妥？",
+      "questionNote": "对应职责：共享 H5 登录鉴权。",
       "answer": [
         [
           {
@@ -86,7 +146,7 @@
           },
           {
             "type": "text",
-            "value": "只渲染可视区行，行高与滚动容器高度必须可计算；列宽、选中态、横向滚动需单独处理。"
+            "value": "凭证放在原生侧；H5 用短时效票据或注入会话换短期 Token；退出要双边清态。"
           }
         ],
         [
@@ -96,11 +156,11 @@
           },
           {
             "type": "strong",
-            "value": "行高策略"
+            "value": "传递"
           },
           {
             "type": "text",
-            "value": "：固定行高实现简单；动态行高需测量缓存，否则滚动条跳动与定位偏移。"
+            "value": "：打开 web-view 带一次性 ticket，或由 Bridge 注入会话；长期 Token 不要明文挂 URL。"
           }
         ],
         [
@@ -110,11 +170,11 @@
           },
           {
             "type": "strong",
-            "value": "缓冲区"
+            "value": "请求"
           },
           {
             "type": "text",
-            "value": "：上下各多渲染若干行，快速滚动时减少白屏；缓冲区过大则 DOM 仍偏多。"
+            "value": "：H5 拦截器统一带会话头；401 区分未带凭证与已过期，再决定换票或回登录。"
           }
         ],
         [
@@ -124,20 +184,20 @@
           },
           {
             "type": "strong",
-            "value": "交互一致"
+            "value": "同步"
           },
           {
             "type": "text",
-            "value": "：全选、跨页选中、列冻结与横向滚动要独立于纵向虚拟层，避免状态丢失。"
+            "value": "：原生登出通知 H5 清本地态；续期由原生统一刷新后再注入。"
           }
         ]
       ]
     },
     {
-      "id": "q-proj-ws-push",
-      "navLabel": "WebSocket 推送",
-      "question": "中后台用 WebSocket 推送业务状态时，前端应如何处理断线重连？",
-      "questionNote": "结合项目经历展开：心跳、重连退避与消息去重策略。",
+      "id": "q-proj-webview-sdk",
+      "navLabel": "WebView 通信",
+      "question": "内嵌 H5 与小程序/原生如何互相调用对方的方法？",
+      "questionNote": "对应职责：共享 H5 与原生通信。",
       "answer": [
         [
           {
@@ -146,7 +206,7 @@
           },
           {
             "type": "text",
-            "value": "心跳保活 + 指数退避重连 + 重连后补拉增量；客户端按消息序号或业务主键去重。"
+            "value": "核心是 JSBridge。H5 调容器用注入 API 或官方 SDK；容器调 H5 用执行脚本或 URL 传参。"
           }
         ],
         [
@@ -156,11 +216,35 @@
           },
           {
             "type": "strong",
-            "value": "心跳"
+            "value": "H5 → 小程序"
           },
           {
             "type": "text",
-            "value": "：定时 ping/pong 或业务心跳，超时判定断线并主动关闭旧连接，避免僵尸连接。"
+            "value": "：调用 "
+          },
+          {
+            "type": "code",
+            "value": "wx.miniProgram"
+          },
+          {
+            "type": "text",
+            "value": " 的跳转等 API；回传数据用 "
+          },
+          {
+            "type": "code",
+            "value": "postMessage"
+          },
+          {
+            "type": "text",
+            "value": "，小程序在 "
+          },
+          {
+            "type": "code",
+            "value": "bindmessage"
+          },
+          {
+            "type": "text",
+            "value": " 里接收。"
           }
         ],
         [
@@ -170,11 +254,11 @@
           },
           {
             "type": "strong",
-            "value": "重连"
+            "value": "H5 → App"
           },
           {
             "type": "text",
-            "value": "：指数退避（如 1s、2s、4s 上限 30s）；页面可见时再连，后台 Tab 可暂停以省资源。"
+            "value": "：原生向页面注入 Bridge；H5 调用其中方法，原生处理完再回调页面。"
           }
         ],
         [
@@ -184,11 +268,235 @@
           },
           {
             "type": "strong",
-            "value": "一致性"
+            "value": "小程序 → H5"
           },
           {
             "type": "text",
-            "value": "：重连成功后带 lastSeq 拉增量；推送与轮询兜底并存，防止长时间断线丢状态。"
+            "value": "：不能直接执行页面函数，通常改 web-view 的 URL 参数；H5 读参后执行逻辑。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "4）"
+          },
+          {
+            "type": "strong",
+            "value": "App → H5"
+          },
+          {
+            "type": "text",
+            "value": "：H5 先在 window 注册回调；原生用 "
+          },
+          {
+            "type": "code",
+            "value": "evaluateJavascript"
+          },
+          {
+            "type": "text",
+            "value": " 触发回调，把数据传给页面。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "5）"
+          },
+          {
+            "type": "strong",
+            "value": "封装"
+          },
+          {
+            "type": "text",
+            "value": "：对外统一 "
+          },
+          {
+            "type": "code",
+            "value": "call(method, params)"
+          },
+          {
+            "type": "text",
+            "value": "，内部按环境分发，并处理超时与能力检测。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-proj-mp-track",
+      "navLabel": "埋点方案",
+      "question": "小程序里全埋点与自定义事件怎么配合才有用？",
+      "questionNote": "对应职责：全埋点与自定义事件上报。",
+      "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "要点："
+          },
+          {
+            "type": "text",
+            "value": "全埋点看行为基线；关键转化用自定义事件带业务字段；批量上报，敏感信息脱敏。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "1）"
+          },
+          {
+            "type": "strong",
+            "value": "全埋点"
+          },
+          {
+            "type": "text",
+            "value": "：覆盖启动、浏览、点击、分享等；敏感页可加黑名单，减少噪声。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2）"
+          },
+          {
+            "type": "strong",
+            "value": "自定义"
+          },
+          {
+            "type": "text",
+            "value": "：下单成功等漏斗节点带业务维度；事件名统一治理，便于分析对齐。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3）"
+          },
+          {
+            "type": "strong",
+            "value": "上报"
+          },
+          {
+            "type": "text",
+            "value": "：批量发送降频；登录后关联用户；曝光可采样，手机号等脱敏后再传。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-proj-mp-ci",
+      "navLabel": "多环境与发布",
+      "question": "小程序多环境切换和自动上传，你会怎么做？",
+      "questionNote": "对应职责：多环境命令脚本与 miniprogram-ci 自动上传。",
+      "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "要点："
+          },
+          {
+            "type": "text",
+            "value": "环境用命令注入配置；CI 构建后用 miniprogram-ci 上传；密钥只放密钥库。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "1）"
+          },
+          {
+            "type": "strong",
+            "value": "环境"
+          },
+          {
+            "type": "text",
+            "value": "：开发/测试/预发/生产隔离 API 与埋点地址；命令或分支映射环境，避免手改文件。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2）"
+          },
+          {
+            "type": "strong",
+            "value": "流水线"
+          },
+          {
+            "type": "text",
+            "value": "：构建 →（可选）混淆 → miniprogram-ci 上传体验版/提审 → 通知结果。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3）"
+          },
+          {
+            "type": "strong",
+            "value": "安全"
+          },
+          {
+            "type": "text",
+            "value": "：上传私钥不进仓库；限制触发分支；保留上一版产物便于回滚。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-proj-monorepo",
+      "navLabel": "Monorepo 工程化",
+      "question": "多个前端应用放同一仓库时，如何用 Workspace 和任务编排提效？",
+      "questionNote": "对应技术栈：pnpm workspace、Turborepo。",
+      "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "要点："
+          },
+          {
+            "type": "text",
+            "value": "共享能力进 packages；应用进 apps；用任务编排处理依赖顺序、增量缓存和按需构建。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "1）"
+          },
+          {
+            "type": "strong",
+            "value": "边界"
+          },
+          {
+            "type": "text",
+            "value": "：请求、埋点、Bridge 等进共享包；业务应用只依赖稳定 API。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2）"
+          },
+          {
+            "type": "strong",
+            "value": "构建"
+          },
+          {
+            "type": "text",
+            "value": "：先构建被依赖包再启应用；无依赖任务并行；改动小范围用 filter 构建。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3）"
+          },
+          {
+            "type": "strong",
+            "value": "注意"
+          },
+          {
+            "type": "text",
+            "value": "：软链解析异常时检查 peer 与 exports；联调前先确保共享包已构建。"
           }
         ]
       ]
@@ -196,8 +504,8 @@
     {
       "id": "q-proj-anti-replay",
       "navLabel": "接口防重放",
-      "question": "接口防重放（时间戳、随机串、签名）在前端的职责边界是什么？",
-      "questionNote": "结合项目经历展开：哪些参数由前端生成、密钥如何保管。",
+      "question": "中后台接口防重放，前端该做哪些、不该做哪些？",
+      "questionNote": "对应职责：签名防重放；技术点含 CryptoJS。",
       "answer": [
         [
           {
@@ -206,7 +514,7 @@
           },
           {
             "type": "text",
-            "value": "前端负责携带 nonce、timestamp 并参与签名拼装；验签、时效窗口与 nonce 落库去重由后端完成。"
+            "value": "前端带时间戳、随机串并参与签名；验签与去重在服务端；密钥不能长期放前端包。"
           }
         ],
         [
@@ -216,11 +524,11 @@
           },
           {
             "type": "strong",
-            "value": "时间戳"
+            "value": "请求侧"
           },
           {
             "type": "text",
-            "value": "：请求头带客户端时间，后端允许 ±N 分钟偏差；时钟漂移大时以服务端时间校准。"
+            "value": "：每次生成 nonce，带时间戳；敏感字段可用 CryptoJS 等加密后传输。"
           }
         ],
         [
@@ -230,11 +538,11 @@
           },
           {
             "type": "strong",
-            "value": "随机串"
+            "value": "服务端"
           },
           {
             "type": "text",
-            "value": "：每次请求生成唯一 nonce，后端短期缓存已用值，重复则拒收。"
+            "value": "：校验时间窗、nonce 是否用过、签名是否匹配；重复或过期拒收。"
           }
         ],
         [
@@ -244,20 +552,20 @@
           },
           {
             "type": "strong",
-            "value": "前端边界"
+            "value": "边界"
           },
           {
             "type": "text",
-            "value": "：密钥不可硬编码在 bundle；敏感签名宜经 BFF 或短期令牌代签，前端不持有长期私钥。"
+            "value": "：长期私钥不进 bundle；登录态仍走 Token，与防重放分层。"
           }
         ]
       ]
     },
     {
-      "id": "q-proj-print",
-      "navLabel": "Web 打印方案",
-      "question": "后台管理系统中，Web 打印、CLodop 与云打印接口方案如何选型？",
-      "questionNote": "结合项目经历展开：票据、标签与 A4 报表各走哪条链路。",
+      "id": "q-proj-rbac",
+      "navLabel": "动态权限",
+      "question": "后台里动态路由、菜单和按钮权限分别管什么？",
+      "questionNote": "对应职责：路由守卫、动态菜单与按钮鉴权。",
       "answer": [
         [
           {
@@ -266,7 +574,135 @@
           },
           {
             "type": "text",
-            "value": "Web 打印零依赖但样式难控；CLodop 控本地打印机；云打印经服务端下发，适合分布式门店。"
+            "value": "路由管能不能进页，菜单管看不看得到，按钮管能不能点；三者同源，最终以后端鉴权为准。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "1）"
+          },
+          {
+            "type": "strong",
+            "value": "路由"
+          },
+          {
+            "type": "text",
+            "value": "：登录后拉权限，过滤路由表再动态注册；未授权进不了页面。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2）"
+          },
+          {
+            "type": "strong",
+            "value": "菜单与按钮"
+          },
+          {
+            "type": "text",
+            "value": "：同一权限数据生成侧栏；页面内用权限码或指令控制按钮显隐。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3）"
+          },
+          {
+            "type": "strong",
+            "value": "边界"
+          },
+          {
+            "type": "text",
+            "value": "：前端隐藏只改善体验；接口必须后端再鉴权；刷新后按登录态重拉权限。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-proj-virtual-table",
+      "navLabel": "虚拟表格",
+      "question": "ERP 大表格卡顿时，虚拟滚动要注意什么？",
+      "questionNote": "对应职责：vxe-table 虚拟滚动优化订单列表。",
+      "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "要点："
+          },
+          {
+            "type": "text",
+            "value": "只渲染可视区；行高要可计算；服务端分页配合；选中与冻结列单独维护。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "1）"
+          },
+          {
+            "type": "strong",
+            "value": "渲染"
+          },
+          {
+            "type": "text",
+            "value": "：上下留缓冲行，减少快速滚动白屏；缓冲过大 DOM 又会涨。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2）"
+          },
+          {
+            "type": "strong",
+            "value": "行高"
+          },
+          {
+            "type": "text",
+            "value": "：固定行高最稳；动态行高要缓存测量，否则滚动条容易抖。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3）"
+          },
+          {
+            "type": "strong",
+            "value": "交互"
+          },
+          {
+            "type": "text",
+            "value": "：跨页勾选、列冻结、横向滚动独立于虚拟层；离开页面及时销毁。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-proj-print",
+      "navLabel": "面单打印",
+      "question": "后台面单打印有多种方案时，怎么选、怎么收口？",
+      "questionNote": "对应职责：菜鸟/CLodop/Web 打印与批量面单。",
+      "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "要点："
+          },
+          {
+            "type": "text",
+            "value": "三条链路："
+          },
+          {
+            "type": "code",
+            "value": "window.print"
+          },
+          {
+            "type": "text",
+            "value": "、CLodop、电商云打印组件；云打印经 WebSocket 向组件下发指令。"
           }
         ],
         [
@@ -288,7 +724,7 @@
           },
           {
             "type": "text",
-            "value": " + 专用 CSS；简单报表可用，分页与毫米级对齐弱。"
+            "value": " + 打印 CSS。实现简单，精度与批量有限，适合内部预览。"
           }
         ],
         [
@@ -302,7 +738,7 @@
           },
           {
             "type": "text",
-            "value": "：本地控件驱动针式/标签机，模板精确；需安装客户端，维护与跨平台成本高。"
+            "value": "：本机安装 Lodop/CLodop，JS 调模板套打，适合针式/标签机精准出纸。"
           }
         ],
         [
@@ -312,20 +748,34 @@
           },
           {
             "type": "strong",
-            "value": "菜鸟云打印"
+            "value": "云打印组件"
           },
           {
             "type": "text",
-            "value": "：前端提交任务 ID，云侧渲染并推打印机；适合 SaaS 多网点，依赖网络与厂商 SLA。"
+            "value": "：接入电商/菜鸟云打印组件；前端与组件建 WebSocket，推送模板、面单数据与打印指令。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "4）"
+          },
+          {
+            "type": "strong",
+            "value": "收口"
+          },
+          {
+            "type": "text",
+            "value": "：统一打印服务按场景选通道；管连接、指令与失败重试，页面不散落调厂商 API。"
           }
         ]
       ]
     },
     {
-      "id": "q-proj-tenant-theme",
-      "navLabel": "多租户与主题",
-      "question": "SaaS 产品中，多租户隔离与动态主题通常如何落地？",
-      "questionNote": "结合项目经历展开：租户标识传递、主题变量与白标定制边界。",
+      "id": "q-proj-ws-push",
+      "navLabel": "WebSocket 推送",
+      "question": "中后台用 WebSocket 推业务状态，断线后怎么处理？",
+      "questionNote": "对应职责：WebSocket 推送订单状态与系统通知。",
       "answer": [
         [
           {
@@ -334,7 +784,7 @@
           },
           {
             "type": "text",
-            "value": "请求级携带 tenantId；数据与配置按租户隔离；主题用 CSS 变量或 Design Token 运行时注入。"
+            "value": "推送减少轮询；心跳判断死连接；断线退避重连；重连后补拉，避免只靠推送保证一致。"
           }
         ],
         [
@@ -344,11 +794,11 @@
           },
           {
             "type": "strong",
-            "value": "租户隔离"
+            "value": "推送"
           },
           {
             "type": "text",
-            "value": "：域名/Header/Token 解析租户；路由、菜单、权限均带租户上下文，防越权串租。"
+            "value": "：订单状态、系统通知进消息通道；关键变更仍可用接口确认。"
           }
         ],
         [
@@ -358,19 +808,11 @@
           },
           {
             "type": "strong",
-            "value": "动态主题"
+            "value": "保活"
           },
           {
             "type": "text",
-            "value": "：登录后拉主题配置（主色、Logo、圆角），写入 "
-          },
-          {
-            "type": "code",
-            "value": "document.documentElement"
-          },
-          {
-            "type": "text",
-            "value": " 的 CSS 变量。"
+            "value": "：定时心跳，超时主动断开；后台页可降频，回到前台再连。"
           }
         ],
         [
@@ -380,80 +822,20 @@
           },
           {
             "type": "strong",
-            "value": "白标边界"
+            "value": "重连"
           },
           {
             "type": "text",
-            "value": "：标品控制可配置项枚举，避免租户任意改布局导致升级冲突；深度定制走独立分支或插件。"
-          }
-        ]
-      ]
-    },
-    {
-      "id": "q-proj-i18n",
-      "navLabel": "国际化落地",
-      "question": "中后台系统做国际化（中英为主）时，前端应关注哪些落地细节？",
-      "questionNote": "结合项目经历展开：文案来源、动态插值与日期数字格式。",
-      "answer": [
-        [
-          {
-            "type": "strong",
-            "value": "要点："
-          },
-          {
-            "type": "text",
-            "value": "文案 key 化管理；路由与组件懒加载语言包；日期、货币、复数按 locale 格式化，勿硬编码拼接。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "1）"
-          },
-          {
-            "type": "strong",
-            "value": "语言包"
-          },
-          {
-            "type": "text",
-            "value": "：按模块拆分 JSON，切换语言动态 import；缺 key 开发环境告警，生产 fallback 默认语。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "2）"
-          },
-          {
-            "type": "strong",
-            "value": "布局"
-          },
-          {
-            "type": "text",
-            "value": "：英文通常比中文长，表格列宽与按钮需弹性；表单校验信息同步翻译。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "3）"
-          },
-          {
-            "type": "strong",
-            "value": "后端协作"
-          },
-          {
-            "type": "text",
-            "value": "：枚举与错误码返回 code，前端映射文案；服务端生成 PDF/邮件时语言与 UI 保持一致。"
+            "value": "：指数退避并设上限；连上后按时间或序号补拉增量，按业务主键去重。"
           }
         ]
       ]
     },
     {
       "id": "q-proj-export-print",
-      "navLabel": "导出与预览一致",
-      "question": "导出 PDF 或打印预览时，如何保证与页面展示一致？",
-      "questionNote": "结合项目经历展开：分页、图表与字体嵌入的处理方式。",
+      "navLabel": "导出与打印",
+      "question": "报告导出 PDF/打印时，怎样减少和页面不一致？",
+      "questionNote": "对应职责：物流碳排报告导出与打印，减少预览偏差。",
       "answer": [
         [
           {
@@ -462,7 +844,7 @@
           },
           {
             "type": "text",
-            "value": "预览与导出共用同一套渲染模板或 HTML；固定纸张尺寸，图表先转图片再入 PDF。"
+            "value": "预览和导出尽量共用结构；固定纸张宽度；图表先转图再进 PDF；抽样对比关键字段。"
           }
         ],
         [
@@ -472,11 +854,11 @@
           },
           {
             "type": "strong",
-            "value": "模板复用"
+            "value": "能力"
           },
           {
             "type": "text",
-            "value": "：屏幕预览、打印预览、服务端 PDF 共用 DOM 模板或 SSR 片段，避免三套样式漂移。"
+            "value": "：常用 html2canvas + jsPDF 导出；浏览器打印走打印组件；注意中英文切换。"
           }
         ],
         [
@@ -486,19 +868,11 @@
           },
           {
             "type": "strong",
-            "value": "图表处理"
+            "value": "一致"
           },
           {
             "type": "text",
-            "value": "：ECharts 等导出前 "
-          },
-          {
-            "type": "code",
-            "value": "getDataURL"
-          },
-          {
-            "type": "text",
-            "value": " 或 canvas 截图嵌入，矢量 PDF 内嵌字体防乱码。"
+            "value": "：共用同一内容区样式；图表导出前转图片嵌入，减少矢量差异。"
           }
         ],
         [
@@ -512,16 +886,16 @@
           },
           {
             "type": "text",
-            "value": "：抽样对比像素或关键字段；分页符、页眉页脚、水印在预览与最终文件同步生效。"
+            "value": "：分页、水印、语言切换后抽样对比；偏差大时先改共用模板。"
           }
         ]
       ]
     },
     {
-      "id": "q-proj-echarts",
-      "navLabel": "ECharts 封装",
-      "question": "中后台如何封装 ECharts 组件并正确处理 dispose 生命周期？",
-      "questionNote": "结合项目经历展开：resize、主题切换与路由缓存场景。",
+      "id": "q-proj-tenant-theme",
+      "navLabel": "多租户主题",
+      "question": "SaaS 切换租户时，品牌信息与主题色怎么同步？",
+      "questionNote": "对应职责：多租户隔离与动态主题。",
       "answer": [
         [
           {
@@ -530,23 +904,7 @@
           },
           {
             "type": "text",
-            "value": "单例 chart 实例绑定容器 ref；数据变化 "
-          },
-          {
-            "type": "code",
-            "value": "setOption"
-          },
-          {
-            "type": "text",
-            "value": "；卸载或 keep-alive 失活时 "
-          },
-          {
-            "type": "code",
-            "value": "dispose"
-          },
-          {
-            "type": "text",
-            "value": " 防泄漏。"
+            "value": "请求和状态都带租户；切换后下发 Logo、标题、主色；用 CSS 变量全局生效。"
           }
         ],
         [
@@ -556,33 +914,151 @@
           },
           {
             "type": "strong",
-            "value": "初始化"
+            "value": "隔离"
           },
           {
             "type": "text",
-            "value": "："
-          },
-          {
-            "type": "code",
-            "value": "echarts.init(dom, theme)"
-          },
-          {
-            "type": "text",
-            "value": " 一次；props 变更用 "
-          },
-          {
-            "type": "code",
-            "value": "notMerge"
-          },
-          {
-            "type": "text",
-            "value": " 控制是否合并旧配置。"
+            "value": "：租户 ID 进 Token/请求头；菜单与数据都在该上下文下，防止串租。"
           }
         ],
         [
           {
             "type": "text",
             "value": "2）"
+          },
+          {
+            "type": "strong",
+            "value": "主题"
+          },
+          {
+            "type": "text",
+            "value": "：主色等写入根节点 CSS 变量；一次切换，全站组件跟着变。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3）"
+          },
+          {
+            "type": "strong",
+            "value": "边界"
+          },
+          {
+            "type": "text",
+            "value": "：白标只开放约定配置项；大改版用扩展能力，少在主干写死客户逻辑。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-proj-i18n",
+      "navLabel": "国际化",
+      "question": "中后台做中英文切换，前端要盯哪些细节？",
+      "questionNote": "对应职责：国际化与中英文界面适配。",
+      "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "要点："
+          },
+          {
+            "type": "text",
+            "value": "文案 key 化；请求带语言；错误码映射文案；英文更长，布局要留余量。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "1）"
+          },
+          {
+            "type": "strong",
+            "value": "词条"
+          },
+          {
+            "type": "text",
+            "value": "：按模块维护语言包；缺 key 回退默认语言，开发环境最好告警。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2）"
+          },
+          {
+            "type": "strong",
+            "value": "协作"
+          },
+          {
+            "type": "text",
+            "value": "：请求头带当前语言；后端返回错误码，前端映射；导出语言跟 UI 一致。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3）"
+          },
+          {
+            "type": "strong",
+            "value": "布局"
+          },
+          {
+            "type": "text",
+            "value": "：表格列、按钮按英文长度弹性排布，避免挤版或截断。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-proj-echarts",
+      "navLabel": "图表封装",
+      "question": "中后台封装 ECharts 时，生命周期和性能怎么管？",
+      "questionNote": "对应职责：ECharts 视口懒加载、自适应与实例销毁。",
+      "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "要点："
+          },
+          {
+            "type": "text",
+            "value": "一个容器一个实例；进视口再初始化；尺寸变化 resize；离开页面必须销毁。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "1）"
+          },
+          {
+            "type": "strong",
+            "value": "实例"
+          },
+          {
+            "type": "text",
+            "value": "：容器就绪后 init；数据变化 setOption；路由离开 dispose，防止泄漏。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2）"
+          },
+          {
+            "type": "strong",
+            "value": "懒加载"
+          },
+          {
+            "type": "text",
+            "value": "：图表代码按需引入；多图仪表盘等进入视口再 init，减轻首屏。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3）"
           },
           {
             "type": "strong",
@@ -590,23 +1066,53 @@
           },
           {
             "type": "text",
-            "value": "："
-          },
+            "value": "：容器变化调 resize；侧栏折叠、Tab 切换后要主动触发一次。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-proj-sse-assistant",
+      "navLabel": "流式 AI 助手",
+      "question": "中后台接入流式问答助手，前端链路怎么串？",
+      "questionNote": "对应职责：SSE 流式 AI 问答与 Markdown 渲染。",
+      "answer": [
+        [
           {
-            "type": "code",
-            "value": "ResizeObserver"
+            "type": "strong",
+            "value": "要点："
           },
           {
             "type": "text",
-            "value": " 或窗口 resize 调 "
+            "value": "先上屏用户消息和空回复；再开 SSE；增量追加；可中断；Markdown 渲染；查询受权限约束。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "1）"
           },
           {
-            "type": "code",
-            "value": "chart.resize()"
+            "type": "strong",
+            "value": "发与收"
           },
           {
             "type": "text",
-            "value": "；侧边栏折叠后需主动触发。"
+            "value": "：POST 建流（如 fetch-event-source）；按块追加到助手气泡，结束标记后收尾。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2）"
+          },
+          {
+            "type": "strong",
+            "value": "停止"
+          },
+          {
+            "type": "text",
+            "value": "：Abort 断开连接，并通知后端停生成，避免后台继续跑。"
           }
         ],
         [
@@ -616,36 +1122,20 @@
           },
           {
             "type": "strong",
-            "value": "销毁"
+            "value": "展示"
           },
           {
             "type": "text",
-            "value": "："
-          },
-          {
-            "type": "code",
-            "value": "onUnmounted"
-          },
-          {
-            "type": "text",
-            "value": " / "
-          },
-          {
-            "type": "code",
-            "value": "deactivated"
-          },
-          {
-            "type": "text",
-            "value": " 中 dispose 并解绑监听；Tab 切换重复 init 前先 dispose 旧实例。"
+            "value": "：流式 Markdown 渐进渲染；用户上滑不强行吸底；只查当前租户权限内数据。"
           }
         ]
       ]
     },
     {
       "id": "q-proj-token-refresh",
-      "navLabel": "Token 刷新竞态",
-      "question": "多接口同时 401 时，Token 刷新如何避免竞态与重复刷新？",
-      "questionNote": "结合项目经历展开：队列挂起、失败降级与登出策略。",
+      "navLabel": "Token 刷新",
+      "question": "多个接口同时 401 时，怎么刷新 Token 才不乱？",
+      "questionNote": "对应 SaaS 请求层常见深挖：与报告/助手等并发请求相关。",
       "answer": [
         [
           {
@@ -654,7 +1144,7 @@
           },
           {
             "type": "text",
-            "value": "全局单飞刷新：首个 401 发起 refresh，其余请求入队等待新 Token，刷新失败统一登出。"
+            "value": "同一时刻只刷新一次；其余请求排队等新 Token；刷新失败统一登出。"
           }
         ],
         [
@@ -664,11 +1154,11 @@
           },
           {
             "type": "strong",
-            "value": "单飞锁"
+            "value": "单飞"
           },
           {
             "type": "text",
-            "value": "：用 Promise 或 mutex 标记 refreshing；并发 401 共用一个 refresh 结果，避免 Token 轮换冲突。"
+            "value": "：第一个 401 触发 refresh，后续 401 共用同一个刷新 Promise。"
           }
         ],
         [
@@ -678,11 +1168,11 @@
           },
           {
             "type": "strong",
-            "value": "请求队列"
+            "value": "重放"
           },
           {
             "type": "text",
-            "value": "：刷新期间新请求挂起或带旧 Token 重试一次；成功后批量重放失败请求并更新 Authorization。"
+            "value": "：成功后更新请求头，把排队请求重发一次。"
           }
         ],
         [
@@ -692,20 +1182,20 @@
           },
           {
             "type": "strong",
-            "value": "失败边界"
+            "value": "失败"
           },
           {
             "type": "text",
-            "value": "：refresh 也 401 则清凭证跳登录；避免无限循环；多端登录被踢需提示并中断队列。"
+            "value": "：refresh 也失败则清凭证跳登录；防止刷新接口再次触发刷新死循环。"
           }
         ]
       ]
     },
     {
       "id": "q-proj-mp-config",
-      "navLabel": "小程序多主体配置",
-      "question": "同一套小程序代码服务多主体差异时，表单与流程如何配置化？",
-      "questionNote": "结合项目经历展开：配置下发、灰度与兜底默认值。",
+      "navLabel": "多主体配置",
+      "question": "一套小程序服务多个主体时，差异怎么做成可配置？",
+      "questionNote": "对应职责：动态配置满足多医院差异化。",
       "answer": [
         [
           {
@@ -714,7 +1204,7 @@
           },
           {
             "type": "text",
-            "value": "主体标识决定配置版本；表单字段、流程节点、文案由远程 JSON Schema 驱动，代码只保留渲染引擎。"
+            "value": "主体标识决定配置；表单和流程尽量配置驱动；缺配置有默认兜底。"
           }
         ],
         [
@@ -724,11 +1214,11 @@
           },
           {
             "type": "strong",
-            "value": "配置分层"
+            "value": "配置"
           },
           {
             "type": "text",
-            "value": "：全局默认 + 主体覆盖 + 环境差异；启动时拉取并本地缓存，版本号不一致再更新。"
+            "value": "：字段显隐、校验、步骤差异用远程配置描述，代码做通用渲染引擎。"
           }
         ],
         [
@@ -738,11 +1228,11 @@
           },
           {
             "type": "strong",
-            "value": "表单引擎"
+            "value": "发布"
           },
           {
             "type": "text",
-            "value": "：字段显隐、校验规则、联动逻辑写配置；复杂校验仍可调后端规则接口。"
+            "value": "：配置带版本，启动比对后更新缓存；关键缺省用默认配置，保证可开页。"
           }
         ],
         [
@@ -752,20 +1242,20 @@
           },
           {
             "type": "strong",
-            "value": "流程编排"
+            "value": "边界"
           },
           {
             "type": "text",
-            "value": "：步骤与分支条件配置化；无法配置的死逻辑保留代码分支并文档化差异点。"
+            "value": "：配不动的死逻辑保留代码分支并文档化，避免配置无限膨胀。"
           }
         ]
       ]
     },
     {
-      "id": "q-proj-mp-subpackage",
-      "navLabel": "分包与冷启动",
-      "question": "小程序主包与分包应如何划分以控制冷启动体积？",
-      "questionNote": "结合项目经历展开：首屏路径、独立分包与预下载策略。",
+      "id": "q-proj-mp-hospital-ctx",
+      "navLabel": "多医院上下文",
+      "question": "多医院小程序切换医院时，请求和状态如何隔离？",
+      "questionNote": "对应职责：多医院下单流程与差异化业务。",
       "answer": [
         [
           {
@@ -774,7 +1264,7 @@
           },
           {
             "type": "text",
-            "value": "主包只放 Tab 首屏与公共依赖；低频业务进分包；独立分包可加速子包首屏，配合预下载。"
+            "value": "当前医院进全局状态；请求头强制带医院标识；切换医院时清掉上一医院业务缓存。"
           }
         ],
         [
@@ -784,11 +1274,11 @@
           },
           {
             "type": "strong",
-            "value": "主包瘦身"
+            "value": "状态"
           },
           {
             "type": "text",
-            "value": "：图片走 CDN；工具库按需引入；避免把整库 chart 打进主包。"
+            "value": "：定位医院、服务类型等进 store；页面读写都基于当前医院上下文。"
           }
         ],
         [
@@ -798,11 +1288,11 @@
           },
           {
             "type": "strong",
-            "value": "分包策略"
+            "value": "请求"
           },
           {
             "type": "text",
-            "value": "：按业务域拆分；单分包不宜过大；跨分包组件放分包异步化或抽 npm 分包。"
+            "value": "：拦截器注入医院 ID、Token、客户端版本，避免串医院数据。"
           }
         ],
         [
@@ -812,28 +1302,20 @@
           },
           {
             "type": "strong",
-            "value": "体验优化"
+            "value": "切换"
           },
           {
             "type": "text",
-            "value": "：配置 "
-          },
-          {
-            "type": "code",
-            "value": "preloadRule"
-          },
-          {
-            "type": "text",
-            "value": " 在 Wi-Fi 下预拉分包；监控主包体积与启动耗时回归。"
+            "value": "：换医院后清空购物车/草稿类缓存，再按新配置拉表单与可达性校验。"
           }
         ]
       ]
     },
     {
-      "id": "q-proj-mp-setdata",
-      "navLabel": "setData 优化",
-      "question": "小程序 setData 导致页面卡顿时，有哪些常用优化策略？",
-      "questionNote": "结合项目经历展开：数据路径、合并更新与自定义组件边界。",
+      "id": "q-proj-electron-delivery",
+      "navLabel": "Electron 搭建与更新",
+      "question": "自助终端 Electron 如何做进程划分、IPC 与远程更新？",
+      "questionNote": "对应职责：框架搭建、主渲染 IPC、打包发版与远程更新。",
       "answer": [
         [
           {
@@ -842,7 +1324,7 @@
           },
           {
             "type": "text",
-            "value": "减少 setData 频率与数据量；用路径更新代替整对象替换；长列表虚拟化或分页。"
+            "value": "主进程管窗口/外设/更新，渲染进程管 UI；preload 白名单 IPC；更新要校验并可回退。"
           }
         ],
         [
@@ -852,19 +1334,11 @@
           },
           {
             "type": "strong",
-            "value": "数据路径"
+            "value": "搭建"
           },
           {
             "type": "text",
-            "value": "："
-          },
-          {
-            "type": "code",
-            "value": "setData({ 'list[2].name': x })"
-          },
-          {
-            "type": "text",
-            "value": " 只传变更字段，避免大对象深拷贝到逻辑层。"
+            "value": "：main / preload / renderer 分模块；开上下文隔离，关 nodeIntegration。"
           }
         ],
         [
@@ -874,11 +1348,11 @@
           },
           {
             "type": "strong",
-            "value": "合并更新"
+            "value": "IPC"
           },
           {
             "type": "text",
-            "value": "：同一帧多次变更合并一次 setData；滚动事件节流，非可视数据不要放进 data。"
+            "value": "：页面只调暴露的有限 API；主进程校验参数后再执行系统能力。"
           }
         ],
         [
@@ -888,20 +1362,20 @@
           },
           {
             "type": "strong",
-            "value": "组件隔离"
+            "value": "发版更新"
           },
           {
             "type": "text",
-            "value": "：复杂区块拆自定义组件，局部 setData 不触发整页 diff；列表用 recycle-view 等方案。"
+            "value": "：流水线打安装包；检查新版本、校验后提示重启；可灰度，失败回退旧包。"
           }
         ]
       ]
     },
     {
-      "id": "q-proj-mp-track",
-      "navLabel": "小程序埋点",
-      "question": "小程序埋点中，全埋点、自定义事件与采样应如何配合？",
-      "questionNote": "结合项目经历展开：上报时机、隐私字段脱敏与失败重试。",
+      "id": "q-proj-kiosk-device",
+      "navLabel": "外设认证",
+      "question": "自助终端读卡、扫码做身份认证，前端链路怎么走？",
+      "questionNote": "对应职责：对接读卡器、扫码器完成身份认证。",
       "answer": [
         [
           {
@@ -910,7 +1384,7 @@
           },
           {
             "type": "text",
-            "value": "全埋点覆盖 PV/点击基线；核心业务用自定义事件带维度；高流量场景按用户或事件采样。"
+            "value": "渲染进程只发指令；主进程用 Node 请求本机中间件取身份信息，再 IPC 回传后走业务认证。"
           }
         ],
         [
@@ -920,11 +1394,11 @@
           },
           {
             "type": "strong",
-            "value": "全埋点"
+            "value": "分层"
           },
           {
             "type": "text",
-            "value": "：自动采集页面进入、停留、分享；配置黑名单页面与敏感控件，避免误采。"
+            "value": "：页面不直连硬件驱动；经 preload 白名单 IPC 把请求交给主进程。"
           }
         ],
         [
@@ -934,11 +1408,11 @@
           },
           {
             "type": "strong",
-            "value": "自定义事件"
+            "value": "取数"
           },
           {
             "type": "text",
-            "value": "：转化漏斗、按钮点击带业务参数；事件名与属性 schema 统一治理，便于数仓对齐。"
+            "value": "：主进程调本地中间件服务；由中间件对接读卡/扫码并返回证件信息。"
           }
         ],
         [
@@ -948,200 +1422,20 @@
           },
           {
             "type": "strong",
-            "value": "采样与合规"
+            "value": "校验"
           },
           {
             "type": "text",
-            "value": "：曝光类可 10% 采样；本地队列批量上报，失败指数退避；手机号等字段脱敏后再传。"
-          }
-        ]
-      ]
-    },
-    {
-      "id": "q-proj-mp-ci",
-      "navLabel": "小程序 CI 发布",
-      "question": "小程序多环境如何通过 CI 完成上传与发布？",
-      "questionNote": "结合项目经历展开：密钥管理、体验版与审核版流水线。",
-      "answer": [
-        [
-          {
-            "type": "strong",
-            "value": "要点："
-          },
-          {
-            "type": "text",
-            "value": "CI 用 miniprogram-ci 上传代码；按分支映射体验/正式环境；密钥与 AppID 走密钥库注入。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "1）"
-          },
-          {
-            "type": "strong",
-            "value": "环境矩阵"
-          },
-          {
-            "type": "text",
-            "value": "：develop 打体验版、release 提审；构建时注入 API 域名与主体 AppID，避免手工改配置。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "2）"
-          },
-          {
-            "type": "strong",
-            "value": "流水线"
-          },
-          {
-            "type": "text",
-            "value": "：lint → 单元测试 → 构建 → upload → 机器人通知；上传描述带 commit 与变更摘要。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "3）"
-          },
-          {
-            "type": "strong",
-            "value": "安全"
-          },
-          {
-            "type": "text",
-            "value": "：上传私钥仅存 CI Secret；限制触发分支；回滚保留上一版构建产物可重传。"
-          }
-        ]
-      ]
-    },
-    {
-      "id": "q-proj-hybrid-login",
-      "navLabel": "Hybrid 登录态",
-      "question": "小程序或 App 内嵌 H5 时，登录态应如何打通？",
-      "questionNote": "结合项目经历展开：Ticket 换 Token、Cookie 限制与退出同步。",
-      "answer": [
-        [
-          {
-            "type": "strong",
-            "value": "要点："
-          },
-          {
-            "type": "text",
-            "value": "原生侧持有凭证，H5 通过一次性 Ticket 或 JSBridge 换短期 Token；避免长期 Token 经 URL 明文传递。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "1）"
-          },
-          {
-            "type": "strong",
-            "value": "Ticket 交换"
-          },
-          {
-            "type": "text",
-            "value": "：原生带 ticket 打开 web-view，H5 调接口换 session；ticket 单次有效、短时效。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "2）"
-          },
-          {
-            "type": "strong",
-            "value": "Cookie 限制"
-          },
-          {
-            "type": "text",
-            "value": "：web-view 内第三方 Cookie 受限，优先 SameSite + HTTPS；必要时全走 Header Token。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "3）"
-          },
-          {
-            "type": "strong",
-            "value": "生命周期"
-          },
-          {
-            "type": "text",
-            "value": "：原生登出通知 H5 清本地态；Token 续期由原生统一刷新再注入，防双端状态不一致。"
-          }
-        ]
-      ]
-    },
-    {
-      "id": "q-proj-jsbridge",
-      "navLabel": "JSBridge 通信",
-      "question": "原生 App、小程序 web-view 与 H5 之间的 JSBridge 应如何设计？",
-      "questionNote": "结合项目经历展开：协议格式、超时与版本兼容。",
-      "answer": [
-        [
-          {
-            "type": "strong",
-            "value": "要点："
-          },
-          {
-            "type": "text",
-            "value": "统一消息协议（method + params + callbackId）；H5 调原生走注入对象，原生调 H5 用 URL Scheme 或 postMessage。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "1）"
-          },
-          {
-            "type": "strong",
-            "value": "调用模型"
-          },
-          {
-            "type": "text",
-            "value": "：异步回调或 Promise 封装；每个请求带 callbackId，超时 reject，防悬挂。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "2）"
-          },
-          {
-            "type": "strong",
-            "value": "安全白名单"
-          },
-          {
-            "type": "text",
-            "value": "：仅暴露扫码、支付、导航等必要 API；参数校验在原生侧再做一层。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "3）"
-          },
-          {
-            "type": "strong",
-            "value": "兼容"
-          },
-          {
-            "type": "text",
-            "value": "：检测 bridge 版本，缺失能力降级 H5 实现；小程序与 App 维护同一套 method 命名。"
+            "value": "：回传后校验格式再调业务接口；中间件不可用或超时要可感知提示。"
           }
         ]
       ]
     },
     {
       "id": "q-proj-kiosk-timeout",
-      "navLabel": "自助终端超时",
-      "question": "自助终端无操作超时回首页时，应如何清理会话与敏感数据？",
-      "questionNote": "结合项目经历展开：计时重置、弹窗预警与硬件状态复位。",
+      "navLabel": "超时回首页",
+      "question": "自助终端无人操作超时后，如何回首页并处理好会话？",
+      "questionNote": "对应职责：全局倒计时、超时退出与会话回收。",
       "answer": [
         [
           {
@@ -1150,7 +1444,7 @@
           },
           {
             "type": "text",
-            "value": "全局空闲计时器监听触控/键盘；超时前倒计时提示；回首页时清表单、Token、本地缓存并复位外设。"
+            "value": "全局空闲计时，超时前提示；回首页清业务态与登录态，并结束外设会话。"
           }
         ],
         [
@@ -1160,11 +1454,11 @@
           },
           {
             "type": "strong",
-            "value": "计时策略"
+            "value": "计时"
           },
           {
             "type": "text",
-            "value": "：任意交互重置计时；关键步骤（支付中）可暂停或延长；后台弹窗可配置。"
+            "value": "：触控重置倒计时；关键步骤可暂停；超时前弹窗倒计时。"
           }
         ],
         [
@@ -1174,11 +1468,11 @@
           },
           {
             "type": "strong",
-            "value": "会话清理"
+            "value": "清态"
           },
           {
             "type": "text",
-            "value": "：清空 Pinia/Vuex、sessionStorage；销毁含敏感信息的组件实例；路由 replace 到欢迎页。"
+            "value": "：回欢迎页清空表单、Token 和临时缓存，避免下一位用户看到隐私。"
           }
         ],
         [
@@ -1188,79 +1482,11 @@
           },
           {
             "type": "strong",
-            "value": "外设复位"
+            "value": "外设"
           },
           {
             "type": "text",
-            "value": "：经 IPC 通知主进程关闭读卡器会话、退钞口；Electron 场景可切 kiosk 全屏防切出。"
-          }
-        ]
-      ]
-    },
-    {
-      "id": "q-proj-electron-secure-ipc",
-      "navLabel": "Electron 安全 IPC",
-      "question": "自助终端 Electron 应用中，渲染进程与主进程的安全隔离与 IPC 应如何设计？",
-      "questionNote": "结合项目经历展开：preload 白名单与 contextIsolation，细节可对照 Electron 章。",
-      "answer": [
-        [
-          {
-            "type": "strong",
-            "value": "要点："
-          },
-          {
-            "type": "text",
-            "value": "开启 contextIsolation + sandbox；禁用 nodeIntegration；preload 仅暴露白名单 IPC 方法。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "1）"
-          },
-          {
-            "type": "strong",
-            "value": "preload 桥接"
-          },
-          {
-            "type": "text",
-            "value": "："
-          },
-          {
-            "type": "code",
-            "value": "contextBridge.exposeInMainWorld"
-          },
-          {
-            "type": "text",
-            "value": " 暴露 print、readCard 等固定 API，不暴露完整 ipcRenderer。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "2）"
-          },
-          {
-            "type": "strong",
-            "value": "主进程校验"
-          },
-          {
-            "type": "text",
-            "value": "：IPC handler 校验参数类型与调用来源；敏感路径不走渲染进程直读文件。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "3）"
-          },
-          {
-            "type": "strong",
-            "value": "加载策略"
-          },
-          {
-            "type": "text",
-            "value": "：生产加载本地 file 或固定域名；禁止任意远程 URL，防 XSS 升级为 RCE。"
+            "value": "：通知主进程关闭读卡/扫码会话；离开页面时清定时器。"
           }
         ]
       ]
@@ -1268,8 +1494,8 @@
     {
       "id": "q-proj-standard-custom",
       "navLabel": "标品与定制",
-      "question": "ToB 标品与定制需求并存时，前端如何控制差异、降低合并成本？",
-      "questionNote": "结合项目经历展开：配置层、扩展点与分支策略。",
+      "question": "ToB 既有标品又有定制时，前端怎么控差异？",
+      "questionNote": "对应职责：标准产品迭代与商业化定制交付。",
       "answer": [
         [
           {
@@ -1278,7 +1504,7 @@
           },
           {
             "type": "text",
-            "value": "标品主干保持通用能力；定制走配置、插件或受控扩展点，避免直接在主干硬编码客户逻辑。"
+            "value": "能配置就不改代码；再不行用扩展点；长期大定制才分客户分支，并定期合回主干。"
           }
         ],
         [
@@ -1288,11 +1514,11 @@
           },
           {
             "type": "strong",
-            "value": "配置优先"
+            "value": "配置"
           },
           {
             "type": "text",
-            "value": "：菜单、字段、流程、主题用配置中心；80% 差异用 JSON 解决，减少 fork。"
+            "value": "：菜单、字段、流程、主题尽量配置化，减少客户逻辑进主干。"
           }
         ],
         [
@@ -1302,11 +1528,11 @@
           },
           {
             "type": "strong",
-            "value": "扩展点"
+            "value": "扩展"
           },
           {
             "type": "text",
-            "value": "：预留 hook/slot/策略模式注入定制逻辑；扩展包独立 npm 或 submodule，按客户按需加载。"
+            "value": "：预留插槽或策略注入；定制包按客户加载，升级时少打架。"
           }
         ],
         [
@@ -1316,20 +1542,20 @@
           },
           {
             "type": "strong",
-            "value": "分支治理"
+            "value": "治理"
           },
           {
             "type": "text",
-            "value": "：长期大定制才开客户分支，定期 rebase 标品；共性需求反哺主干，控制技术债。"
+            "value": "：客户分支定期同步标品；共性需求反哺主干，控制分叉成本。"
           }
         ]
       ]
     },
     {
-      "id": "q-proj-vue2-class",
-      "navLabel": "vue-class-component",
-      "question": "遗留中后台使用 vue-class-component 时，与 Options API 如何协作？",
-      "questionNote": "结合项目经历展开：装饰器能力边界与渐进迁移思路。",
+      "id": "q-proj-request-guard",
+      "navLabel": "请求拦截与鉴权",
+      "question": "中后台如何通过请求拦截、参数管控与权限校验降低越权风险？",
+      "questionNote": "对应职责：请求拦截、参数管控与权限校验；可点到 JSEncrypt。",
       "answer": [
         [
           {
@@ -1338,7 +1564,7 @@
           },
           {
             "type": "text",
-            "value": "Class 组件编译为 Options；装饰器映射 data、computed、生命周期；新模块可渐进切组合式 API。"
+            "value": "拦截器统一注入凭证与公共参数；敏感参数加密；入口按权限裁剪，最终以后端鉴权为准。"
           }
         ],
         [
@@ -1348,7 +1574,67 @@
           },
           {
             "type": "strong",
-            "value": "写法对照"
+            "value": "请求拦截"
+          },
+          {
+            "type": "text",
+            "value": "：统一加 Token、组织/租户上下文；集中处理错误码与登出。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2）"
+          },
+          {
+            "type": "strong",
+            "value": "参数管控"
+          },
+          {
+            "type": "text",
+            "value": "：敏感字段可用 JSEncrypt 等加密传输；禁止前端随意改写服务端权威字段。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3）"
+          },
+          {
+            "type": "strong",
+            "value": "权限"
+          },
+          {
+            "type": "text",
+            "value": "：路由/按钮层拦截无权限操作；接口仍须后端鉴权，前端只做体验层。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-proj-vue2-class",
+      "navLabel": "类组件写法",
+      "question": "遗留项目用 vue-class-component 等类写法时，三个库分别做什么？",
+      "questionNote": "对应技术栈：vue-class-component、vue-property-decorator、vuex-class。",
+      "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "要点："
+          },
+          {
+            "type": "text",
+            "value": "class-component 提供类组件底座；property-decorator 写 props/watch 等；vuex-class 映射 Vuex。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "1）"
+          },
+          {
+            "type": "strong",
+            "value": "vue-class-component"
           },
           {
             "type": "text",
@@ -1360,7 +1646,21 @@
           },
           {
             "type": "text",
-            "value": " 声明组件；"
+            "value": " 声明类组件，方法即 methods，编译结果仍是 Options。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2）"
+          },
+          {
+            "type": "strong",
+            "value": "vue-property-decorator"
+          },
+          {
+            "type": "text",
+            "value": "："
           },
           {
             "type": "code",
@@ -1376,21 +1676,23 @@
           },
           {
             "type": "text",
-            "value": " 对应 options 字段；方法即 methods。"
-          }
-        ],
-        [
-          {
-            "type": "text",
-            "value": "2）"
+            "value": " / "
           },
           {
-            "type": "strong",
-            "value": "混用"
+            "type": "code",
+            "value": "@Emit"
           },
           {
             "type": "text",
-            "value": "：Class 组件可与普通 .vue 共存；Vuex map 装饰器简化状态映射；注意 this 类型需 TS 声明。"
+            "value": " / "
+          },
+          {
+            "type": "code",
+            "value": "@Ref"
+          },
+          {
+            "type": "text",
+            "value": " 对应选项式能力。"
           }
         ],
         [
@@ -1400,11 +1702,177 @@
           },
           {
             "type": "strong",
+            "value": "vuex-class"
+          },
+          {
+            "type": "text",
+            "value": "："
+          },
+          {
+            "type": "code",
+            "value": "@State"
+          },
+          {
+            "type": "text",
+            "value": " / "
+          },
+          {
+            "type": "code",
+            "value": "@Getter"
+          },
+          {
+            "type": "text",
+            "value": " / "
+          },
+          {
+            "type": "code",
+            "value": "@Action"
+          },
+          {
+            "type": "text",
+            "value": " / "
+          },
+          {
+            "type": "code",
+            "value": "@Mutation"
+          },
+          {
+            "type": "text",
+            "value": " 映射 store。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "4）"
+          },
+          {
+            "type": "strong",
             "value": "迁移"
           },
           {
             "type": "text",
-            "value": "：新功能优先组合式 API + script setup；旧 Class 模块按页逐步替换，避免大爆炸重写。"
+            "value": "：可与普通 .vue 共存；新功能优先组合式，旧页按模块替换。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-proj-cs-realtime",
+      "navLabel": "客服实时会话",
+      "question": "客服工作台里，实时消息收发和会话列表一般怎么做？",
+      "questionNote": "对应早期智能客服经历：PC/H5/小程序上的会话与推送，属高频追问。",
+      "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "要点："
+          },
+          {
+            "type": "text",
+            "value": "消息通道用 WebSocket；会话列表与消息区状态分离；断线重连后补拉，避免只靠推送。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "1）"
+          },
+          {
+            "type": "strong",
+            "value": "通道"
+          },
+          {
+            "type": "text",
+            "value": "：坐席在线收发走 WebSocket；心跳保活，断线退避重连，重连后按 lastMsgId 补历史。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2）"
+          },
+          {
+            "type": "strong",
+            "value": "列表"
+          },
+          {
+            "type": "text",
+            "value": "：会话列表只维护摘要（未读、最后一条）；点进会话再拉分页消息，降低首屏压力。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3）"
+          },
+          {
+            "type": "strong",
+            "value": "体验"
+          },
+          {
+            "type": "text",
+            "value": "：发送先乐观上屏，失败回滚；图片/文件走上传再发消息体；未读角标与当前会话已读同步。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-proj-exam-state",
+      "navLabel": "在线考试答卷",
+      "question": "在线考试场景下，倒计时与答卷状态如何做得可靠？",
+      "questionNote": "对应培训考试平台经历：倒计时、刷新/断网不丢答是高频点。",
+      "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "要点："
+          },
+          {
+            "type": "text",
+            "value": "以服务端剩余时长为准；答卷本地草稿 + 定时上报；交卷前再拉取权威状态防作弊与丢答。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "1）"
+          },
+          {
+            "type": "strong",
+            "value": "倒计时"
+          },
+          {
+            "type": "text",
+            "value": "：进入考试拉服务器截止时间；本地倒计时只作展示，到点以服务端校验为准。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2）"
+          },
+          {
+            "type": "strong",
+            "value": "答卷"
+          },
+          {
+            "type": "text",
+            "value": "：选项变更写本地缓存并防抖上报；刷新/切端先恢复草稿，再与服务端进度合并。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3）"
+          },
+          {
+            "type": "strong",
+            "value": "交卷"
+          },
+          {
+            "type": "text",
+            "value": "：交卷二次确认；提交中禁用改题；失败可重试且幂等，避免重复交卷。"
           }
         ]
       ]

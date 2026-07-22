@@ -2,7 +2,7 @@
   "slug": "browser",
   "title": "浏览器",
   "documentTitle": "浏览器",
-  "description": "从输入 URL 到渲染、脚本 defer/async、重排重绘与存储，以及同源、跨页通信与观察器。",
+  "description": "从输入 URL 到渲染、脚本 defer/async、重排重绘与存储（含 IndexedDB），以及同源、跨页通信与观察器。",
   "lead": "从导航到渲染串起存储、同源与跨页通信；观察器用于懒加载等场景。",
   "items": [
     {
@@ -589,6 +589,80 @@
           {
             "type": "text",
             "value": "绑定，关闭页面即清空，适用于多步表单防刷新丢失数据。"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "q-indexeddb",
+      "navLabel": "IndexedDB",
+      "question": "IndexedDB 与 localStorage 应如何选择？",
+      "questionNote": "容量、异步 API、结构化数据；离线缓存与大量前端数据场景。",
+      "answer": [
+        [
+          {
+            "type": "strong",
+            "value": "要点："
+          },
+          {
+            "type": "text",
+            "value": "localStorage 适合小体积同步读写；IndexedDB 适合较大容量、结构化数据与异步读写。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "1）"
+          },
+          {
+            "type": "strong",
+            "value": "localStorage："
+          },
+          {
+            "type": "text",
+            "value": "同步 API、键值字符串、容量约数 MB，适合主题、草稿、轻量配置；大数据会阻塞主线程。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2）"
+          },
+          {
+            "type": "strong",
+            "value": "IndexedDB："
+          },
+          {
+            "type": "text",
+            "value": "异步、可存对象/二进制，支持索引与事务，容量通常更大，适合离线资源、列表缓存、本地草稿库。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3）"
+          },
+          {
+            "type": "strong",
+            "value": "选型："
+          },
+          {
+            "type": "text",
+            "value": "「读一次配置」用 localStorage；「查表/分页/大量记录」用 IndexedDB（或封装库降低样板代码）。"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "value": "4）"
+          },
+          {
+            "type": "strong",
+            "value": "边界："
+          },
+          {
+            "type": "text",
+            "value": "均受同源限制；勿存密钥与敏感明文；可与 Service Worker 配合做离线，但复杂度明显高于 localStorage。"
           }
         ]
       ]

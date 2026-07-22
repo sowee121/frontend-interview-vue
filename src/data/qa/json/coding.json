@@ -230,36 +230,6 @@
       "questionNote": "考察要点：按 depth 层数展开嵌套数组，depth 为 Infinity 时展开至叶子元素；递归配合 flatMap 写法简洁，大数组可改用迭代或栈以避免递归过深。"
     },
     {
-      "id": "q-impl-list-to-tree",
-      "navLabel": "列表 ⇄ 树",
-      "question": "扁平列表转树 listToTree，以及树再压平 treeToList",
-      "answer": [
-        [
-          {
-            "type": "strong",
-            "value": "要点："
-          },
-          {
-            "type": "text",
-            "value": "listToTree 以 Map 索引节点并按 parentId 挂接；treeToList 为逆操作，经深度优先遍历去除 children 后压平。"
-          }
-        ],
-        [
-          {
-            "type": "code",
-            "value": "// listToTree：Map 存 id → 带 children 的节点；reduce 挂接父子关系\nconst listToTree = (list) => {\n  const m = new Map(list.map((n) => [n.id, { ...n, children: [] }])); // 复制数据并初始化 children\n  return list.reduce((roots, n) => {\n    const node = m.get(n.id);\n    const p = m.get(n.parentId); // 找不到父节点则视为根\n    (p ? p.children : roots).push(node); // 有父节点挂子树，无父节点进 roots\n    return roots;\n  }, []);\n};"
-          }
-        ],
-        [
-          {
-            "type": "code",
-            "value": "// treeToList：深度优先遍历；解构将子节点从 rest 中剥离\nconst treeToList = (nodes, k = 'children') => {\n  const out = [];\n  const walk = (n) => {\n    if (!n) return;\n    const { [k]: ch, ...rest } = n; // rest 为不含 children 的浅拷贝字段\n    out.push(rest);\n    (ch ?? []).forEach(walk); // 递归子树\n  };\n  [].concat(nodes).forEach(walk); // 兼容单根或森林结构\n  return out;\n};"
-          }
-        ]
-      ],
-      "questionNote": "考察要点：扁平列表经 id/parentId 转为根节点数组（含 children）；树结构经深度优先遍历去除 children 后压平。两题为逆操作，面试常成对考查。"
-    },
-    {
       "id": "q-impl-deep-clone",
       "navLabel": "手写深拷贝",
       "question": "手写深拷贝 clone(x)",
